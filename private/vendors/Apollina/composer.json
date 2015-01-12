@@ -1,0 +1,10 @@
+{
+    "name": "las93/apollina",
+    "type": "library",
+    "description": "Library to create template in your app",
+    "keywords": ["library"],
+    "autoload": {
+        "psr-0": { "Apollina\\": "src/" }
+    },
+    "minimum-stability": "dev"
+}
