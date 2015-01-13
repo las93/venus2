@@ -55,7 +55,12 @@ class Home extends Controller {
 
 	public function show() {
 
+	    $this->view
+	         ->assign('test', 1)
+	         ->display();
+	    
 		echo "Hello World";
 
+	    exit;
 	}
 }

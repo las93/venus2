@@ -18,7 +18,7 @@ namespace Venus\core;
 use \Venus\core\Router as Router;
 use \Venus\core\Security as Security;
 use \Venus\lib\I18n as I18n;
-use \Venus\lib\Template as Template;
+use \Venus\lib\Vendor as Vendor;
 use \Venus\lib\Form as Form;
 use \Venus\lib\Mail as Mail;
 use \Venus\lib\Session as Session;
@@ -55,17 +55,17 @@ abstract class Controller extends Mother
 		if (isset($sClassName)) {
 
 			$sNamespaceBaseName = str_replace('\Controller', '', $sNamespaceName);
-			$defaultModel = $sNamespaceBaseName.'\Model\\'.$sClassName;
-			$defaultView = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('Venus\\', '\\', $sNamespaceBaseName)).DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$sClassName.'.tpl';
-			$defaultLayout = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('Venus\\', '\\', $sNamespaceBaseName)).DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.'Layout.tpl';
+			$sDefaultModel = $sNamespaceBaseName.'\Model\\'.$sClassName;
+			$sDefaultView = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('Venus\\', '\\', $sNamespaceBaseName)).DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$sClassName.'.tpl';
+			$sDefaultLayout = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('Venus\\', '\\', $sNamespaceBaseName)).DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.'Layout.tpl';
 
-			$this->model = function() use ($defaultModel) { return new $defaultModel; };
+			$this->model = function() use ($sDefaultModel) { return new $sDefaultModel; };
 
-			$this->view = function() use ($defaultView) { return new Template($defaultView); };
+			$this->view = function() use ($sDefaultView) { return Vendor::getVendor('Apollina\Template', $sDefaultView); };
 
-			$this->layout = function() use ($defaultLayout) { return new Template($defaultLayout); };
+			$this->layout = function() use ($sDefaultLayout) { return Vendor::getVendor('Apollina\Template', $sDefaultLayout); };
 
-			$this->layout->assign('model', $defaultView);
+			$this->layout->assign('model', $sDefaultView);
 		}
 
 		$this->form = function() { return new Form(); };

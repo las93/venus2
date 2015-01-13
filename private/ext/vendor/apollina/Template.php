@@ -7,7 +7,7 @@
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
  * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
- * @version   	Release: 1.0.0
+ * @version   	Release: 3.0.0
  * @filesource	https://github.com/las93/venus2
  * @link      	https://github.com/las93
  * @since     	3.0.0.0
@@ -21,7 +21,7 @@ namespace Apollina;
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
  * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
- * @version   	Release: 1.0.0
+ * @version   	Release: 3.0.0
  * @filesource	https://github.com/las93/venus2
  * @link      	https://github.com/las93
  * @since     	3.0.0.0
@@ -87,26 +87,48 @@ class Template
 	 * Right delimiter
 	 *
 	 * @access private
-	 * @var    \Venus\lib\Template
+	 * @var    \Apollina\Template
 	 */
 	private $_oTemplateLink = null;
+
+	/**
+	 * If the system detect mobile
+	 *
+	 * @access private
+	 * @var    bool
+	 */
+	private $_bIsMobile = false;
+
+	/**
+	 * The base path of templates
+	 *
+	 * @access private
+	 * @var    string
+	 */
+	private $_sBasePath = '';
 
 	/**
 	 * constructor of class
 	 *
 	 * @access public
 	 * @param  string $sName name of the template
-	 * @return \Venus\lib\Template
+	 * @return \Apollina\Template
 	 */
-	public function __construct($sName = null) 
+	public function __construct($sName = null, $sBasePathOfTemplate = null) 
 	{
-		$oMobileDetect = new \Mobile_Detect;
+	    if ($sBasePathOfTemplate !== null) { $this->_sBasePath = $sBasePathOfTemplate; }
+	    
+	    if (class_exists('\Mobile_Detect')) {
+	        
+	        $oMobileDetect = new \Mobile_Detect;
+	        $this->_bIsMobile = $oMobileDetect->isMobile();
+	    }
 
-		if ($oMobileDetect->isMobile()) {
+		if ($this->_bIsMobile) {
 
 			if ($sName && is_string($sName) && strstr($sName, '.tpl')) {
 
-				$sMobileTpl = str_replace('lib', '', __DIR__).str_replace('.tpl', 'Mobile.tpl', $sName);
+				$sMobileTpl = $this->_sBasePath.str_replace('.tpl', 'Mobile.tpl', $sName);
 				if (file_exists($sMobileTpl)) { $sName = str_replace('.tpl', 'Mobile.tpl', $sName); }
 			}
 		}
@@ -119,7 +141,9 @@ class Template
 	 *
 	 * @access public
 	 * @param  int $iValue caching kind
-	 * @return \Venus\lib\Template
+	 * @return \Apollina\Template
+	 * 
+	 * @todo to use soon
 	 */
 	public function caching($iValue) 
 	{
@@ -128,31 +152,13 @@ class Template
 	}
 
 	/**
-	 * create link
-	 *
-	 * @access public
-	 * @param  \Venus\lib\Template $oTemplate datas to add
-	 * @return \Venus\lib\Template
-	 */
-	public function createData(\Venus\lib\Template $oTemplate = null) 
-	{
-		$oNewTemplate = new \Venus\lib\Template;
-
-		if ($oTemplate !== null) {
-
-			$oNewTemplate = $oTemplate->assignAll($this->_aVar);
-			$this->_oTemplateLink = $oTemplate;
-		}
-
-		return $oNewTemplate;
-	}
-
-	/**
 	 * caching templates
 	 *
 	 * @access public
 	 * @param  int $iValue caching kind
-	 * @return \Venus\lib\Template
+	 * @return \Apollina\Template
+	 * 
+	 * @todo to use soon
 	 */
 	public function time($iValue) 
 	{
@@ -166,7 +172,7 @@ class Template
 	 * @access public
 	 * @param  string $sName name of the variable
 	 * @param  mixed $mValue value of the variable
-	 * @return \Venus\lib\Template
+	 * @return \Apollina\Template
 	 */
 	public function assign($sName, $mValue) 
 	{
@@ -179,7 +185,7 @@ class Template
 	 *
 	 * @access public
 	 * @param  mixed $mValue value of the variable
-	 * @return \Venus\lib\Template
+	 * @return \Apollina\Template
 	 */
 	public function assignAll($mValue) 
 	{
@@ -203,7 +209,7 @@ class Template
 	 *
 	 * @access public
 	 * @param  string $sValue value of delimiter
-	 * @return \Venus\lib\Template
+	 * @return \Apollina\Template
 	 */
 	public function setLeftDelimiter($sValue) 
 	{
@@ -216,7 +222,7 @@ class Template
 	 *
 	 * @access public
 	 * @param  string $sValue value of delimiter
-	 * @return \Venus\lib\Template
+	 * @return \Apollina\Template
 	 */
 	public function setRightDelimiter($sValue) 
 	{
@@ -251,10 +257,10 @@ class Template
 	 *
 	 * @access public
 	 * @param  string $sName name of the template
-	 * @param  \Venus\lib\Template $oTemplate datas to add
+	 * @param  \Apollina\Template $oTemplate datas to add
 	 * @return bool
 	 */
-	public function display($sName = null, \Venus\lib\Template $oTemplate = null) 
+	public function display($sName = null, \Apollina\Template $oTemplate = null) 
 	{
 		if ($oTemplate !== null) {
 
@@ -280,19 +286,17 @@ class Template
 	 */
 	public function fetch($sName = null, $bMainCall = true) 
 	{
-		$oMobileDetect = new \Mobile_Detect;
-
-		if ($oMobileDetect->isMobile()) {
+		if ($this->_bIsMobile) {
 
 			if ($sName) {
 
-				$sMobileTpl = str_replace('lib', '', __DIR__).str_replace('.tpl', 'Mobile.tpl', $sName);
+				$sMobileTpl = $this->_sBasePath.str_replace('.tpl', 'Mobile.tpl', $sName);
 				if (file_exists($sMobileTpl)) { $sName = str_replace('.tpl', 'Mobile.tpl', $sName); }
 			}
 
 			if (isset($this->_aVar['model'])) {
 
-				$sMobileTpl = str_replace('lib', '', __DIR__).str_replace('.tpl', 'Mobile.tpl', $this->_aVar['model']);
+				$sMobileTpl = $this->_sBasePath.str_replace('.tpl', 'Mobile.tpl', $this->_aVar['model']);
 				if (file_exists($sMobileTpl)) { $this->_aVar['model'] = str_replace('.tpl', 'Mobile.tpl', $this->_aVar['model']); }
 			}
 		}
@@ -323,12 +327,12 @@ class Template
 
 		if ($iCacheModificationTime < $iFileModificationTime) {
 
-			$sTemplate = file_get_contents(str_replace('lib', '', __DIR__).$this->_sTemplateName);
+			$sTemplate = file_get_contents($this->_sBasePath.$this->_sTemplateName);
 			$this->_transform($sTemplate, $this->_sTemplateName, $bMainCall, true);
 		}
 		else {
 
-			$sTemplate = file_get_contents(str_replace('lib', '', __DIR__).$this->_sTemplateName);
+			$sTemplate = file_get_contents($this->_sBasePath.$this->_sTemplateName);
 			$this->_transform($sTemplate, $this->_sTemplateName, $bMainCall, false);
 		}
 
@@ -472,7 +476,7 @@ class Template
 
 			if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'Template'.DIRECTORY_SEPARATOR.'Modifiers'.DIRECTORY_SEPARATOR.$sName.'.php')) {
 
-				$sClassName = '\Venus\lib\Template\Modifiers\\'.$sName;
+				$sClassName = '\Apollina\Template\Modifiers\\'.$sName;
 				$oFunction = new $sClassName;
 				$aAttributes = explode(' ', $aOne[3]);
 				preg_match_all('#:([^:]+)#msi', $aOne[3], $aMatchs2, PREG_SET_ORDER);
@@ -594,11 +598,9 @@ class Template
 
 		if (preg_match('|\{include model\}|', $sContent)) {
 
-			$sContent = preg_replace('|\{include model\}|', '<?php $_aProtectedVar[\'model\'] = preg_replace("#^.+[^a-zA-Z0-9_-]([a-zA-Z0-9_-]+\.tpl)$#msi", "\$1", $_aProtectedVar[\'model\']); $oMobileDetect = new \Mobile_Detect; if ($oMobileDetect->isMobile() && file_exists("'.$sTmpDirectory.'".md5(str_replace(".tpl", "Mobile.tpl", str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\']))).".cac.php")) { include "'.$sTmpDirectory.'".md5(str_replace(".tpl", "Mobile.tpl", str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\']))).".cac.php"; } else { include "'.$sTmpDirectory.'".md5(str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\'])).".cac.php"; } ?>', $sContent);
+			$sContent = preg_replace('|\{include model\}|', '<?php $_aProtectedVar[\'model\'] = preg_replace("#^.+[^a-zA-Z0-9_-]([a-zA-Z0-9_-]+\.tpl)$#msi", "\$1", $_aProtectedVar[\'model\']); if (class_exists(\'\\Mobile_Detect\')) { $oMobileDetect = new \Mobile_Detect; $bIsMobile = $oMobileDetect->isMobile(); } else { $bIsMobile = false; } if ($bIsMobile && file_exists("'.$sTmpDirectory.'".md5(str_replace(".tpl", "Mobile.tpl", str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\']))).".cac.php")) { include "'.$sTmpDirectory.'".md5(str_replace(".tpl", "Mobile.tpl", str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\']))).".cac.php"; } else { include "'.$sTmpDirectory.'".md5(str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\'])).".cac.php"; } ?>', $sContent);
 
-			$oMobileDetect = new \Mobile_Detect;
-
-			if ($oMobileDetect->isMobile() && file_exists(str_replace('lib', 'src/'.PORTAIL.'/View/', __DIR__).str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model']))) {
+			if ($this->_bIsMobile && file_exists(str_replace('lib', 'src/'.PORTAIL.'/View/', __DIR__).str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model']))) {
 
 				$this->_transform(file_get_contents(str_replace('lib', 'src/'.PORTAIL.'/View/', __DIR__).str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model'])), str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model']));
 			}
@@ -653,7 +655,7 @@ class Template
 	 */
 	private function _includeTransform($aMatch) 
 	{
-		eval('$oTemplate = new \Venus\lib\Template($this->_aVar[\''.$aMatch[1].'\']'.$aMatch[2].'); $oTemplate->fetch(null, false);');
+		eval('$oTemplate = new \Apollina\Template($this->_aVar[\''.$aMatch[1].'\']'.$aMatch[2].'); $oTemplate->fetch(null, false);');
 		return '<?php include "'.$this->sTmpDirectory.'".md5($aProtectedVar[\''.$aMatch[1].'\']'.$aMatch[2].').".cac.php"; ?>';
 	}
 
@@ -668,9 +670,9 @@ class Template
     {
 		$sViewDirectory = str_replace('lib', 'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR, __DIR__);
 		$sViewDirectory = str_replace('\\', '\\\\\\', $sViewDirectory);
-		//echo '$oTemplate = new \Venus\lib\Template("src".DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR."View".DIRECTORY_SEPARATOR."'.$aMatch[1].'"); $oTemplate->fetch(null, false);';
-		eval('$oTemplate = new \Venus\lib\Template("src".DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR."View".DIRECTORY_SEPARATOR."'.$aMatch[1].'"); $oTemplate->fetch(null, false);');
-		//eval('$oTemplate = new \Venus\lib\Template("'.$aMatch[1].'"); $oTemplate->fetch(null, false);');
+		//echo '$oTemplate = new \Apollina\Template("src".DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR."View".DIRECTORY_SEPARATOR."'.$aMatch[1].'"); $oTemplate->fetch(null, false);';
+		eval('$oTemplate = new \Apollina\Template("src".DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR."View".DIRECTORY_SEPARATOR."'.$aMatch[1].'"); $oTemplate->fetch(null, false);');
+		//eval('$oTemplate = new \Apollina\Template("'.$aMatch[1].'"); $oTemplate->fetch(null, false);');
 		return '<?php include "'.$this->sTmpDirectory.'".md5("src".DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR."View".DIRECTORY_SEPARATOR."'.$aMatch[1].'").".cac.php"; ?>';
 	}
 

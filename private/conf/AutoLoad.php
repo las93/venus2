@@ -7,16 +7,15 @@
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
  * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
- * @version   	Release: 1.0.0
+ * @version   	Release: 2.0.0.0
  * @filesource	https://github.com/las93/venus2
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	2.0.0.0
  *
  * new version with SPL to have the capacity to add external autoload
  */
-
-spl_autoload_register(function ($sClassName) {
-
+spl_autoload_register(function ($sClassName)
+{
     $sClassName = ltrim($sClassName, '\\');
     $sFileName  = '';
     $sNamespace = '';
@@ -51,3 +50,8 @@ spl_autoload_register(function ($sClassName) {
     	}
     }
 });
+
+if (file_exists(str_replace('conf', '', __DIR__).'ext/vendor/autoload.php')) {
+    
+    include str_replace('conf', '', __DIR__).'ext/vendor/autoload.php';
+}

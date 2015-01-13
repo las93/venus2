@@ -1,0 +1,22 @@
+{
+    "name": "las93/apollina",
+    "type": "library",
+    "description": "Library to create template in your app",
+    "keywords": ["library"],
+    "homepage": "https://github.com/las93/apollina",
+    "authors": [
+        {
+            "name": "Paquet Judicaël",
+            "email": "las92i@homail.fr",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Apollina\\": "src/" }
+    },
+    "require": {
+        "mobiledetect/mobiledetectlib": ">=2.8.0",
+        "php": ">=5.3.0"
+    },
+    "minimum-stability": "dev"
+}

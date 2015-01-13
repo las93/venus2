@@ -19,7 +19,7 @@ use \Venus\core\Security as Security;
 use \Venus\lib\Cache as Cache;
 use \Venus\lib\PhpDoc as PhpDoc;
 use \Venus\lib\Request as Request;
-use \Venus\lib\Template as Template;
+use \Venus\lib\Vendor as Vendor;
 use \Venus\core\UrlManager as UrlManager;
 use \Venus\lib\Debug as Debug;
 use \Venus\lib\Log\LoggerAwareInterface as LoggerAwareInterface;
@@ -440,7 +440,7 @@ class Router implements LoggerAwareInterface
 			}
 			else if (isset($oRoute->template) && isset($oRoute->layout) && $oRoute->layout === true) {
 
-				$oLayout = new Template(DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.'Layout.tpl');
+			    $oLayout = Vendor::getVendor('Apollina\Template', DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.'Layout.tpl');
 
 				if (isset($oRoute->vars)) {
 
@@ -455,7 +455,7 @@ class Router implements LoggerAwareInterface
 			}
 			else if (isset($oRoute->template)) {
 
-				$oTemplate = new Template(DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$oRoute->template.'.tpl');
+				$oTemplate = Vendor::getVendor('Apollina\Template', DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$oRoute->template.'.tpl');
 
 				if (isset($oRoute->vars)) {
 
