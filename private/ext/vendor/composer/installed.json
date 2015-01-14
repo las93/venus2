@@ -97,5 +97,48 @@
         "keywords": [
             "library"
         ]
+    },
+    {
+        "name": "las93/attila",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/las93/attila.git",
+            "reference": "d483a3b36e7afc00085628fbf08c35c32a94afe1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/las93/attila/zipball/d483a3b36e7afc00085628fbf08c35c32a94afe1",
+            "reference": "d483a3b36e7afc00085628fbf08c35c32a94afe1",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2015-01-14 21:28:29",
+        "type": "orm",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Attila": "/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Paquet Judicaël",
+                "email": "las92i@homail.fr",
+                "role": "Developer"
+            }
+        ],
+        "description": "ORM in PHP",
+        "homepage": "https://github.com/las93/apollina",
+        "keywords": [
+            "orm"
+        ]
     }
 ]
