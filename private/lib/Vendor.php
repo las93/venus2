@@ -50,29 +50,20 @@ class Vendor
 	 */
 
 	public static function getVendor($sVendorName, $mParam = null) {
+ 
+	    $sClassName = $sVendorName;
+	    
+	    if ($sVendorName === 'Apollina\Template') { 
 
-		if (self::$_aCache === null) { self::$_aCache = include('ext/vendor/composer/autoload_classmap.php'); }
-		
-		if (isset(self::$_aCache[$sVendorName])) { 
-		    
-		    $sClassName = $sVendorName;
-		    
-		    if ($sVendorName === 'Apollina\Template') { 
-
-		        return new $sClassName($mParam, str_replace('lib', '', __DIR__));
-		    }
-		    else if (isset($mParam)) { 
-		        
-		        return new $sClassName($mParam);
-		    }
-		    else { 
-		        
-		        return new $sClassName;
-		    }
-		}
-		else { 
-		    
-		    return false;
-		}
+	        return new $sClassName($mParam, str_replace('lib', '', __DIR__));
+	    }
+	    else if (isset($mParam)) { 
+	        
+	        return new $sClassName($mParam);
+	    }
+	    else { 
+	        
+	        return new $sClassName;
+	    }
 	}
 }

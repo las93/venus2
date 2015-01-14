@@ -7,6 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Mobile_Detect' => $vendorDir . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
-    'Apollina\Template' => $vendorDir . '/apollina/Template.php',
-    'Attila\Orm' => $vendorDir . '/attila/Orm.php',
 );

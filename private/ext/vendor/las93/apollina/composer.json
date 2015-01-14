@@ -1,7 +1,9 @@
 {
-    "name": "las93/venus2",
-    "type": "PHP framework",
-    "description": "New framework in PHP",
+    "name": "las93/apollina",
+    "license": "MIT",
+    "version": "1.0.5",
+    "type": "library",
+    "description": "Library to create template in your app",
     "keywords": ["library"],
     "homepage": "https://github.com/las93/apollina",
     "authors": [
@@ -12,12 +14,9 @@
         }
     ],
     "autoload": {
-        "psr-0": { "Apollina": "" }
+        "psr-0": { "Apollina": "/" }
     },
     "require": {
-        "las93/apollina": "*",
-        "mobiledetect/mobiledetectlib": ">=2.8.0",
         "php": ">=5.3.0"
-    },
-    "minimum-stability": "dev"
+    }
 }

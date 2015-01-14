@@ -55,3 +55,6 @@ if (file_exists(str_replace('conf', '', __DIR__).'ext/vendor/autoload.php')) {
     
     include str_replace('conf', '', __DIR__).'ext/vendor/autoload.php';
 }
+
+var_dump(class_exists('Apollina\Template'));
+var_dump(class_exists('Detection\MobileDetect'));

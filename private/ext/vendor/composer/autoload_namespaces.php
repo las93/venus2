@@ -7,7 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
-    'Apollina' => array($vendorDir . '/apollina'),
-    'Attila' => array($vendorDir . '/attila'),
-    'Apollina\\' => array($baseDir . '/src'),
+    'Apollina' => array($baseDir . '/', $vendorDir . '/las93/apollina'),
 );

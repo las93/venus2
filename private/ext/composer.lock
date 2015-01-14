@@ -4,8 +4,49 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "44275094b3527679e11f543f00dfeccd",
+    "hash": "0c662e28a48d118e037d0abff2d4e979",
     "packages": [
+        {
+            "name": "las93/apollina",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/las93/apollina.git",
+                "reference": "9de5a17eddf257127dc2358cc573e86c57e2838f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/las93/apollina/zipball/9de5a17eddf257127dc2358cc573e86c57e2838f",
+                "reference": "9de5a17eddf257127dc2358cc573e86c57e2838f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Apollina": "/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paquet Judicaël",
+                    "email": "las92i@homail.fr",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Library to create template in your app",
+            "homepage": "https://github.com/las93/apollina",
+            "keywords": [
+                "library"
+            ],
+            "time": "2015-01-14 21:15:24"
+        },
         {
             "name": "mobiledetect/mobiledetectlib",
             "version": "dev-master",
