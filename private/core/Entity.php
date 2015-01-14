@@ -15,7 +15,7 @@
 namespace Venus\core;
 
 use \Venus\lib\Entity as LibEntity;
-use \Venus\lib\Orm as Orm;
+use \Venus\lib\Vendor as Vendor;
 use \Venus\lib\Orm\Where as Where;
 
 /**
@@ -115,7 +115,7 @@ abstract class Entity
 
 			$aPrimaryKey = array();	
 
-			$oOrm = new Orm;
+			$oOrm = new Vendor('Attila\Orm');
 			
 			$iResults = $oOrm->select(array('*'))
 							 ->from(preg_replace('/^.*\\\\([a-zA-Z0-9_]+)$/', '$1', get_called_class()));
@@ -148,7 +148,7 @@ abstract class Entity
 			}
 		}
 		
-		$oOrm = new Orm;
+		$oOrm = new Vendor('Attila\Orm');
 		
 		if ($bInsertMode === true) {
 			
@@ -204,7 +204,7 @@ abstract class Entity
 			}
 		}
 		
-		$oOrm = new Orm;
+		$oOrm = new Vendor('Attila\Orm');
 		
 		$oOrm->delete(preg_replace('/^.*\\\\([a-zA-Z0-9_]+)$/', '$1', get_called_class()))
 			 ->where($aPrimaryKey)

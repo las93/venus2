@@ -50,20 +50,23 @@ class Vendor
 	 */
 
 	public static function getVendor($sVendorName, $mParam = null) {
- 
-	    $sClassName = $sVendorName;
-	    
+
 	    if ($sVendorName === 'Apollina\Template') { 
 
-	        return new $sClassName($mParam, str_replace('lib', '', __DIR__));
+	        return new $sVendorName($mParam, str_replace('lib', '', __DIR__), 
+	            str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__).DIRECTORY_SEPARATOR);
+	    }
+	    else if ($sVendorName === 'Attila\Orm') { 
+
+	        return new $sVendorName($mParam, DB_CONF);
 	    }
 	    else if (isset($mParam)) { 
 	        
-	        return new $sClassName($mParam);
+	        return new $sVendorName($mParam);
 	    }
 	    else { 
 	        
-	        return new $sClassName;
+	        return new $sVendorName;
 	    }
 	}
 }

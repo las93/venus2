@@ -271,7 +271,7 @@ class Entity extends Controller
 namespace Venus\src\\'.$sPortail.'\Entity;
 
 use \Venus\core\Entity as Entity;
-use \Venus\lib\Orm as Orm;
+use \Venus\lib\Vendor as Vendor;
 
 /**
  * Entity to '.$sTableName.'

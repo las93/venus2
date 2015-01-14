@@ -16,7 +16,7 @@
 
 namespace Venus\core;
 
-use \Venus\lib\Orm as Orm;
+use \Venus\lib\Vendor as Vendor;
 use \Venus\lib\Entity as LibEntity;
 use \Venus\lib\Orm\Where as Where;
 
@@ -57,7 +57,7 @@ abstract class Model extends Mother {
 			$this->_sTableName = $sClassName;
 
 			$this->entity = function() use ($defaultEntity) { return new $defaultEntity; };
-			$this->orm = function() { return new Orm; };
+			$this->orm = function() { return new Vendor('Attila\Orm'); };
 			$this->where = function() { return new Where; };
 		}
 	}
