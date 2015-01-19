@@ -6,11 +6,11 @@
  * @category  	Attila
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
- * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @license   	https://github.com/las93/attila/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
  * @version   	Release: 1.0.0
- * @filesource	https://github.com/las93/venus2
+ * @filesource	https://github.com/las93/attila
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	1.0.0
  */
 namespace Attila;
 
@@ -20,11 +20,11 @@ namespace Attila;
  * @category  	Attila
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
- * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @license   	https://github.com/las93/attila/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
  * @version   	Release: 1.0.0
- * @filesource	https://github.com/las93/venus2
+ * @filesource	https://github.com/las93/attila
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	1.0.0
  */
 class Entity 
 {
@@ -39,13 +39,14 @@ class Entity
 	 * add the namespace
 	 *
 	 * @access public
-	 * @param  string $sOtherPortal select another portal
+	 * @param  string $sEntityNamespace set the entity namespace
 	 * @return void
 	 */
-	public static function setEntityNamespace($sOtherPortal = null) 
+	public static function setEntityNamespace($sEntityNamespace) 
 	{
-		if ($sOtherPortal === null) { self::$_sEntityNamespace = '\Venus\\src\\'.PORTAIL.'\Entity\\'; }
-		else { self::$_sEntityNamespace = '\Venus\\src\\'.$sOtherPortal.'\Entity\\'; }
+// 		if ($sOtherPortal === null) { self::$_sEntityNamespace = '\Venus\\src\\'.PORTAIL.'\Entity\\'; }
+// 		else { self::$_sEntityNamespace = '\Venus\\src\\'.$sOtherPortal.'\Entity\\'; }
+	    self::$_sEntityNamespace = $sEntityNamespace;
 	}
 
 	/**
@@ -63,20 +64,16 @@ class Entity
 	 * @param  array $aSql results in array by the sql array('id' => 1, 'title' => 'super');
 	 * @param  string $sPrefix prefixe for the sql returns
 	 * @param  bool $bAddOnStdClass add the parameter when there arent method of entity
-	 * @param  string $sOtherPortail change the default portal for the entity
+	 * @param  string $sEntityNamespace change the default portal for the entity
 	 * @return object
 	 */
-	public static function autoLoadEntity($sEntity, array $aSql, $sPrefix = '', $bAddOnStdClass = false, $sOtherPortail = null) 
+	public static function autoLoadEntity($sEntity, array $aSql, $sPrefix = '', $bAddOnStdClass = false, $sEntityNamespace = null) 
 	{
 		if ($sEntity === '') { return; }
 
-		if ($sOtherPortail === null) {
+		if ($sEntityNamespace !== null) {
 			
-			self::setEntityNamespace();
-		}
-		else {
-
-			self::setEntityNamespace($sOtherPortail);
+			self::setEntityNamespace($sEntityNamespace);
 		}
 			
 

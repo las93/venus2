@@ -108,15 +108,26 @@ class Template
 	private $_sBasePath = '';
 
 	/**
+	 * The base path of templates
+	 *
+	 * @access private
+	 * @var    string
+	 */
+	private $_sCachePath = '';
+
+	/**
 	 * constructor of class
 	 *
 	 * @access public
 	 * @param  string $sName name of the template
+	 * @param  string $sCachePath cache of the cache
 	 * @return \Apollina\Template
 	 */
-	public function __construct($sName = null, $sBasePathOfTemplate = null) 
+	public function __construct($sName = null, $sBasePathOfTemplate = null, $sCachePath = null) 
 	{
 	    if ($sBasePathOfTemplate !== null) { $this->_sBasePath = $sBasePathOfTemplate; }
+
+	    if ($sCachePath !== null) { $this->_sCachePath = $sCachePath; }
 	    
 	    if (class_exists('\Mobile_Detect')) {
 	        
@@ -307,18 +318,16 @@ class Template
 
 		if (!strstr($this->_sTemplateName, 'View')) {
 
-			$iFileModificationTime = filemtime(str_replace('lib', '', __DIR__).'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$this->_sTemplateName);
+			$iFileModificationTime = filemtime($this->_sBasePath.'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$this->_sTemplateName);
 		}
 		else {
 
-			$iFileModificationTime = filemtime(str_replace('lib', '', __DIR__).$this->_sTemplateName);
+			$iFileModificationTime = filemtime($this->_sBasePath.$this->_sTemplateName);
 		}
 
-		$sTmpDirectory = str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__).DIRECTORY_SEPARATOR;
+		if (file_exists($this->_sCachePath.$this->_getEncodeTemplateName($this->_sTemplateName).'.cac.php')) {
 
-		if (file_exists($sTmpDirectory.$this->_getEncodeTemplateName($this->_sTemplateName).'.cac.php')) {
-
-			$iCacheModificationTime = filemtime($sTmpDirectory.$this->_getEncodeTemplateName($this->_sTemplateName).'.cac.php');
+			$iCacheModificationTime = filemtime($this->_sCachePath.$this->_getEncodeTemplateName($this->_sTemplateName).'.cac.php');
 		}
 		else {
 
@@ -357,7 +366,7 @@ class Template
 		// {$foo[section_name]}? http://www.smarty.net/docs/en/language.syntax.variables.tpl
 		//*****************************************************************************************************************************
 
-		$sTmpDirectory = str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__).DIRECTORY_SEPARATOR;
+		$sTmpDirectory = $this->_sCachePath;
 		$sTmpDirectory = str_replace('\\', '\\\\\\', $sTmpDirectory);
 
 		$sViewDirectory = str_replace('lib', 'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR, __DIR__).DIRECTORY_SEPARATOR;

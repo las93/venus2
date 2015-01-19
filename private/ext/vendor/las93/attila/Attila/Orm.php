@@ -6,11 +6,11 @@
  * @category  	Attila
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
- * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @license   	https://github.com/las93/attila/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
  * @version   	Release: 1.0.0
- * @filesource	https://github.com/las93/venus2
+ * @filesource	https://github.com/las93/attila
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	1.0.0
  */
 namespace Attila;
 
@@ -24,21 +24,21 @@ use \Attila\Orm\Where as Where;
  * @category  	Attila
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
- * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @license   	https://github.com/las93/attila/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
  * @version   	Release: 1.0.0
- * @filesource	https://github.com/las93/venus2
+ * @filesource	https://github.com/las93/attila
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	1.0.0
  */
 class Orm
 {
 	/**
-	 * const of the default DB_CONF
+	 * default db to call
 	 *
 	 * @access private
 	 * @var    array
 	 */
-	const DB_CONF = DB_CONF;
+	private $_sDefaultDb = '';
 
 	/**
 	 * alias to Where object of the Orm
@@ -432,7 +432,7 @@ class Orm
 
 		if ($bDebug === true) { echo $sQuery;  }
 
-		$aResults = Db::connect(self::DB_CONF)->query($sQuery)->fetchAll(\PDO::FETCH_ASSOC);
+		$aResults = Db::connect($this->_sDefaultDb)->query($sQuery)->fetchAll(\PDO::FETCH_ASSOC);
 		$aReturn = array();
 		$i = 0;
 
@@ -493,7 +493,7 @@ class Orm
 
 		if (preg_match('/INSERT INTO/i', $sQuery)) {
 
-			$oDb = Db::connect(self::DB_CONF);
+			$oDb = Db::connect($this->_sDefaultDb);
 			$oDb->exec($sQuery);
 			$this->flush();
 			return $oDb->lastInsertId();
@@ -504,9 +504,33 @@ class Orm
 
 			if ($this->_mWhere instanceof Where) { $this->_mWhere->flush(); }
 
-			return Db::connect(self::DB_CONF)->exec($sQuery);
+			return Db::connect($this->_sDefaultDb)->exec($sQuery);
 		}
 
+	}
+
+	/**
+	 * save
+	 *
+	 * @access public
+	 * @param  string $sDefaultDb set the default db
+	 * @return \Attila\Orm
+	 */
+	public function setDefaultDb($sDefaultDb)
+	{
+		$this->_sDefaultDb = $sDefaultDb;
+		return $this;
+	}
+
+	/**
+	 * save
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function getDefaultDb($sDefaultDb)
+	{
+		return $this->_sDefaultDb;
 	}
 
 	/**
@@ -556,7 +580,7 @@ class Orm
 
 					if ($sValue !== null) {
 
-						$sQuery .= "`".$sKey."` = ".Db::connect(self::DB_CONF)->quote($sValue).",";
+						$sQuery .= "`".$sKey."` = ".Db::connect($this->_sDefaultDb)->quote($sValue).",";
 					}
 				}
 			}
@@ -579,7 +603,7 @@ class Orm
 
 			foreach ($this->_aValues as $sKey => $sValue) {
 
-				if (!is_array($sValue)) { $sQuery .= "".Db::connect(self::DB_CONF)->quote($sValue).","; }
+				if (!is_array($sValue)) { $sQuery .= "".Db::connect($this->_sDefaultDb)->quote($sValue).","; }
 			}
 
 			$sQuery = substr($sQuery, 0, -1);
@@ -591,7 +615,7 @@ class Orm
 			    
     			foreach ($this->_aOnDuplicateKeyUpdate as $sKey => $sValue) {
     			    
-    			    $sQuery .= " ".$sKey." = ".Db::connect(self::DB_CONF)->quote($sValue).",";
+    			    $sQuery .= " ".$sKey." = ".Db::connect($this->_sDefaultDb)->quote($sValue).",";
     			}
     			
     			$sQuery = substr($sQuery, 0, -1);
