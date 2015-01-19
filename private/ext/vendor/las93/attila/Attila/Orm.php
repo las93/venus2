@@ -6,16 +6,15 @@
  * @category  	Attila
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
- * @license   	https://github.com/las93/attila/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
  * @version   	Release: 1.0.0
- * @filesource	https://github.com/las93/attila
+ * @filesource	https://github.com/las93/venus2
  * @link      	https://github.com/las93
- * @since     	1.0.0
+ * @since     	1.0
  */
 namespace Attila;
 
 use \Attila\Db as Db;
-use \Attila\Db\Container as Container;
 use \Attila\Entity as Entity;
 use \Attila\Orm\Where as Where;
 
@@ -25,21 +24,21 @@ use \Attila\Orm\Where as Where;
  * @category  	Attila
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
- * @license   	https://github.com/las93/attila/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
  * @version   	Release: 1.0.0
- * @filesource	https://github.com/las93/attila
+ * @filesource	https://github.com/las93/venus2
  * @link      	https://github.com/las93
- * @since     	1.0.0
+ * @since     	1.0
  */
 class Orm
 {
 	/**
-	 * default db to call
+	 * const of the default DB_CONF
 	 *
 	 * @access private
 	 * @var    array
 	 */
-	private $_sDefaultDb = '';
+	const DB_CONF = DB_CONF;
 
 	/**
 	 * alias to Where object of the Orm
@@ -197,41 +196,12 @@ class Orm
 	 * constructor to create the symlink to \Attila\Orm\Where
 	 *
 	 * @access public
-	 * @param string $sName
-	 * @param string $sType
-	 * @param string $sHost
-	 * @param string $sUser
-	 * @param string $sPassword
-	 * @param string $sDbName
+	 * @param  array $aSelect select
 	 * @return \Attila\Orm
 	 */
-	public function __construct($sName = null, $sType = null, $sHost = null, $sUser = null, $sPassword = null, $sDbName = null) 
+	public function __construct() 
 	{
-	    if ($sName === null && $sType === null && $sHost === null && $sUser === null && $sPassword === null
-	        && $sDbName === null && Db::getContainer() !== null) {
-
-	        $this->where = new Where;
-	    }
-	    else if ($sName === null && $sType === null && $sHost === null && $sUser === null && $sPassword === null
-	        && $sDbName === null && Db::getContainer() === null) {
-
-	        throw new \Exception("Error: No connection define!");
-	    }
-	    else {
-
-	        $oContainer = new Container;
-	        
-	        $oContainer->setDbName($sDbName)
-	                   ->setHost($sHost)
-	                   ->setName($sName)
-	                   ->setPassword($sPassword)
-	                   ->setType($sType)
-	                   ->setUser($sUser);
-
-	        Db::setContainer($oContainer);
-	        $this->setDefaultDb($sName);
-            $this->where = new Where;
-	    }
+		$this->where = new Where;
 	}
 
 	/**
@@ -462,7 +432,7 @@ class Orm
 
 		if ($bDebug === true) { echo $sQuery;  }
 
-		$aResults = self::connect()->query($sQuery)->fetchAll(\PDO::FETCH_ASSOC);
+		$aResults = Db::connect(self::DB_CONF)->query($sQuery)->fetchAll(\PDO::FETCH_ASSOC);
 		$aReturn = array();
 		$i = 0;
 
@@ -523,7 +493,7 @@ class Orm
 
 		if (preg_match('/INSERT INTO/i', $sQuery)) {
 
-			$oDb = self::connect();
+			$oDb = Db::connect(self::DB_CONF);
 			$oDb->exec($sQuery);
 			$this->flush();
 			return $oDb->lastInsertId();
@@ -534,33 +504,9 @@ class Orm
 
 			if ($this->_mWhere instanceof Where) { $this->_mWhere->flush(); }
 
-			return self::connect()->exec($sQuery);
+			return Db::connect(self::DB_CONF)->exec($sQuery);
 		}
 
-	}
-
-	/**
-	 * save
-	 *
-	 * @access public
-	 * @param  string $sDefaultDb set the default db
-	 * @return \Attila\Orm
-	 */
-	public function setDefaultDb($sDefaultDb)
-	{
-		$this->_sDefaultDb = $sDefaultDb;
-		return $this;
-	}
-
-	/**
-	 * save
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function getDefaultDb($sDefaultDb)
-	{
-		return $this->_sDefaultDb;
 	}
 
 	/**
@@ -610,7 +556,7 @@ class Orm
 
 					if ($sValue !== null) {
 
-						$sQuery .= "`".$sKey."` = ".self::connect()->quote($sValue).",";
+						$sQuery .= "`".$sKey."` = ".Db::connect(self::DB_CONF)->quote($sValue).",";
 					}
 				}
 			}
@@ -633,7 +579,7 @@ class Orm
 
 			foreach ($this->_aValues as $sKey => $sValue) {
 
-				if (!is_array($sValue)) { $sQuery .= "".self::connect()->quote($sValue).","; }
+				if (!is_array($sValue)) { $sQuery .= "".Db::connect(self::DB_CONF)->quote($sValue).","; }
 			}
 
 			$sQuery = substr($sQuery, 0, -1);
@@ -645,7 +591,7 @@ class Orm
 			    
     			foreach ($this->_aOnDuplicateKeyUpdate as $sKey => $sValue) {
     			    
-    			    $sQuery .= " ".$sKey." = ".self::connect()->quote($sValue).",";
+    			    $sQuery .= " ".$sKey." = ".Db::connect(self::DB_CONF)->quote($sValue).",";
     			}
     			
     			$sQuery = substr($sQuery, 0, -1);
@@ -854,17 +800,5 @@ class Orm
 		$this->_aGroupBy = array();
 		$this->_iLimit = null;
 		return $this;
-	}
-
-	/**
-	 * connect on DB
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public static function connect()
-	{
-	    if (Db::getContainer() instanceof Container) { return Db::connect(Db::getContainer()); }
-	    else { echo "Error of connection"; }
 	}
 }
