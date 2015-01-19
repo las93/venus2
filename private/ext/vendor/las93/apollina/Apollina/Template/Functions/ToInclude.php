@@ -15,6 +15,8 @@
  */
 namespace Apollina\Template\Functions;
 
+use Apollina\Template as Template;
+
 /**
  * This class manage the Template
  *
@@ -39,25 +41,21 @@ class ToInclude
 	 */
 	public function replaceBy($aParams = array()) 
 	{
-		if (!strstr($aParams['real_name'], '\\') && !strstr($aParams['real_name'], '/')) {
+		$aParams['to_include'] = $aParams['real_name'];
+		
+		$sViewDirectory = Template::getBasePath();
+		$sCacheDirectory = Template::getCachePath();
 
-			$aParams['to_include'] = 'src/'.PORTAIL.'/View/'.$aParams['real_name'];
-			$aParams['real_name'] = ''.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$aParams['real_name'];
+		if (class_exists('\Mobile_Detect')) {
+		    
+		    $oMobileDetect = new \Mobile_Detect;
 		}
 		else {
-			
-			$aParams['to_include'] = $aParams['real_name'];
+		    
+		    $oMobileDetect = null;
 		}
-		
-		$sViewDirectory = str_replace('lib'.DIRECTORY_SEPARATOR.'Template'.DIRECTORY_SEPARATOR.'Functions',
-			'src/'.PORTAIL.'/View/', __DIR__);
 
-		$sCacheDirectory = str_replace('private'.DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'Template'.DIRECTORY_SEPARATOR.'Functions',
-						'data/cache/', __DIR__);
-
-		$oMobileDetect = new \Mobile_Detect;
-
-		if ($oMobileDetect->isMobile() && file_exists(str_replace('lib/Template/Functions', '../../..', __DIR__).str_replace('.tpl', 'Mobile.tpl', $aParams['real_name']))) {
+		if ($oMobileDetect !== null && $oMobileDetect->isMobile() && file_exists(str_replace('lib/Template/Functions', '../../..', __DIR__).str_replace('.tpl', 'Mobile.tpl', $aParams['real_name']))) {
 
 			eval('$oTemplate = new \Apollina\Template("'.str_replace('.tpl', 'Mobile.tpl', $aParams['real_name']).'"); $oTemplate->fetch(null, false);');
 		}
@@ -67,12 +65,12 @@ class ToInclude
 		}
 
 		if (strstr($aParams['file'], '$_aProtectedVar[\'model\']')) {
-		//return '<?php include "'.$sCacheDirectory.'".md5('.preg_replace('#^.*?([^/\\\\]+)$#', '$1', $aParams['file']).').".cac.php"; ?'.'>';
-			return '<?php '.$aParams['file'].' = str_replace("\\\\", "/", '.$aParams['file'].'); if (!strstr('.$aParams['file'].', \'/\')) { '.$aParams['file'].' = "src/'.PORTAIL.'/View/".'.$aParams['file'].'; } $oMobileDetect = new \Mobile_Detect; if ($oMobileDetect->isMobile()) { if (file_exists(\''.$sCacheDirectory.'\'.md5('.str_replace('.tpl', 'Mobile.tpl',$aParams['file']).').".cac.php")) { include \''.$sCacheDirectory.'\'.md5('.str_replace('.tpl', 'Mobile.tpl',$aParams['file']).').".cac.php"; } else { include \''.$sCacheDirectory.'\'.md5('.$aParams['file'].').".cac.php"; }} else { include \''.$sCacheDirectory.'\'.md5('.$aParams['file'].').".cac.php"; } ?'.'>';
+
+		    return '<?php '.$aParams['file'].' = str_replace("\\\\", "/", '.$aParams['file'].'); if (!strstr('.$aParams['file'].', \'/\')) { '.$aParams['file'].' = "src/'.PORTAIL.'/View/".'.$aParams['file'].'; } if (class_exists(\'\Mobile_Detect\')) { $oMobileDetect = new \Mobile_Detect; } else { $oMobileDetect = null; } if ($oMobileDetect !== null && $oMobileDetect->isMobile()) { if (file_exists(\''.$sCacheDirectory.'\'.md5('.str_replace('.tpl', 'Mobile.tpl',$aParams['file']).').".cac.php")) { include \''.$sCacheDirectory.'\'.md5('.str_replace('.tpl', 'Mobile.tpl',$aParams['file']).').".cac.php"; } else { include \''.$sCacheDirectory.'\'.md5('.$aParams['file'].').".cac.php"; }} else { include \''.$sCacheDirectory.'\'.md5('.$aParams['file'].').".cac.php"; } ?'.'>';
 		}
 		else {
 
-			return '<?php $oMobileDetect = new \Mobile_Detect; if ($oMobileDetect->isMobile()) { if (file_exists("'.$sCacheDirectory.'".md5("'.str_replace('.tpl', 'Mobile.tpl', $aParams['to_include']).'").".cac.php")) { include "'.$sCacheDirectory.'".md5("'.str_replace('.tpl', 'Mobile.tpl', $aParams['to_include']).'").".cac.php"; } else { include "'.$sCacheDirectory.'".md5("'.$aParams['to_include'].'").".cac.php"; } } else { include "'.$sCacheDirectory.'".md5("'.$aParams['to_include'].'").".cac.php"; } ?'.'>';
+			return '<?php if (class_exists(\'\Mobile_Detect\')) { $oMobileDetect = new \Mobile_Detect; } else { $oMobileDetect = null; } if ($oMobileDetect !== null && $oMobileDetect->isMobile()) { if (file_exists("'.$sCacheDirectory.'".md5("'.str_replace('.tpl', 'Mobile.tpl', $aParams['to_include']).'").".cac.php")) { include "'.$sCacheDirectory.'".md5("'.str_replace('.tpl', 'Mobile.tpl', $aParams['to_include']).'").".cac.php"; } else { include "'.$sCacheDirectory.'".md5("'.$aParams['to_include'].'").".cac.php"; } } else { include "'.$sCacheDirectory.'".md5("'.$aParams['to_include'].'").".cac.php"; } ?'.'>';
 		}
 	}
 }

@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 use \Venus\core\Config as Config;
@@ -34,16 +33,14 @@ use \Venus\lib\Cache\Mock as Mock;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Cache {
-
+class Cache
+{
 	/**
 	 * type of cache (memcache/file)
 	 *
 	 * @access private
 	 * @var    string
 	 */
-
 	private static $_sTypeOfCache = 'file';
 
 	/**
@@ -52,7 +49,6 @@ class Cache {
 	 * @access private
 	 * @var    array
 	 */
-
 	private static $_aCache = array();
 
 	/**
@@ -62,9 +58,8 @@ class Cache {
 	 * @param  string $sCacheName name of cache
 	 * @return object
 	 */
-
-	public static function setCacheType($sCacheName) {
-
+	public static function setCacheType($sCacheName)
+	{
 		if ($sCacheName === 'file') { $this->_sTypeOfCache = 'file'; }
 		else if ($sCacheName === 'memcache') { $this->_sTypeOfCache = 'memcache'; }
 		else if ($sCacheName === 'apc') { $this->_sTypeOfCache = 'apc'; }
@@ -82,9 +77,8 @@ class Cache {
 	 * @param  int $iExpire expiration of cache
 	 * @return void
 	 */
-
-	public static function set($sName, $mValue, $iFlag = 0, $iExpire = 0) {
-
+	public static function set($sName, $mValue, $iFlag = 0, $iExpire = 0)
+	{
 		return self::_getCacheObject()->set($sName, $mValue, $iFlag, $iExpire);
 	}
 
@@ -97,9 +91,8 @@ class Cache {
 	 * @param  int $iTimeout expiration of cache
 	 * @return void
 	 */
-
-	public static function get($sName, &$iFlags = null, $iTimeout = 0) {
-
+	public static function get($sName, &$iFlags = null, $iTimeout = 0)
+	{
 		return self::_getCacheObject()->get($sName, $iFlags, $iTimeout);
 	}
 
@@ -110,9 +103,8 @@ class Cache {
 	 * @param  string $sName name of the session
 	 * @return boolean
 	 */
-
-	public static function delete($sName) {
-
+	public static function delete($sName)
+	{
 		return self::_getCacheObject()->delete($sName);
 	}
 
@@ -123,9 +115,8 @@ class Cache {
 	 * @param  string $sName name of the session
 	 * @return boolean
 	 */
-
-	public static function flush() {
-
+	public static function flush()
+	{
 		return self::_getCacheObject()->flush();
 	}
 
@@ -135,9 +126,8 @@ class Cache {
 	 * @access private
 	 * @return object
 	 */
-
-	private static function _getCacheObject() {
-
+	private static function _getCacheObject()
+	{
 		if (self::$_sTypeOfCache === 'file') {
 
 			if (!isset(self::$_aCache['file'])) { self::$_aCache['file'] = new CacheFile; }

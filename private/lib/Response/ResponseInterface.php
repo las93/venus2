@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Response;
 
 /**
@@ -29,15 +28,13 @@ namespace Venus\lib\Response;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-interface ResponseInterface {
-
+interface ResponseInterface
+{
 	/**
 	 * translate the content
 	 *
 	 * @access public
 	 * @param  mixed $mContent content
 	 */
-
 	public static function translate($mContent);
 }

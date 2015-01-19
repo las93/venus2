@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 /**
@@ -27,63 +26,54 @@ namespace Venus\lib;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Upload {
-
+class Upload
+{
 	/**
 	 * max size of upload
 	 * @var int
 	 */
-
 	private $_iMaxFile = 100000;
 
 	/**
 	 * error while upload
 	 * @var string
 	 */
-
 	private $_sError = '';
 
 	/**
 	 * array of extensions allowed
 	 * @var array
 	 */
-
 	private $_aAllowExtension = array();
 
 	/**
 	 * final extension
 	 * @var string
 	 */
-
 	private $_sExtension = null;
 
 	/**
 	 * height of image
 	 * @var int
 	 */
-
 	private $_iHeight = null;
 
 	/**
 	 * width of image
 	 * @var int
 	 */
-
 	private $_iWidth = null;
 
 	/**
 	 * image name
 	 * @var string
 	 */
-
 	private $_sName = null;
 
 	/**
 	 * if the crop or resize
 	 * @var bool
 	 */
-
 	private $_bProportion = true;
 
 	/**
@@ -93,9 +83,8 @@ class Upload {
 	 * @param  string $sFile
 	 * @return bool|object
 	 */
-
-	public function upload($sFile) {
-
+	public function upload($sFile)
+	{
 		if ($_FILES[$sFile]['error'] > 0) {
 
 			$this->_sError = "Error while the upload";
@@ -158,9 +147,8 @@ class Upload {
 	 * @param  int $iMaxFile
 	 * @return \Venus\lib\Upload
 	 */
-
-	public function setMaxSize($iMaxFile) {
-
+	public function setMaxSize($iMaxFile)
+	{
 		$this->_iMaxFile = $iMaxFile;
 		return $this;
 	}
@@ -172,9 +160,8 @@ class Upload {
 	 * @param  array $aAllowExtension
 	 * @return \Venus\lib\Upload
 	 */
-
-	public function setAllowExtension(array $aAllowExtension) {
-
+	public function setAllowExtension(array $aAllowExtension)
+	{
 		$this->_aAllowExtension = $aAllowExtension;
 		return $this;
 	}
@@ -186,9 +173,8 @@ class Upload {
 	 * @param  array $sExtension
 	 * @return \Venus\lib\Upload
 	 */
-
-	public function setExtension($sExtension) {
-
+	public function setExtension($sExtension)
+	{
 		$this->_sExtension = $sExtension;
 		return $this;
 	}
@@ -200,9 +186,8 @@ class Upload {
 	 * @param  int $iHeight
 	 * @return \Venus\lib\Upload
 	 */
-
-	public function setHeight($iHeight) {
-
+	public function setHeight($iHeight)
+	{
 		$this->_iHeight = $iHeight;
 		return $this;
 	}
@@ -214,9 +199,8 @@ class Upload {
 	 * @param  int $iWidth
 	 * @return \Venus\lib\Upload
 	 */
-
-	public function setWidth($iWidth) {
-
+	public function setWidth($iWidth)
+	{
 		$this->_iWidth = $iWidth;
 		return $this;
 	}
@@ -228,9 +212,8 @@ class Upload {
 	 * @param  tring $sName
 	 * @return \Venus\lib\Upload
 	 */
-
-	public function setName($sName) {
-
+	public function setName($sName)
+	{
 		$this->_sName = $sName;
 		return $this;
 	}

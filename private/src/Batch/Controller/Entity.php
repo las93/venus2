@@ -5,13 +5,13 @@
  *
  * @category  	src
  * @package   	src\Batch\Controller
- * @author    	Judicaël Paquet <paquet.judicael@iscreenway.com>
- * @copyright 	Copyright (c) 2013-2014 iScreenway FR/VN Inc. (http://www.iscreenway.com)
+ * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
+ * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
  * @license   	http://www.iscreenway.com/framework/licence.php Tout droit réservé à http://www.iscreenway.com
- * @version   	Release: 1.0.0
- * @filesource	http://www.iscreenway.com/framework/download.php
- * @link      	http://www.iscreenway.com
- * @since     	1.0
+ * @version   	Release: 2.0.0
+ * @filesource	https://github.com/las93/venus2
+ * @link      	https://github.com/las93
+ * @since     	2.0.0
  *
  * @tutorial    You could launch this Batch in /private/
  * 				php launch.php scaffolding -p [portal]
@@ -22,7 +22,7 @@
 namespace Venus\src\Batch\Controller;
 
 use \Venus\core\Config as Config;
-use \Attila\Batch\Entity as Entity;
+use \Attila\Batch\Entity as BatchEntity;
 use \Venus\src\Batch\common\Controller as Controller;
 
 /**
@@ -30,13 +30,13 @@ use \Venus\src\Batch\common\Controller as Controller;
  *
  * @category  	src
  * @package   	src\Batch\Controller
- * @author    	Judicaël Paquet <paquet.judicael@iscreenway.com>
- * @copyright 	Copyright (c) 2013-2014 iScreenway FR/VN Inc. (http://www.iscreenway.com)
+ * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
+ * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
  * @license   	http://www.iscreenway.com/framework/licence.php Tout droit réservé à http://www.iscreenway.com
- * @version   	Release: 1.0.0
- * @filesource	http://www.iscreenway.com/framework/download.php
- * @link      	http://www.iscreenway.com
- * @since     	1.0
+ * @version   	Release: 2.0.0
+ * @filesource	https://github.com/las93/venus2
+ * @link      	https://github.com/las93
+ * @since     	2.0.0
  */
 class Entity extends Controller
 {
@@ -49,7 +49,6 @@ class Entity extends Controller
 	 * @param  string $sRewrite rewrite or not the file (no/yes)
 	 * @return void
 	 */
-
 	public function runScaffolding(array $aOptions = array())
 	{
 	    if (isset($aOptions['p'])) { $sPortail = $aOptions['p']; }
@@ -57,7 +56,14 @@ class Entity extends Controller
 	    
 	    $aOptions['b'] = json_encode(Config::get('Db', $aOptions['p']));
 	    
-	    $oBatch = new Entity;
+	    $aOptions['g'] = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$aOptions['p'].DIRECTORY_SEPARATOR.'Entity'.DIRECTORY_SEPARATOR;
+	    
+	    $aOptions['h'] = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$aOptions['p'].DIRECTORY_SEPARATOR.'Model'.DIRECTORY_SEPARATOR;
+	    
+	    define('ENTITY_NAMESPACE', '\Venus\src\\'.$aOptions['p'].'\Entity');
+	    define('MODEL_NAMESPACE', '\Venus\src\\'.$aOptions['p'].'\Model');
+	    
+	    $oBatch = new BatchEntity;
 	    $oBatch->runScaffolding($aOptions);
 	}
 }

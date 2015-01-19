@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\core;
 
 use \Venus\lib\PhpDoc as PhpDoc;
@@ -31,30 +30,32 @@ use \Venus\lib\PhpDoc as PhpDoc;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Mother implements \ArrayAccess {
-
+class Mother implements \ArrayAccess
+{
 	/**
 	 * containts the closures
 	 * @var array
 	 */
-
 	private $_aClosures = array();
 
 	/**
 	 * containts data type
 	 * @var array
 	 */
-
 	private $_aDataType = array();
 
 	/**
 	 * containts datas
 	 * @var array
 	 */
-
 	protected $_aData = array();
 
+	/**
+	 * array of filter
+	 *
+	 * @access private
+	 * @var    array
+	 */
 	private $_aFilterVar = array(
 		'int' => FILTER_VALIDATE_INT,
 		'integer' => FILTER_VALIDATE_INT,
@@ -76,9 +77,8 @@ class Mother implements \ArrayAccess {
 	 * @param  unknown_type $mKey
 	 * @return void
 	 */
-
-	public function __get($mKey) {
-
+	public function __get($mKey)
+	{
 		if (isset($this->_aDataType[$mKey])) {
 
 			if (!is_callable($data = $this->_aDataType[$mKey][$mKey]) || (is_string($data) && function_exists($data))) {
@@ -106,9 +106,8 @@ class Mother implements \ArrayAccess {
 	 * @param  unknown_type $mKey
 	 * @return void
 	 */
-
-	public function __set($mKey, $mValue) {
-
+	public function __set($mKey, $mValue)
+	{
 		if (is_callable($mValue) && !is_string($mValue)) {
 
 			$this->_aClosures[$mKey] = $mValue;
@@ -128,9 +127,8 @@ class Mother implements \ArrayAccess {
 	 * @param  mixed $mKey
 	 * @return void
 	 */
-
-	public function __unset($mKey) {
-
+	public function __unset($mKey)
+	{
 		if ($this->__isset($mKey)) {
 
 			unset($this->_aDataType[$mKey][$mKey]);
@@ -145,9 +143,8 @@ class Mother implements \ArrayAccess {
 	 * @param  mixed $mKey
 	 * @return void
 	 */
-
-	public function __isset($mKey) {
-
+	public function __isset($mKey)
+	{
 		return isset($this->_aDataType[$mKey]);
 	}
 
@@ -158,9 +155,8 @@ class Mother implements \ArrayAccess {
 	 * @param  mixed $mKey
 	 * @return mixed
 	 */
-
-	function offsetExists($offset) {
-
+	function offsetExists($offset)
+	{
 		return $this->__isset($offset);
 	}
 
@@ -171,9 +167,8 @@ class Mother implements \ArrayAccess {
 	 * @param  mixed $mKey
 	 * @return mixed
 	 */
-
-	public function offsetGet($offset) {
-
+	public function offsetGet($offset)
+	{
 		return $this->__get($offset);
 	}
 
@@ -184,9 +179,8 @@ class Mother implements \ArrayAccess {
 	 * @param  mixed $mKey
 	 * @return void
 	 */
-
-	public function offsetSet($offset, $mValue) {
-
+	public function offsetSet($offset, $mValue)
+	{
 		$this->__set($offset, $mValue);
 	}
 
@@ -197,9 +191,8 @@ class Mother implements \ArrayAccess {
 	 * @param  mixed $mKey
 	 * @return void
 	 */
-
-	public function offsetUnset($offset) {
-
+	public function offsetUnset($offset)
+	{
 		$this->__unset($offset);
 	}
 
@@ -211,9 +204,8 @@ class Mother implements \ArrayAccess {
 	 * @param  array $aArguments
 	 * @return
 	 */
-
-	public function __call($sName, $aArguments) {
-
+	public function __call($sName, $aArguments)
+	{
 		if (method_exists($this, $sName)) {
 
 			$aPhpDoc = PhpDoc::getPhpDocOfMethod(get_called_class(), $sName);

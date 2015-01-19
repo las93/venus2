@@ -5,20 +5,19 @@
  *
  * @category  	src
  * @package   	src\Batch\Controller
- * @author    	Judicaël Paquet <paquet.judicael@iscreenway.com>
- * @copyright 	Copyright (c) 2013-2014 iScreenway FR/VN Inc. (http://www.iscreenway.com)
- * @license   	http://www.iscreenway.com/framework/licence.php Tout droit réservé à http://www.iscreenway.com
- * @version   	Release: 1.0.0
- * @filesource	http://www.iscreenway.com/framework/download.php
- * @link      	http://www.iscreenway.com
- * @since     	1.0
+ * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
+ * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
+ * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @version   	Release: 2.0.0
+ * @filesource	https://github.com/las93/venus2
+ * @link      	https://github.com/las93
+ * @since     	2.0.0
  *
  * @tutorial    You could launch this Batch in /private/
  * 				php launch.php create_project -p [portal]
  * 				-p [portal] => it's the name where you want add your entities and models
  * 					by default, it's Batch
  */
-
 namespace Venus\src\Batch\Controller;
 
 use \Venus\src\Batch\common\Controller as Controller;
@@ -28,17 +27,16 @@ use \Venus\src\Batch\common\Controller as Controller;
  *
  * @category  	src
  * @package   	src\Batch\Controller
- * @author    	Judicaël Paquet <paquet.judicael@iscreenway.com>
- * @copyright 	Copyright (c) 2013-2014 iScreenway FR/VN Inc. (http://www.iscreenway.com)
- * @license   	http://www.iscreenway.com/framework/licence.php Tout droit réservé à http://www.iscreenway.com
- * @version   	Release: 1.0.0
- * @filesource	http://www.iscreenway.com/framework/download.php
- * @link      	http://www.iscreenway.com
- * @since     	1.0
+ * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
+ * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
+ * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @version   	Release: 2.0.0
+ * @filesource	https://github.com/las93/venus2
+ * @link      	https://github.com/las93
+ * @since     	2.0.0
  */
-
-class Generator extends Controller {
-
+class Generator extends Controller
+{
 	/**
 	 * run the batch to create a project in this framework
 	 * @tutorial launch.php create_project
@@ -47,9 +45,8 @@ class Generator extends Controller {
 	 * @param  string $sPortail name of the portail that you would create
 	 * @return void
 	 */
-
-	public function create(array $aOptions = array()) {
-
+	public function create(array $aOptions = array())
+	{
 		/**
 		 * option -p [portail]
 		 */
@@ -92,7 +89,6 @@ class Generator extends Controller {
  * @link      	'.LINK.'
  * @since     	1.0
  */
-
 const PORTAIL = \''.$sPortail.'\';
 
 set_include_path(get_include_path().PATH_SEPARATOR.str_replace(\'public\'.DIRECTORY_SEPARATOR.PORTAIL, \'private\', __DIR__));

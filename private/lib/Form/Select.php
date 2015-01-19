@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Form;
 
 /**
@@ -29,16 +28,14 @@ namespace Venus\lib\Form;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Select extends Common {
-
+class Select extends Common
+{
 	/**
 	 * the name of element
 	 *
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_aOptions = null;
 
 	/**
@@ -47,7 +44,6 @@ class Select extends Common {
 	 * @access private
 	 * @var    string
 	 */
-	
 	private $_sLabel = null;
 	
 	/**
@@ -56,7 +52,6 @@ class Select extends Common {
 	 * @access private
 	 * @var    string
 	 */
-	
 	private $_sValue = null;
 	
 	/**
@@ -69,9 +64,8 @@ class Select extends Common {
 	 * @param  string $sValue value of input
 	 * @return \Venus\lib\Form\Input
 	 */
-
-	public function __construct($sName, $aOptions, $sLabel = null, $sValue = null) {
-
+	public function __construct($sName, $aOptions, $sLabel = null, $sValue = null)
+	{
 		$this->setName($sName);
 		$this->setOptions($aOptions);
 		$this->setValue($sValue);
@@ -84,9 +78,8 @@ class Select extends Common {
 	 * @access public
 	 * @return array
 	 */
-
-	public function getOptions() {
-
+	public function getOptions()
+	{
 		return $this->_aOptions;
 	}
 
@@ -97,9 +90,8 @@ class Select extends Common {
 	 * @param  array $aOptions Options of input;
 	 * @return object
 	 */
-
-	public function setOptions(array $aOptions) {
-
+	public function setOptions(array $aOptions)
+	{
 		$this->_aOptions = $aOptions;
 		return $this;
 	}
@@ -110,9 +102,8 @@ class Select extends Common {
 	 * @access public
 	 * @return string
 	 */
-	
-	public function getValue() {
-	
+	public function getValue()
+	{
 		return $this->_sValue;
 	}
 	
@@ -123,9 +114,8 @@ class Select extends Common {
 	 * @param  string $sValue Value of input;
 	 * @return \Venus\lib\Form\Input
 	 */
-	
-	public function setValue($sValue) {
-	
+	public function setValue($sValue)
+	{
 		$this->_sValue = $sValue;
 		return $this;
 	}
@@ -136,9 +126,8 @@ class Select extends Common {
 	 * @access public
 	 * @return string
 	 */
-	
-	public function getLabel() {
-	
+	public function getLabel()
+	{
 		return $this->_sLabel;
 	}
 	
@@ -149,9 +138,8 @@ class Select extends Common {
 	 * @param  string $sLabel Label of input;
 	 * @return \Venus\lib\Form\Input
 	 */
-	
-	public function setLabel($sLabel) {
-	
+	public function setLabel($sLabel)
+	{
 		$this->_sLabel = $sLabel;
 		return $this;
 	}
@@ -162,9 +150,8 @@ class Select extends Common {
 	 * @access public
 	 * @return string
 	 */
-
-	public function fetch() {
-
+	public function fetch()
+	{
 		$sContent = '';
 		
 		if ($this->getLabel() !== null) { $sContent .= '<label>'.$this->getLabel().'</label> '; }

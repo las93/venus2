@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Cache;
 
 use \Venus\core\Exception as Exception;
@@ -32,9 +31,8 @@ use \Redis as RealRedis;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Redis extends RealRedis implements CacheInterface {
-
+class Redis extends RealRedis implements CacheInterface
+{
     /**
      * constructor with the connection to Redis
      *
@@ -44,9 +42,8 @@ class Redis extends RealRedis implements CacheInterface {
      * @param  int $iTimeout expiration of cache
      * @return mixed
      */
-    
-    public function __construct($oConf) {
-
+    public function __construct($oConf)
+    {
     	if (!$this->connect($oConf->host, $oConf->port)) {
     	    
     		throw new Exception('Redis server unavailable');
@@ -65,9 +62,8 @@ class Redis extends RealRedis implements CacheInterface {
 	 * @param  int $iTimeout expiration of cache
 	 * @return mixed
 	 */
-
-	public function get($sName, &$iFlags = null, $iTimeout = 0) {
-	    
+	public function get($sName, &$iFlags = null, $iTimeout = 0)
+	{ 
 	    return parent::get($sName);
 	}
 	
@@ -81,9 +77,8 @@ class Redis extends RealRedis implements CacheInterface {
 	 * @param  int $iExpire expiration of cache
 	 * @return \Venus\lib\Cache\Apc
 	 */
-
-	public function set($sName, $mValue, $iFlag = 0, $iExpire = false) {
-	    
+	public function set($sName, $mValue, $iFlag = 0, $iExpire = false)
+	{ 
 		if ($iExpire === false) {
 			
 			return parent::set($sName, $mValue);
@@ -100,9 +95,8 @@ class Redis extends RealRedis implements CacheInterface {
 	 * @access public
 	 * @return mixed
 	 */
-
-	public function flush() {
-
+	public function flush()
+	{
 		return false;
 	}
 	
@@ -113,10 +107,9 @@ class Redis extends RealRedis implements CacheInterface {
 	 * @param  string $sName name of the session
 	 * @return mixed
 	 */
-	
-	public function delete($sName) {
-	
-        return $this->del($sName);
+	public function delete($sName)
+	{
+		return $this->del($sName);
 	}
 
 	/**
@@ -125,9 +118,8 @@ class Redis extends RealRedis implements CacheInterface {
 	 * @access public
 	 * @return mixed
 	 */
-	
-	public function __sleep() {
-	    
+	public function __sleep()
+	{ 
 		$this->close();
 	}
 
@@ -141,9 +133,8 @@ class Redis extends RealRedis implements CacheInterface {
 	 * @param  int $iExpire expiration of cache
 	 * @return mixed
 	 */
-	
-	public function add($sName, $mValue, $iExpire = false) {
-	    
+	public function add($sName, $mValue, $iExpire = false)
+	{    
 		return $this->set($sName, $mValue, 0, $iExpire);
 	}
 }

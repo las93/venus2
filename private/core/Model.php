@@ -8,17 +8,16 @@
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
  * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
- * @version   	Release: 1.0.0
+ * @version   	Release: 2.0.0
  * @filesource	https://github.com/las93/venus2
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	2.0.0
  */
-
 namespace Venus\core;
 
 use \Venus\lib\Vendor as Vendor;
-use \Venus\lib\Entity as LibEntity;
-use \Venus\lib\Orm\Where as Where;
+use \Attila\Entity as LibEntity;
+use \Attila\Orm\Where as Where;
 
 /**
  * Model Manager
@@ -28,23 +27,21 @@ use \Venus\lib\Orm\Where as Where;
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
  * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
- * @version   	Release: 1.0.0
+ * @version   	Release: 2.0.0
  * @filesource	https://github.com/las93/venus2
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	2.0.0
  */
-
-abstract class Model extends Mother {
-
+abstract class Model extends Mother
+{
 	/**
 	 * Constructor
 	 *
 	 * @access public
 	 * @return object
 	 */
-
-	public function __construct() {
-
+	public function __construct()
+	{
 		$aClass = explode('\\', get_called_class());
 		$sClassName = $aClass[count($aClass) - 1];
 		$sNamespaceName = str_replace('\\'.$aClass[count($aClass) - 1], '', get_called_class());
@@ -57,7 +54,7 @@ abstract class Model extends Mother {
 			$this->_sTableName = $sClassName;
 
 			$this->entity = function() use ($defaultEntity) { return new $defaultEntity; };
-			$this->orm = function() { return new Vendor('Attila\Orm'); };
+			$this->orm = function() { return Vendor::getVendor('Attila\Orm'); };
 			$this->where = function() { return new Where; };
 		}
 	}
@@ -69,9 +66,8 @@ abstract class Model extends Mother {
 	 * @param  object $oEntityCriteria
 	 * @return void
 	 */
-
-	public function find($oEntityCriteria) {
-
+	public function find($oEntityCriteria)
+	{
 		$this->_checkEntity($oEntityCriteria);
 		$aEntity = get_object_vars(LibEntity::getRealEntity($oEntityCriteria));
 
@@ -96,9 +92,8 @@ abstract class Model extends Mother {
 	 * @param  array $aArguments
 	 * @return mixed
 	 */
-
-	public function __call($sName, $aArguments) {
-
+	public function __call($sName, $aArguments) 
+	{
 		/**
 		 * @example	$oModel->findOneByid(12);
 		 * 			$oModel->findByfirstname('george');
@@ -176,9 +171,8 @@ abstract class Model extends Mother {
      * @access private
      * @return void
      */
-
-    public function findAll() {
-
+    public function findAll() 
+    {
     	$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
     	
     	$aResults = $this->orm
@@ -198,9 +192,8 @@ abstract class Model extends Mother {
      *
      * @example	$oModel->findOneBy(array('id' => 12);
      */
-
-    public function findOneBy(array $aArguments) {
-
+    public function findOneBy(array $aArguments)
+    {
     	$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
     	
     	$aResults = $this->orm
@@ -223,9 +216,8 @@ abstract class Model extends Mother {
      *
      * @example	$oModel->findBy(array('id' => 12);
      */
-
-    public function findBy(array $aArguments) {
-
+    public function findBy(array $aArguments)
+    {
     	$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
     	
     	$aResults = $this->orm
@@ -246,9 +238,8 @@ abstract class Model extends Mother {
      *
      * @example	$oModel->findOneBy(array('id' => 12);
      */
-
-    public function findOneOrderBy(array $aArguments) {
-
+    public function findOneOrderBy(array $aArguments)
+    {
     	$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
     	 
     	$aResults = $this->orm
@@ -270,9 +261,8 @@ abstract class Model extends Mother {
      *
      * @example	$oModel->findOrderBy(array('id DESC');
      */
-
-    public function findOrderBy(array $aArguments) {
-
+    public function findOrderBy(array $aArguments)
+    {
     	$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
     	
     	$aResults = $this->orm
@@ -291,9 +281,8 @@ abstract class Model extends Mother {
 	 * @param  object $oEntityCriteria
 	 * @return void
 	 */
-
-	public function get($oEntityCriteria = null) {
-
+	public function get($oEntityCriteria = null)
+	{
 		$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
 		
 		if ($oEntityCriteria !== null) {
@@ -331,9 +320,8 @@ abstract class Model extends Mother {
 	 * @param  object $oEntityCriteria
 	 * @return void
 	 */
-
-	public function update($oEntityCriteria) {
-
+	public function update($oEntityCriteria)
+	{
 		$this->_checkEntity($oEntityCriteria);
 
 		if ($oEntityCriteria !== null) {
@@ -381,9 +369,8 @@ abstract class Model extends Mother {
 	 * @param  object $oEntityCriteria
 	 * @return void
 	 */
-
-	public function insert($oEntity) {
-
+	public function insert($oEntity)
+	{
 		$this->_checkEntity($oEntity);
 
 		$aResults = $this->orm
@@ -401,8 +388,8 @@ abstract class Model extends Mother {
 	 * @return void
 	 */
 
-	public function getLastRow() {
-
+	public function getLastRow()
+	{
 		$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
 		
 		$result = $this->orm
@@ -422,9 +409,8 @@ abstract class Model extends Mother {
 	 * @param  object $oEntity
 	 * @return void
 	 */
-
-	public function insertAndGet($oEntity) {
-
+	public function insertAndGet($oEntity)
+	{
 		$result = $this->insert($oEntity);
 		if ($result) {
 			return $this->getLastRow();
@@ -441,8 +427,8 @@ abstract class Model extends Mother {
 	 * @return void
 	 */
 
-	public function updateAndGet($oEntity) {
-
+	public function updateAndGet($oEntity)
+	{
 		$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
 		
 		$result = $this->update($oEntity);
@@ -467,9 +453,8 @@ abstract class Model extends Mother {
 	 * @param  object $oEntityCriteria
 	 * @return void
 	 */
-
-	public function delete($oEntityCriteria) {
-
+	public function delete($oEntityCriteria)
+	{
 		$this->_checkEntity($oEntityCriteria);
 
 		$aEntity = LibEntity::getAllEntity($oEntityCriteria, true);
@@ -486,10 +471,8 @@ abstract class Model extends Mother {
 	 * @access private
 	 * @return void
 	 */
-	
-	public function truncate() {
-	
-	    
+	public function truncate()
+	{    
 		$aClass = explode('\\', get_called_class());
 		$sClassName = $aClass[count($aClass) - 1];
 	
@@ -505,9 +488,8 @@ abstract class Model extends Mother {
 	 * @param  object $oEntityCriteria
 	 * @return void
 	 */
-
-	private function _checkEntity($oEntityCriteria) {
-
+	private function _checkEntity($oEntityCriteria)
+	{
 		$sClassName = get_called_class();
 		$sClassName = str_replace('Model', 'Entity', $sClassName);
 

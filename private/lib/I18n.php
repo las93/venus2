@@ -11,8 +11,7 @@
  * @filesource  https://github.com/las93/venus2
  * @link        https://github.com/las93
  * @since       1.0
- */
-
+ *
 namespace Venus\lib;
 
 use \Venus\lib\I18n\Mock as Mock;
@@ -31,14 +30,12 @@ use \Venus\lib\I18n\Translator as Translator;
  * @link        https://github.com/las93
  * @since       1.0
  */
-
-class I18n {
-	
+class I18n
+{	
 	/**
 	 * the translation language
 	 * @var string
-	 */
-	
+	 */	
 	private $_sLanguage = LANGUAGE;
 	
 	/**
@@ -48,9 +45,8 @@ class I18n {
 	 * @param  string $sLanguage
 	 * @return \Venus\lib\I18n
 	 */
-	
-	public function setLanguage($sLanguage) {
-		
+	public function setLanguage($sLanguage)
+	{	
 		$this->_sLanguage = $sLanguage;
 		return $this;
 	}
@@ -63,9 +59,8 @@ class I18n {
      * @param  mixed $mValue value of this sesion var
      * @return \Venus\lib\Cookie
      */
-
-    public function _($sValue) {
-
+    public function _($sValue)
+    {
     	if (!function_exists("gettext")) {
     		
     		if (!Gettext::isConfigurated()) { Gettext::setConfig(LANGUAGE, I18N_DOMAIN, I18N_DIRECTORY); }	

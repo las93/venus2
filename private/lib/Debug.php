@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 use \Venus\lib\Bash as Bash;

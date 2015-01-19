@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Cache;
 
 /**
@@ -29,9 +28,8 @@ namespace Venus\lib\Cache;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-interface CacheInterface {
-
+interface CacheInterface
+{
 	/**
 	 * set a value
 	 *
@@ -41,7 +39,6 @@ interface CacheInterface {
 	 * @param  int $iFlag flags
 	 * @param  int $iExpire expiration of cache
 	 */
-
 	public function set($sName, $mValue, $iFlag, $iExpire);
 
 	/**
@@ -52,7 +49,6 @@ interface CacheInterface {
 	 * @param  int $iFlags flags
 	 * @param  int $iTimeout expiration of cache
 	 */
-
 	public function get($sName, &$iFlags = null, $iTimeout = 0);
 
 	/**
@@ -61,7 +57,6 @@ interface CacheInterface {
 	 * @access public
 	 * @param  string $sName name of the session
 	 */
-
 	public function delete($sName);
 
 	/**
@@ -69,6 +64,5 @@ interface CacheInterface {
 	 *
 	 * @access public
 	 */
-
 	public function flush();
 }

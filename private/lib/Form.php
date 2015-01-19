@@ -35,7 +35,6 @@
  *
  *				if ($this->form->get('save')->isClicked()) { ... }
  */
-
 namespace Venus\lib;
 
 use \Venus\lib\Entity as LibEntity;
@@ -58,16 +57,14 @@ use \Venus\lib\Form\Textarea as Textarea;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Form {
-
+class Form
+{
 	/**
 	 * Elements of the form
 	 *
 	 *  @access private
 	 *  @var    array
 	 */
-
 	private $_aElement = array();
 
 	/**
@@ -76,7 +73,6 @@ class Form {
 	 *  @access private
 	 *  @var    int
 	 */
-
 	private static $_iFormIncrement = 0;
 
 	/**
@@ -85,7 +81,6 @@ class Form {
 	 *  @access private
 	 *  @var    int
 	 */
-
 	private $_iFormNumber = 0;
 
 	/**
@@ -94,7 +89,6 @@ class Form {
 	 *  @access private
 	 *  @var    string
 	 */
-
 	private $_sSeparator = '<br/>';
 
 	/**
@@ -103,7 +97,6 @@ class Form {
 	 *  @access private
 	 *  @var    string
 	 */
-
 	private $_sSynchronizeEntity = null;
 
 	/**
@@ -112,7 +105,6 @@ class Form {
 	 *  @access private
 	 *  @var    int
 	 */
-
 	private $_iIdEntity = null;
 
 	/**
@@ -121,7 +113,6 @@ class Form {
 	 *  @access private
 	 *  @var    int
 	 */
-
 	private $_iIdEntityCreated = null;
 
 	/**
@@ -130,9 +121,8 @@ class Form {
 	 * @access public
 	 * @return \Venus\lib\Form
 	 */
-
-	public function __construct() {
-
+	public function __construct()
+	{
 		self::$_iFormIncrement++;
 		$this->_iFormNumber = self::$_iFormIncrement;
 	}
@@ -148,9 +138,8 @@ class Form {
 	 * @parma  mixed $mOptions options (for select)
 	 * @return \Venus\lib\Form
 	 */
-
-	public function add($sName, $sType, $sLabel = null, $mValue = null, $mOptions = null) {
-
+	public function add($sName, $sType, $sLabel = null, $mValue = null, $mOptions = null)
+	{
 		if ($sType === 'text' || $sType === 'submit' || $sType === 'password' || $sType === 'file') {
 
 			$this->_aElement[$sName] = new Input($sName, $sType, $sLabel, $mValue);
@@ -234,9 +223,8 @@ class Form {
 	 * @access public
 	 * @return int
 	 */
-
-	public function getIdEntityCreated() {
-		
+	public function getIdEntityCreated()
+	{	
 		return $this->_iIdEntityCreated;
 	}
 
@@ -246,9 +234,8 @@ class Form {
 	 * @access public
 	 * @return string
 	 */
-
-	public function getForm() {
-
+	public function getForm()
+	{
 		if ($this->_iIdEntity > 0 && $this->_sSynchronizeEntity !== null && count($_POST) > 0) {
 
 			$sModelName = str_replace('Entity', 'Model', $this->_sSynchronizeEntity);
@@ -333,9 +320,8 @@ class Form {
 	 * @access public
 	 * @return boolean
 	 */
-
-	public function isValid() {
-
+	public function isValid()
+	{
 		if (isset($_POST['validform'.$this->_iFormNumber]) && $_POST['validform'.$this->_iFormNumber] == 1) { return true; }
 		else { return false; }
 	}
@@ -347,9 +333,8 @@ class Form {
 	 * @param  string $sName name
 	 * @return object
 	 */
-
-	public function get($sName) {
-
+	public function get($sName)
+	{
 		return $this->_aElement[$sName];
 	}
 
@@ -359,9 +344,8 @@ class Form {
 	 * @access public
 	 * @return string
 	 */
-
-	public function getSeparator() {
-
+	public function getSeparator()
+	{
 		return $this->_sSeparator;
 	}
 
@@ -372,9 +356,8 @@ class Form {
 	 * @param  string $sSeparator separator between the fields
 	 * @return \Venus\lib\Form
 	 */
-
-	public function setSeparator($sSeparator) {
-
+	public function setSeparator($sSeparator)
+	{
 		$this->_sSeparator = $sSeparator;
 		return $this;
 	}
@@ -387,9 +370,8 @@ class Form {
 	 * @param  int $iId id of the primary key
 	 * @return \Venus\lib\Form
 	 */
-
-	public function synchronizeEntity($sSynchronizeEntity, $iId = null) {
-
+	public function synchronizeEntity($sSynchronizeEntity, $iId = null)
+	{
 		if ($iId !== null) { $this->_iIdEntity = $iId; }
 			
 		$this->_sSynchronizeEntity = $sSynchronizeEntity;

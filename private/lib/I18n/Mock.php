@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\I18n;
 
 /**
@@ -29,9 +28,8 @@ namespace Venus\lib\I18n;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Mock {
-
+class Mock
+{
 	/**
 	 * get a value
 	 *
@@ -41,9 +39,8 @@ class Mock {
 	 * @param  int $iTimeout expiration of cache
 	 * @return mixed
 	 */
-
-	public static function _($sValue) {
-	    
+	public static function _($sValue)
+	{ 
 	    return $sValue;
 	}
 }

@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\I18n;
 
 /**
@@ -29,14 +28,12 @@ namespace Venus\lib\I18n;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Gettext {
-
+class Gettext
+{
 	/**
 	 * Indicate if the configuration is good or not
 	 * @var bool 
 	 */
-	
 	private static $_bConfigurated = false;
 	
 	/**
@@ -44,10 +41,9 @@ class Gettext {
 	 * 
 	 * @access private
 	 * @return void
-	 */
-	
-	public static function setConfig($sLanguage, $sDomain, $sDirectory) {
-		
+	 */	
+	public static function setConfig($sLanguage, $sDomain, $sDirectory)
+	{	
 		putenv('LC_ALL='.$sLanguage);
 		setlocale(LC_ALL, $sLanguage);
 		
@@ -63,9 +59,8 @@ class Gettext {
 	 * @access private
 	 * @return bool
 	 */
-	
-	public static function isConfigurated() {
-		
+	public static function isConfigurated()
+	{	
 		return $this->_bConfigurated;
 	}
 	
@@ -78,9 +73,8 @@ class Gettext {
 	 * @param  int $iTimeout expiration of cache
 	 * @return mixed
 	 */
-
-	public static function _($sValue) {
-	    
+	public static function _($sValue)
+	{ 
 	    return _($sValue);
 	}
 }

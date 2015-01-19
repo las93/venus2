@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Cache;
 
 /**
@@ -29,9 +28,8 @@ namespace Venus\lib\Cache;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Apc implements CacheInterface {
-
+class Apc implements CacheInterface
+{
 	/**
 	 * set a value
 	 *
@@ -42,9 +40,8 @@ class Apc implements CacheInterface {
 	 * @param  int $iExpire expiration of cache
 	 * @return \Venus\lib\Cache\Apc
 	 */
-
-	public function set($sName, $mValue, $iFlag = 0, $iExpire = 0) {
-
+	public function set($sName, $mValue, $iFlag = 0, $iExpire = 0)
+	{
 		apc_add($sName, $mValue, $iExpire);
 		return $this;
 	}
@@ -58,9 +55,8 @@ class Apc implements CacheInterface {
 	 * @param  int $iTimeout expiration of cache
 	 * @return mixed
 	 */
-
-	public function get($sName, &$iFlags = null, $iTimeout = 0) {
-
+	public function get($sName, &$iFlags = null, $iTimeout = 0)
+	{
 		return apc_fetch($sName);
 	}
 
@@ -71,9 +67,8 @@ class Apc implements CacheInterface {
 	 * @param  string $sName name of the session
 	 * @return mixed
 	 */
-
-	public function delete($sName) {
-
+	public function delete($sName)
+	{
 		return apc_delete($sName);
 	}
 
@@ -83,9 +78,8 @@ class Apc implements CacheInterface {
 	 * @access public
 	 * @return mixed
 	 */
-
-	public function flush() {
-
+	public function flush()
+	{
 		return flush();
 	}
 }

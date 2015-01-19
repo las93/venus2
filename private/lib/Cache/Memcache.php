@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Cache;
 
 use \Memcache as RealMemcache;
@@ -31,7 +30,6 @@ use \Memcache as RealMemcache;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Memcache extends RealMemcache {
-
+class Memcache extends RealMemcache
+{
 }

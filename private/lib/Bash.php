@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 /**
@@ -27,16 +26,14 @@ namespace Venus\lib;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Bash {
-
+class Bash
+{
 	/**
 	 * color of the text in the bash
 	 *
 	 * @access public
 	 * @var    array
 	 */
-
 	public static $_aColorCodes = array(
 		'default' => 39,
 		'black' => 30,
@@ -63,7 +60,6 @@ class Bash {
 	 * @access public
 	 * @var    array
 	 */
-
 	public static $_aBackgroundCodes = array(
 		'default' => 49,
 		'black' => 40,
@@ -90,7 +86,6 @@ class Bash {
 	 * @access public
 	 * @var    array
 	 */
-
 	public static $_aDecorationCodes = array(
 		'bold' => '1',
 		'dim' => '2',
@@ -108,9 +103,8 @@ class Bash {
 	 * @param  string $sStyleName the name of the style
 	 * @return string
 	 */
-
-	public static function setDecoration($sContent, $sStyleName) {
-
+	public static function setDecoration($sContent, $sStyleName)
+	{
 		return self::_applyCode($sContent, self::$_aBackgroundCodes[$sStyleName]);
 	}
 
@@ -122,9 +116,8 @@ class Bash {
 	 * @param  string $sColorName the name of the color
 	 * @return string
 	 */
-
-	public static function setBackground($sContent, $sColorName) {
-
+	public static function setBackground($sContent, $sColorName)
+	{
 		if (!isset(self::$_aBackgroundCodes[$sColorName])) { $sColorName = 'black'; }
 
 		return self::_applyCode($sContent, self::$_aBackgroundCodes[$sColorName]);
@@ -138,9 +131,8 @@ class Bash {
 	 * @param  string $sColorName the name of the color
 	 * @return string
 	 */
-
-	public static function setColor($sContent, $sColorName) {
-
+	public static function setColor($sContent, $sColorName)
+	{
 		if (!isset(self::$_aBackgroundCodes[$sColorName])) { $sColorName = 'white'; }
 
 		return self::_applyCode($sContent, self::$_aBackgroundCodes[$sColorName]);
@@ -154,9 +146,8 @@ class Bash {
 	 * @param  string $sCode the name of the code (color or decoration)
 	 * @var    string
 	 */
-
-	private static function _applyCode($sContent, $sCode) {
-
+	private static function _applyCode($sContent, $sCode)
+	{
 		return "\033[" . $sCode . "m" . $sContent . "\033[0m";
 	}
 }

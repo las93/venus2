@@ -14,6 +14,8 @@
  */
 namespace Venus\lib;
 
+use \Venus\core\Config as Config;
+
 /**
  * This class manage the vendor class
  *
@@ -54,11 +56,14 @@ class Vendor
 	    if ($sVendorName === 'Apollina\Template') { 
 
 	        return new $sVendorName($mParam, str_replace('lib', '', __DIR__), 
-	            str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__).DIRECTORY_SEPARATOR);
+	            str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__));
 	    }
 	    else if ($sVendorName === 'Attila\Orm') { 
 
-	        return new $sVendorName($mParam, DB_CONF);
+	        $oDbConfig = Config::get('DB')->configuration->{DB_CONF};
+
+	        return new $sVendorName($oDbConfig->db, $oDbConfig->type, $oDbConfig->host, $oDbConfig->user, $oDbConfig->password, 
+	            $oDbConfig->db);
 	    }
 	    else if (isset($mParam)) { 
 	        

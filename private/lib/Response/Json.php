@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Response;
 
 use \Venus\lib\Object as Object;
@@ -41,8 +40,8 @@ class Json implements ResponseInterface
 	 * @param  mixed $mContent content to translate
 	 * @return mixed
 	 */
-	public static function translate($mContent) {
-
+	public static function translate($mContent)
+	{
 	    return json_encode(Object::object_to_array($mContent));
 	}
 }

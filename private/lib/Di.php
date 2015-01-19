@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 /**
@@ -27,16 +26,14 @@ namespace Venus\lib;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Di {
-
+class Di
+{
 	/**
 	 * contener of depency injector
 	 *
 	 * @access private
 	 * @var    array
 	 */
-
 	private static $_aDependencyInjectorContener = null;
 
 	/**
@@ -54,9 +51,8 @@ class Di {
 	 *
 	 * 				please set smarty in vendors/smarty/*
 	 */
-
-	public static function import($sClass, $sFolder, $sNameOfDi) {
-
+	public static function import($sClass, $sFolder, $sNameOfDi)
+	{
 		$sDirectory = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'vendors'.DIRECTORY_SEPARATOR.$sFolder;
 		$aFiles = scandir($sDirectory);
 
@@ -87,9 +83,8 @@ class Di {
 	 * @param  array $aParameters parameters of the constructor
 	 * @return object
 	 */
-
-	public function get($sNameOfDi, array $aParameters = array()) {
-
+	public function get($sNameOfDi, array $aParameters = array())
+	{
 		if (!isset(self::$_aDependencyInjectorContener[md5($sNameOfDi)])) {
 
 			if (count($aParameters) > 0) {
@@ -115,9 +110,8 @@ class Di {
 	 * @param  array $aParameters parameters of the constructor
 	 * @return object
 	 */
-
-	public function newInstance($sNameOfDi, array $aParameters = array()) {
-
+	public function newInstance($sNameOfDi, array $aParameters = array())
+	{
 		if (count($aParameters) > 0) {
 
 			$oReflectionClass  = new \ReflectionClass($sNameOfDi);
@@ -140,9 +134,8 @@ class Di {
 	 * @param  mixed $mValue value to set
 	 * @return \Venus\core\Di
 	 */
-
-	public function setProperty($sNameOfDi, $sParameter, $mValue) {
-
+	public function setProperty($sNameOfDi, $sParameter, $mValue)
+	{
 		self::$_aDependencyInjectorContener[md5($sNameOfDi)]->$sParameter = $mValue;
 		return $this;
 	}

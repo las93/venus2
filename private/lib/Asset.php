@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 /**
@@ -30,16 +29,14 @@ namespace Venus\lib;
  * @tutorial	$oAsset = new \Venus\lib\Asset;
  * 				echo $oAsset->getUrl('css/style.css');
  */
-
-class Asset {
-
+class Asset
+{
 	/**
 	 * content asset
 	 *
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sContent = '';
 
 	/**
@@ -49,9 +46,8 @@ class Asset {
 	 * @param  string $sUrl url to get
 	 * @return \Venus\lib\Asset
 	 */
-
-	public function getUrl($sUrl) {
-
+	public function getUrl($sUrl)
+	{
 		$this->_sContent = file_get_contents(str_replace('private'.DIRECTORY_SEPARATOR.'lib', '', __DIR__).'public'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.$sUrl);
 		return $this;
 	}
@@ -62,9 +58,8 @@ class Asset {
 	 * @access public
 	 * @return string
 	 */
-
-	public function __toString() {
-
+	public function __toString()
+	{
 		return $this->_sContent;
 	}
 }

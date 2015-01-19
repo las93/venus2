@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 use \Facebook as LibFacebook;
@@ -32,38 +31,32 @@ use \Venus\core\Exception as Exception;
  *
  * @help		http://thinkdiff.net/facebook/php-sdk-3-0-graph-api-base-facebook-connect-tutorial/
  */
-
-class Facebook {
-
+class Facebook
+{
 	/**
 	 * app id of Facebook
 	 * @var string
 	 */
-
 	const APP_ID = FACEBOOK_APP_ID;
 
 	/**
 	 * app secret of Facebook
 	 * @var string
 	 */
-
 	const APP_SECRET = FACEBOOK_APP_SECRET;
 
 	/**
 	 * app secret of Facebook
 	 * @var string
 	 */
-
 	const BASE_URL = FACEBOOK_BASE_URL;
 
 	/**
 	 * app secret of Facebook
 	 * @var array
 	 */
-
 	//private $_aScope = array('email','offline_access,publish_stream','user_birthday','user_location','user_work_history',
 	//	'user_about_me','user_hometown', 'manage_pages');
-
 	private $_aScope = array('email','user_birthday','user_location','user_work_history',
 					'user_about_me','user_hometown');
 
@@ -71,7 +64,6 @@ class Facebook {
 	 * object Facebook of the SDK
 	 * @var \Facebook
 	 */
-
 	private $_oFacebook = null;
 
 	/**
@@ -80,9 +72,8 @@ class Facebook {
 	 * @access public
 	 * @return object
 	 */
-
-	public function __construct() {
-
+	public function __construct()
+	{
 		$aConfig = array();
 		$aConfig['appId'] = self::APP_ID;
 		$aConfig['secret'] = self::APP_SECRET;
@@ -96,9 +87,8 @@ class Facebook {
 	 * @access public
 	 * @return string
 	 */
-
-	public function getUser() {
-
+	public function getUser()
+	{
 		return $this->_oFacebook->getUser();
 	}
 
@@ -108,9 +98,8 @@ class Facebook {
 	 * @access public
 	 * @return string
 	 */
-
-	public function getButton($sLabelName = 'Inscription par Facebook') {
-
+	public function getButton($sLabelName = 'Inscription par Facebook')
+	{
 		if ($this->_oFacebook->getUser()) {
 
 			return '<a href="'.$this->_oFacebook->getLogoutUrl().'">'.$sLabelName.'</a>';
@@ -133,9 +122,8 @@ class Facebook {
 	 * @param  array $aScope
 	 * @return \Venus\lib\Facebook
 	 */
-
-	public function setScope(array $aScope) {
-
+	public function setScope(array $aScope)
+	{
 		$this->_aScope = $aScope;
 		return $this;
 	}
@@ -147,9 +135,8 @@ class Facebook {
 	 * @param  string $aScope
 	 * @return \Venus\lib\Facebook
 	 */
-
-	public function addScope($sScope) {
-
+	public function addScope($sScope)
+	{
 		if (!is_string($sScope)) {
 
 			throw new Exception(__FILE__.':'.__METHOD__.' : You must add a string!');
@@ -166,9 +153,8 @@ class Facebook {
 	 * @param  string $aScope
 	 * @return object
 	 */
-
-	public function getUserInfo() {
-
+	public function getUserInfo()
+	{
 		$sUser = $this->_oFacebook->getUser();
 		return $this->_oFacebook->api('/'.$sUser);
 	}
@@ -180,9 +166,8 @@ class Facebook {
 	 * @param  string $sName name to call
 	 * @return object
 	 */
-
-	public function getInfo($sName) {
-
+	public function getInfo($sName)
+	{
 		$sUser = $this->_oFacebook->getUser();
 
 		try {
@@ -202,9 +187,8 @@ class Facebook {
 	 * @param  string $sFql fql query
 	 * @return object
 	 */
-
-	public function getInfoByFql($sFql) {
-
+	public function getInfoByFql($sFql)
+	{
 		$sUser = $this->_oFacebook->getUser();
 
 		try {
@@ -230,9 +214,8 @@ class Facebook {
 	 * @param  string $sFql fql query
 	 * @return object
 	 */
-
-	public function publishWallPost($sMessage, $sLink, $sImg, $sName, $sDescription) {
-
+	public function publishWallPost($sMessage, $sLink, $sImg, $sName, $sDescription)
+	{
 		$sUser = $this->_oFacebook->getUser();
 
 		try {
@@ -259,9 +242,8 @@ class Facebook {
 	 * @param  string $sFql fql query
 	 * @return object
 	 */
-
-	public function publishMyWallPost($sPageId, $sMessage, $sLink, $sImg, $sDescription) {
-
+	public function publishMyWallPost($sPageId, $sMessage, $sLink, $sImg, $sDescription)
+	{
 		$user = $this->_oFacebook->getUser();
 
 		if ($user){
@@ -312,9 +294,8 @@ class Facebook {
 	 * @param  int $iHeight height
 	 * @return object
 	 */
-
-	public function getPicture($iWidth = 50, $iHeight = 50) {
-
+	public function getPicture($iWidth = 50, $iHeight = 50)
+	{
 		$oUser = $this->getUserInfo();
 		$sUserName = $oUser['username'];
 		return 'http://graph.facebook.com/'.$sUserName.'/picture?width='.$iWidth.'&height='.$iHeight;

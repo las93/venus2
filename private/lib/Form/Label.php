@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Form;
 
 /**
@@ -29,16 +28,14 @@ namespace Venus\lib\Form;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Label extends Common {
-
+class Label extends Common
+{
 	/**
 	 * the label of element
 	 *
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sLabel = null;
 	
 	/**
@@ -47,9 +44,8 @@ class Label extends Common {
 	 * @access private
 	 * @var    string
 	 */
-
-	public function __construct($sLabel) {
-
+	public function __construct($sLabel)
+	{
 		$this->setLabel($sLabel);
 	}
 
@@ -59,9 +55,8 @@ class Label extends Common {
 	 * @access public
 	 * @return string
 	 */
-
-	public function getLabel() {
-
+	public function getLabel()
+	{
 		return $this->_sLabel;
 	}
 
@@ -72,9 +67,8 @@ class Label extends Common {
 	 * @param  string $sLabel Label of input;
 	 * @return \Venus\lib\Form\Input
 	 */
-
-	public function setLabel($sLabel) {
-
+	public function setLabel($sLabel)
+	{
 		$this->_sLabel = $sLabel;
 		return $this;
 	}
@@ -85,9 +79,8 @@ class Label extends Common {
 	 * @access public
 	 * @return string
 	 */
-
-	public function fetch() {
-
+	public function fetch()
+	{
 		$sContent = '<label>'.$this->getLabel().'</label> ';
 
 		return $sContent;

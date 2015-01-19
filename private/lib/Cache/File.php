@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Cache;
 
 /**
@@ -29,16 +28,14 @@ namespace Venus\lib\Cache;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class File implements CacheInterface {
-
+class File implements CacheInterface
+{
 	/**
 	 * var containe this folder of cache
 	 *
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sFolder = '';
 
 	/**
@@ -47,9 +44,8 @@ class File implements CacheInterface {
 	 * @access public
 	 * @return \Venus\lib\Cache\File
 	 */
-
-	public function __construct() {
-
+	public function __construct()
+	{
 		$this->_sFolder = str_replace('private'.DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'Cache', CACHE_DIR, __DIR__).DIRECTORY_SEPARATOR;
 	}
 
@@ -63,9 +59,8 @@ class File implements CacheInterface {
 	 * @param  int $iExpire expiration of cache
 	 * @return \Venus\lib\Cache\File
 	 */
-
-	public function set($sName, $mValue, $iFlag, $iExpire) {
-
+	public function set($sName, $mValue, $iFlag, $iExpire)
+	{
 		file_put_contents($this->_sFolder.$this->_getSubDirectory($sName).md5($sName).'.fil.cac', serialize($mValue));
 		return $this;
 	}
@@ -79,9 +74,8 @@ class File implements CacheInterface {
 	 * @param  int $iTimeout expiration of cache
 	 * @return mixed
 	 */
-
-	public function get($sName, &$iFlags = null, $iTimeout = 0) {
-
+	public function get($sName, &$iFlags = null, $iTimeout = 0)
+	{
 		if ($iTimeout > 0 && file_exists($this->_sFolder.$this->_getSubDirectory($sName).md5($sName).'.fil.cac')
 			&& time() - filemtime($this->_sFolder.$this->_getSubDirectory($sName).md5($sName).'.fil.cac') > $iTimeout) {
 
@@ -105,9 +99,8 @@ class File implements CacheInterface {
 	 * @param  string $sName name of the session
 	 * @return mixed
 	 */
-
-	public function delete($sName) {
-
+	public function delete($sName)
+	{
 		return unlink($this->_sFolder.$this->_getSubDirectory($sName).md5($sName).'.fil.cac');
 	}
 
@@ -118,9 +111,8 @@ class File implements CacheInterface {
 	 * @param  string $sName name of the session
 	 * @return mixed
 	 */
-
-	public function flush() {
-
+	public function flush()
+	{
 		$this->_removeDirectory($this->_sFolder);
 	}
 
@@ -131,9 +123,8 @@ class File implements CacheInterface {
 	 * @param  string $sName name of the session
 	 * @return mixed
 	 */
-
-	private function _getSubDirectory($sName) {
-
+	private function _getSubDirectory($sName)
+	{
 		if (!file_exists($this->_sFolder.substr(md5($sName), 0, 2).DIRECTORY_SEPARATOR.substr(md5($sName), 2, 2))) {
 
 			mkdir($this->_sFolder.substr(md5($sName), 0, 2).DIRECTORY_SEPARATOR.substr(md5($sName), 2, 2), 0777, true);
@@ -149,9 +140,8 @@ class File implements CacheInterface {
 	 * @param  string $sName nom du répertoire
 	 * @return void
 	 */
-
-	private function _removeDirectory($sName) {
-
+	private function _removeDirectory($sName)
+	{
 		if ($rDirectory = opendir($sName)) {
 
 			while (($sFile = readdir($rDirectory)) !== false) {

@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 /**
@@ -27,15 +26,13 @@ namespace Venus\lib;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Mail {
-
+class Mail
+{
 	/**
 	 * the recipient of mail
 	 * @access private
 	 * @var    array
 	 */
-
 	private $_aRecipient = array();
 
 	/**
@@ -43,7 +40,6 @@ class Mail {
 	 * @access private
 	 * @var    string
 	*/
-
 	private $_sFrom = "no-reply@iscreenway.com";
 
 	/**
@@ -51,7 +47,6 @@ class Mail {
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sSubject = "nosubject";
 
 	/**
@@ -59,7 +54,6 @@ class Mail {
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sMessage = "";
 
 	/**
@@ -67,7 +61,6 @@ class Mail {
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sFormat = "TXT"; // valeur : TXT ou HTML;
 
 	/**
@@ -75,7 +68,6 @@ class Mail {
 	 * @access private
 	 * @var    array
 	 */
-	
 	private $_aAttachments = array();
 
 	/**
@@ -84,9 +76,8 @@ class Mail {
 	 * @access public private
 	 * @param  string $sRecipient
 	 */
-
-	public function addRecipient($sRecipient) {
-
+	public function addRecipient($sRecipient)
+	{
 		$this->_aRecipient[] = $sRecipient;
 		return $this;
 	}
@@ -99,9 +90,8 @@ class Mail {
 	 * @param  string $sContent
 	 * @param  string $sType
 	 */
-
-	public function attachFile($sFileName, $sContent, $sType) {
-
+	public function attachFile($sFileName, $sContent, $sType)
+	{
 		$this->_aAttachments[] = array(
 			"name" => $sFileName,
 			"content" => $sContent,
@@ -117,9 +107,8 @@ class Mail {
 	 * @access public private
 	 * @param  string $sFrom
 	 */
-
-	public function setFrom($sFrom) {
-
+	public function setFrom($sFrom)
+	{
 		$this->_sFrom = $sFrom;
 		return $this;
 	}
@@ -130,9 +119,8 @@ class Mail {
 	 * @access public private
 	 * @param  string $sSubject
 	 */
-
-	public function setSubject($sSubject) {
-
+	public function setSubject($sSubject)
+	{
 		$this->_sSubject = $sSubject;
 		return $this;
 	}
@@ -143,9 +131,8 @@ class Mail {
 	 * @access public private
 	 * @param  string $sMessage
 	 */
-
-	public function setMessage($sMessage) {
-
+	public function setMessage($sMessage)
+	{
 		$this->_sMessage = $sMessage;
 		return $this;
 	}
@@ -155,9 +142,8 @@ class Mail {
 	 *
 	 * @access public private
 	 */
-
-	public function setFormatHtml() {
-
+	public function setFormatHtml()
+	{
 		$this->_sFormat = "HTML";
 		return $this;
 	}
@@ -167,9 +153,8 @@ class Mail {
 	 *
 	 * @access public private
 	 */
-
-	public function setFormatText() {
-
+	public function setFormatText()
+	{
 		$this->_sFormat = "TXT";
 		return $this;
 	}
@@ -180,9 +165,8 @@ class Mail {
 	 * @access public private
 	 * @return bool
 	 */
-
-	public function send() {
-
+	public function send()
+	{
 		$sHeaders = 'From: ' . $this->_sFrom . "\r\n";
 
 		if (empty($this->_aAttachments)) {

@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 /**
@@ -27,18 +26,16 @@ namespace Venus\lib;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class PhpDoc {
-
+class PhpDoc
+{
 	/**
 	 * add the namespace
 	 *
 	 * @access public
 	 * @return array
 	 */
-
-	public static function getPhpDocOfMethod($sClassName, $sMethodName) {
-
+	public static function getPhpDocOfMethod($sClassName, $sMethodName)
+	{
 		$oReflectionClass  = new \ReflectionClass($sClassName);
 		$oReflectionMethod = $oReflectionClass->getMethod($sMethodName);
 		$sCommentPhpDoc = $oReflectionMethod->getDocComment();

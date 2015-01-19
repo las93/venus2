@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\Form;
 
 /**
@@ -29,16 +28,14 @@ namespace Venus\lib\Form;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Checkbox extends Common {
-
+class Checkbox extends Common
+{
 	/**
 	 * the name of element
 	 *
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sType = null;
 	
 	/**
@@ -47,7 +44,6 @@ class Checkbox extends Common {
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sLabel = null;
 	
 	/**
@@ -56,7 +52,6 @@ class Checkbox extends Common {
 	 * @access private
 	 * @var    string
 	 */
-
 	private $_sValue = null;
 
 	/**
@@ -65,7 +60,6 @@ class Checkbox extends Common {
 	 * @access private
 	 * @var    array
 	 */
-	
 	private $_aValuesChecked = null;
 
 	/**
@@ -78,9 +72,8 @@ class Checkbox extends Common {
 	 * @param  array $aValuesChecked value checked of checkbox
 	 * @return \Venus\lib\Form\Input
 	 */
-
-	public function __construct($sName, $sLabel, $sValue, $aValuesChecked = null) {
-
+	public function __construct($sName, $sLabel, $sValue, $aValuesChecked = null)
+	{
 		$this->setName($sName);
 		$this->setValue($sValue);
 		$this->setValuesChecked($aValuesChecked);
@@ -93,9 +86,8 @@ class Checkbox extends Common {
 	 * @access public
 	 * @return string
 	 */
-
-	public function getValue() {
-
+	public function getValue()
+	{
 		return $this->_sValue;
 	}
 
@@ -106,9 +98,8 @@ class Checkbox extends Common {
 	 * @param  string $sValue Value of input;
 	 * @return \Venus\lib\Form\Input
 	 */
-
-	public function setValue($sValue) {
-
+	public function setValue($sValue)
+	{
 		$this->_sValue = $sValue;
 		return $this;
 	}
@@ -119,9 +110,8 @@ class Checkbox extends Common {
 	 * @access public
 	 * @return array
 	 */
-
-	public function getValuesChecked() {
-
+	public function getValuesChecked()
+	{
 		return $this->_aValuesChecked;
 	}
 
@@ -132,9 +122,8 @@ class Checkbox extends Common {
 	 * @param  array $aValuesChecked Values of input;
 	 * @return \Venus\lib\Form\Input
 	 */
-
-	public function setValuesChecked($aValuesChecked) {
-
+	public function setValuesChecked($aValuesChecked)
+	{
 		$this->_aValuesChecked = $aValuesChecked;
 		return $this;
 	}
@@ -145,9 +134,8 @@ class Checkbox extends Common {
 	 * @access public
 	 * @return string
 	 */
-
-	public function getLabel() {
-
+	public function getLabel()
+	{
 		return $this->_sLabel;
 	}
 
@@ -158,9 +146,8 @@ class Checkbox extends Common {
 	 * @param  string $sLabel Label of input;
 	 * @return \Venus\lib\Form\Input
 	 */
-
-	public function setLabel($sLabel) {
-
+	public function setLabel($sLabel)
+	{
 		$this->_sLabel = $sLabel;
 		return $this;
 	}
@@ -172,9 +159,8 @@ class Checkbox extends Common {
 	 * @param  string $sType type of input;
 	 * @return bool
 	 */
-
-	public function isClicked($sType) {
-
+	public function isClicked($sType)
+	{
 		if ($this->getType() === 'submit' || $this->getType() === 'button') {
 
 			if (isset($_POST[$this->getName()])) { return true; }
@@ -189,9 +175,8 @@ class Checkbox extends Common {
 	 * @access public
 	 * @return string
 	 */
-
-	public function fetch() {
-
+	public function fetch()
+	{
 		$sContent = '<input type="checkbox" name="'.$this->getName().'[]" value="'.$this->getValue().'"';
 
 		if (in_array($this->getValue(), $this->getValuesChecked())) { $sContent .= ' checked="checked"'; }

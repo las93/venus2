@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 use \DateTime as DateTime;
@@ -29,9 +28,8 @@ use \DateTime as DateTime;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Date {
-
+class Date
+{
 	/**
 	 * set name of image
 	 *
@@ -40,9 +38,8 @@ class Date {
 	 * @param  int $iYear year
 	 * @return \Venus\lib\Date
 	 */
-
-	public static function getWeek($iWeek, $iYear, $sFormat = "Y-m-d") {
-
+	public static function getWeek($iWeek, $iYear, $sFormat = "Y-m-d")
+	{
 		$iFirstDayInYear = date("N",mktime(0, 0, 0, 1, 1, $iYear));
 
 		if ($iFirstDayInYear < 5) { $iShift = -($iFirstDayInYear - 1) * 86400; }
@@ -65,9 +62,8 @@ class Date {
 	 * @param  int $iYear year
 	 * @return \Venus\lib\Date
 	 */
-
-	public static function getActualWeek() {
-
+	public static function getActualWeek()
+	{
 		return self::getWeek(date('W'), date('Y'));
 	}
 
@@ -79,9 +75,8 @@ class Date {
 	 * @param  string $sLanguage language
 	 * @return \Venus\lib\Date
 	 */
-
-	public static function getMonthInWord($mMonth, $sLanguage = 'fr') {
-
+	public static function getMonthInWord($mMonth, $sLanguage = 'fr')
+	{
 		if ($sLanguage == 'fr') {
 
 			if ($mMonth == '01' || $mMonth == 1) { return 'Janvier'; }
@@ -99,7 +94,6 @@ class Date {
 		}
 	}
 
-
 	/**
 	 * set name of image
 	 *
@@ -108,9 +102,8 @@ class Date {
 	 * @param  string $sLanguage language
 	 * @return \Venus\lib\Date
 	 */
-
-	public static function getDayInWord($sDay, $sLanguage = 'fr') {
-
+	public static function getDayInWord($sDay, $sLanguage = 'fr')
+	{
 		if ($sLanguage == 'fr') {
 
 			if ($sDay == 0) { return 'dimanche'; }
@@ -130,9 +123,8 @@ class Date {
 	 * @param unknown $sBirthday
 	 * @return int
 	 */
-
-	public static function getAgeByDate($sBirthday) {
-
+	public static function getAgeByDate($sBirthday)
+	{
 		list($iYear, $iMonth, $iDay) = preg_split('/[-.]/', $sBirthday);
 
 		$aToday = array();
@@ -165,9 +157,8 @@ class Date {
 	 * @param  int $iYear year
 	 * @return \Venus\lib\Date
 	 */
-
-	public static function getMiddleWeek($iWeek, $iYear, $sFormat = "Y-m-d") {
-
+	public static function getMiddleWeek($iWeek, $iYear, $sFormat = "Y-m-d")
+	{
 		$iFirstDayInYear = date("N",mktime(0, 0, 0, 1, 1, $iYear));
 
 		if ($iFirstDayInYear < 5) { $iShift = -($iFirstDayInYear - 1) * 86400; }
@@ -206,9 +197,8 @@ class Date {
 	 * @param  int $iYear year
 	 * @return \Venus\lib\Date
 	 */
-
-	public static function getActualMiddleWeek() {
-
+	public static function getActualMiddleWeek()
+	{
 		return self::getMiddleWeek(date('W'), date('Y'));
 	}
 
@@ -220,9 +210,8 @@ class Date {
 	 * @param  string $sLanguage language
 	 * @return \Venus\lib\Date
 	 */
-
-	public static function GetTimeAgoInString($sDateTime, $sLanguage = 'fr') {
-
+	public static function GetTimeAgoInString($sDateTime, $sLanguage = 'fr')
+	{
 		if ($sLanguage == 'fr') {
 
 			$sStartReturn = 'Il y a';

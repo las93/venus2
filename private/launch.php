@@ -11,7 +11,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 error_reporting(E_ALL);
 ini_set('display_error', 1);
 

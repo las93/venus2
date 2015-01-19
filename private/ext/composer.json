@@ -15,8 +15,8 @@
         "psr-0": { "Apollina": "" }
     },
     "require": {
-        "las93/attila": "*",
-        "las93/apollina": "*",
+        "las93/attila": "1.0.0-beta1",
+        "las93/apollina": "3.0.0-beta1",
         "mobiledetect/mobiledetectlib": ">=2.8.0",
         "php": ">=5.3.0"
     },

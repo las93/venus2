@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\I18n;
 
 /**
@@ -29,15 +28,13 @@ namespace Venus\lib\I18n;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-interface I18nInterface {
-
+interface I18nInterface
+{
 	/**
 	 * translate the content
 	 *
 	 * @access public
 	 * @param  string $sContent content
 	 */
-
 	public static function _($sValue);
 }

@@ -12,7 +12,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib;
 
 /**
@@ -27,18 +26,16 @@ namespace Venus\lib;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Session {
-	
+class Session
+{	
 	/**
 	 * constructor
 	 *
 	 * @access public
 	 * @return \Venus\lib\Session
 	 */
-	
-	public function __construct() {
-	
+	public function __construct()
+	{	
 		$this->start();
 	}
 	
@@ -50,9 +47,8 @@ class Session {
   	 * @param  mixed $mValue value of this sesion var
   	 * @return \Venus\lib\Session
   	 */
-
-  	public function set($sName, $mValue) {
-
+  	public function set($sName, $mValue)
+	{
     	$_SESSION[$sName] = $mValue;
     	return $this;
   	}
@@ -64,9 +60,8 @@ class Session {
   	 * @param  string $sName name of the session
   	 * @return mixed
   	 */
-
-  	public function get($sName) {
-
+  	public function get($sName)
+	{
   		if (isset($_SESSION[$sName])) { return $_SESSION[$sName]; }
   		else { return false; }
   	}
@@ -77,9 +72,8 @@ class Session {
   	 * @access public
   	 * @return mixed
   	 */
-
-  	public function start() {
-
+  	public function start()
+	{
 		if (!session_id()) { session_start(); }
   	}
 
@@ -91,9 +85,8 @@ class Session {
   	 * @param  string $sValue value of this sesion var
   	 * @return \Venus\lib\Session
 	 */
-
- 	 public function setFlashBag($sName, $sValue) {
-
+ 	 public function setFlashBag($sName, $sValue)
+	 {
   		if (!isset($_SESSION['flashbag'])) { $_SESSION['flashbag'] = array(); }
 
   		$_SESSION['flashbag'][$sName] = $sValue;
@@ -106,9 +99,8 @@ class Session {
 	 * @access public
 	 * @return mixed
 	 */
-	
-	public function destroy() {
-	
+	public function destroy()
+	{
 		session_start();
 
 		$_SESSION = array();

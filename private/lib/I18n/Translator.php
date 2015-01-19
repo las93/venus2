@@ -13,7 +13,6 @@
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
 namespace Venus\lib\I18n;
 
 /**
@@ -29,21 +28,18 @@ namespace Venus\lib\I18n;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-
-class Translator {
-
+class Translator
+{
 	/**
 	 * Indicate if the configuration is good or not
 	 * @var bool
-	 */
-	
+	 */	
 	private static $_bConfigurated = false;
 	
 	/**
 	 * Indicate if the configuration is good or not
 	 * @var bool
 	 */
-	
 	private static $_aTranslator = false;
 	
 	/**
@@ -52,9 +48,8 @@ class Translator {
 	 * @access private
 	 * @return void
 	 */
-	
-	public static function setConfig($sFile) {
-	
+	public static function setConfig($sFile)
+	{
 		$this->_aTranslator = json_decode($sFile);
 		$this->_bConfigurated = true;
 	}
@@ -65,9 +60,8 @@ class Translator {
 	 * @access private
 	 * @return bool
 	 */
-	
-	public static function isConfigurated() {
-	
+	public static function isConfigurated()
+	{
 		return $this->_bConfigurated;
 	}
 	
@@ -78,9 +72,8 @@ class Translator {
 	 * @param  string $sValue value to translate
 	 * @return mixed
 	 */
-
-	public static function _($sValue) {
-	    
+	public static function _($sValue)
+	{    
 	    return $this->_aTranslator[$sValue];
 	}
 }
