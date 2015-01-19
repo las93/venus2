@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9490e3fdd5534699919223c97709a57c",
+    "hash": "b1b4d559b3ca78eda0ea840fa75c39ce",
     "packages": [
         {
             "name": "las93/apollina",
-            "version": "dev-master",
+            "version": "3.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/las93/apollina.git",
-                "reference": "9de5a17eddf257127dc2358cc573e86c57e2838f"
+                "reference": "b21910c8622fc83d4f511162a52c461886b81895"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/las93/apollina/zipball/9de5a17eddf257127dc2358cc573e86c57e2838f",
-                "reference": "9de5a17eddf257127dc2358cc573e86c57e2838f",
+                "url": "https://api.github.com/repos/las93/apollina/zipball/b21910c8622fc83d4f511162a52c461886b81895",
+                "reference": "b21910c8622fc83d4f511162a52c461886b81895",
                 "shasum": ""
             },
             "require": {
@@ -45,20 +45,20 @@
             "keywords": [
                 "library"
             ],
-            "time": "2015-01-14 21:15:24"
+            "time": "2015-01-19 23:03:44"
         },
         {
             "name": "las93/attila",
-            "version": "dev-master",
+            "version": "1.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/las93/attila.git",
-                "reference": "d483a3b36e7afc00085628fbf08c35c32a94afe1"
+                "reference": "b4ba6d164459a6e39e203c067e4eec0a58cac039"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/las93/attila/zipball/d483a3b36e7afc00085628fbf08c35c32a94afe1",
-                "reference": "d483a3b36e7afc00085628fbf08c35c32a94afe1",
+                "url": "https://api.github.com/repos/las93/attila/zipball/b4ba6d164459a6e39e203c067e4eec0a58cac039",
+                "reference": "b4ba6d164459a6e39e203c067e4eec0a58cac039",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +86,7 @@
             "keywords": [
                 "orm"
             ],
-            "time": "2015-01-14 21:28:29"
+            "time": "2015-01-19 23:06:53"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -94,12 +94,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "793885f33d0123d5d2fdaf7ff8419d3e87d2b0fa"
+                "reference": "b3cc9ccb3603daebff6f1545740d01a0266b4fc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/793885f33d0123d5d2fdaf7ff8419d3e87d2b0fa",
-                "reference": "793885f33d0123d5d2fdaf7ff8419d3e87d2b0fa",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/b3cc9ccb3603daebff6f1545740d01a0266b4fc4",
+                "reference": "b3cc9ccb3603daebff6f1545740d01a0266b4fc4",
                 "shasum": ""
             },
             "require": {
@@ -140,7 +140,7 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2014-12-08 13:10:04"
+            "time": "2015-01-19 13:13:13"
         }
     ],
     "packages-dev": [],

@@ -6,15 +6,15 @@
  * @category  	Attila
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
- * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @license   	https://github.com/las93/attila/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
  * @version   	Release: 1.0.0
- * @filesource	https://github.com/las93/venus2
+ * @filesource	https://github.com/las93/attila
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	1.0.0
  */
 namespace Attila;
 
-use \Venus\core\Config as Config;
+use \Attila\Db\Container as Container;
 
 /**
  * Db Manager
@@ -22,11 +22,11 @@ use \Venus\core\Config as Config;
  * @category  	Attila
  * @author    	Judicaël Paquet <judicael.paquet@gmail.com>
  * @copyright 	Copyright (c) 2013-2014 PAQUET Judicaël FR Inc. (https://github.com/las93)
- * @license   	https://github.com/las93/venus2/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
+ * @license   	https://github.com/las93/attila/blob/master/LICENSE.md Tout droit réservé à PAQUET Judicaël
  * @version   	Release: 1.0.0
- * @filesource	https://github.com/las93/venus2
+ * @filesource	https://github.com/las93/attila
  * @link      	https://github.com/las93
- * @since     	1.0
+ * @since     	1.0.0
  */
 class Db 
 {
@@ -37,47 +37,83 @@ class Db
 	 * @var    array
 	 */
 	private static $_oPdo = null;
+	
+	/**
+	 * the container of connection datas
+	 * 
+	 * @access private
+	 * @var    \Attila\Db\Container
+	 */
+	private static $_oContainerConnection = null;
 
 	/**
 	 * get instance of Pdo
 	 *
 	 * @access public
 	 * @param  string sName name of the configuration
+	 * @param  string $sType kind of database
+	 * @param  string $sHost host of the connection (path for sqlite)
+	 * @param  string $sUser user of the connection
+	 * @param  string $sPassword password of the connection
+	 * @param  string $sDbName name of the connection
 	 * @return void
 	 */
-	public static function connect($sName)
+	public static function connect(Container $oContainerConnection)
 	{
-		if (!isset(self::$_oPdo[$sName])) {
+	    if (self::getContainer() === null) { self::setContainer($oContainerConnection); }
+	    
+		if (!isset(self::$_oPdo[$oContainerConnection->getName()])) {
 
-			$oDbConf = Config::get('Db')->configuration;
-
-			if ($oDbConf->{$sName}->type == 'mysql') {
+			if ($oContainerConnection->getType() == 'mysql') {
 
 				try {
 
-					self::$_oPdo[$sName] = new \PDO('mysql:host='.$oDbConf->{$sName}->host.';dbname='.$oDbConf->{$sName}->db, $oDbConf->{$sName}->user, $oDbConf->{$sName}->password, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-					self::$_oPdo[$sName]->setAttribute(\PDO::ATTR_FETCH_TABLE_NAMES, 1);
-					self::$_oPdo[$sName]->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+					self::$_oPdo[$oContainerConnection->getName()] = new \PDO('mysql:host='.$oContainerConnection->getHost().';dbname='.$oContainerConnection->getDbName(), $oContainerConnection->getUser(), $oContainerConnection->getPassword(), array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+					self::$_oPdo[$oContainerConnection->getName()]->setAttribute(\PDO::ATTR_FETCH_TABLE_NAMES, 1);
+					self::$_oPdo[$oContainerConnection->getName()]->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 				}
 				catch (\Exception $oException) {
 
 					echo $oException->getMessage();
 				}
 			}
-			else if ($oDbConf->{$sName}->type == 'mssql') {
+			else if ($oDbConf->{$oContainerConnection->getName()}->type == 'mssql') {
 
-				self::$_oPdo[$sName] = new \PDO('mssql:host='.$oDbConf->{$sName}->host.';dbname='.$oDbConf->{$sName}->db, $oDbConf->{$sName}->user, $oDbConf->{$sName}->password);
-				self::$_oPdo[$sName]->setAttribute(\PDO::ATTR_FETCH_TABLE_NAMES, 1);
-				self::$_oPdo[$sName]->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+				self::$_oPdo[$oContainerConnection->getName()] = new \PDO('mssql:host='.$oContainerConnection->getHost().';dbname='.$oContainerConnection->getDbName(), $oContainerConnection->getUser(), $oContainerConnection->getPassword());
+				self::$_oPdo[$oContainerConnection->getName()]->setAttribute(\PDO::ATTR_FETCH_TABLE_NAMES, 1);
+				self::$_oPdo[$oContainerConnection->getName()]->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 			}
-			else if ($oDbConf->{$sName}->type == 'sqlite') {
+			else if ($oDbConf->{$oContainerConnection->getName()}->type == 'sqlite') {
 
-				self::$_oPdo[$sName] = new \PDO('sqlite:'.$oDbConf->{$sName}->path);
-				self::$_oPdo[$sName]->setAttribute(\PDO::ATTR_FETCH_TABLE_NAMES, 1);
-				self::$_oPdo[$sName]->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+				self::$_oPdo[$oContainerConnection->getName()] = new \PDO('sqlite:'.$oContainerConnection->getHost());
+				self::$_oPdo[$oContainerConnection->getName()]->setAttribute(\PDO::ATTR_FETCH_TABLE_NAMES, 1);
+				self::$_oPdo[$oContainerConnection->getName()]->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 			}
 		}
 
-		return self::$_oPdo[$sName];
+		return self::$_oPdo[$oContainerConnection->getName()];
+	}
+
+	/**
+	 * set container of the database connection
+	 *
+	 * @access public
+	 * @param Container $oContainer
+	 * @return string
+	 */
+	public static function setContainer(Container $oContainer)
+	{
+		self::$_oContainerConnection = $oContainer;
+	}
+
+	/**
+	 * get container of the database connection
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public static function getContainer()
+	{
+		return self::$_oContainerConnection;
 	}
 }

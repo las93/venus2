@@ -1,66 +1,23 @@
 [
     {
-        "name": "las93/apollina",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/las93/apollina.git",
-            "reference": "9de5a17eddf257127dc2358cc573e86c57e2838f"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/las93/apollina/zipball/9de5a17eddf257127dc2358cc573e86c57e2838f",
-            "reference": "9de5a17eddf257127dc2358cc573e86c57e2838f",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2015-01-14 21:15:24",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Apollina": "/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Paquet Judicaël",
-                "email": "las92i@homail.fr",
-                "role": "Developer"
-            }
-        ],
-        "description": "Library to create template in your app",
-        "homepage": "https://github.com/las93/apollina",
-        "keywords": [
-            "library"
-        ]
-    },
-    {
         "name": "las93/attila",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "1.0.0-beta1",
+        "version_normalized": "1.0.0.0-beta1",
         "source": {
             "type": "git",
             "url": "https://github.com/las93/attila.git",
-            "reference": "d483a3b36e7afc00085628fbf08c35c32a94afe1"
+            "reference": "b4ba6d164459a6e39e203c067e4eec0a58cac039"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/las93/attila/zipball/d483a3b36e7afc00085628fbf08c35c32a94afe1",
-            "reference": "d483a3b36e7afc00085628fbf08c35c32a94afe1",
+            "url": "https://api.github.com/repos/las93/attila/zipball/b4ba6d164459a6e39e203c067e4eec0a58cac039",
+            "reference": "b4ba6d164459a6e39e203c067e4eec0a58cac039",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2015-01-14 21:28:29",
+        "time": "2015-01-19 23:06:53",
         "type": "orm",
         "installation-source": "dist",
         "autoload": {
@@ -86,18 +43,61 @@
         ]
     },
     {
+        "name": "las93/apollina",
+        "version": "3.0.0-beta1",
+        "version_normalized": "3.0.0.0-beta1",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/las93/apollina.git",
+            "reference": "b21910c8622fc83d4f511162a52c461886b81895"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/las93/apollina/zipball/b21910c8622fc83d4f511162a52c461886b81895",
+            "reference": "b21910c8622fc83d4f511162a52c461886b81895",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2015-01-19 23:03:44",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Apollina": "/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Paquet Judicaël",
+                "email": "las92i@homail.fr",
+                "role": "Developer"
+            }
+        ],
+        "description": "Library to create template in your app",
+        "homepage": "https://github.com/las93/apollina",
+        "keywords": [
+            "library"
+        ]
+    },
+    {
         "name": "mobiledetect/mobiledetectlib",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/serbanghita/Mobile-Detect.git",
-            "reference": "793885f33d0123d5d2fdaf7ff8419d3e87d2b0fa"
+            "reference": "b3cc9ccb3603daebff6f1545740d01a0266b4fc4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/793885f33d0123d5d2fdaf7ff8419d3e87d2b0fa",
-            "reference": "793885f33d0123d5d2fdaf7ff8419d3e87d2b0fa",
+            "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/b3cc9ccb3603daebff6f1545740d01a0266b4fc4",
+            "reference": "b3cc9ccb3603daebff6f1545740d01a0266b4fc4",
             "shasum": ""
         },
         "require": {
@@ -108,7 +108,7 @@
             "johnkary/phpunit-speedtrap": "~1.0@dev",
             "phpunit/phpunit": "*"
         },
-        "time": "2014-12-08 13:10:04",
+        "time": "2015-01-19 13:13:13",
         "type": "library",
         "installation-source": "source",
         "autoload": {

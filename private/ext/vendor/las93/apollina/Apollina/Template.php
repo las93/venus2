@@ -105,18 +105,29 @@ class Template
 	 * @access private
 	 * @var    string
 	 */
-	private $_sBasePath = '';
+	private static $_sBasePath = '';
+
+	/**
+	 * The base path of templates
+	 *
+	 * @access private
+	 * @var    string
+	 */
+	private static $_sCachePath = '';
 
 	/**
 	 * constructor of class
 	 *
 	 * @access public
 	 * @param  string $sName name of the template
+	 * @param  string $sCachePath cache of the cache
 	 * @return \Apollina\Template
 	 */
-	public function __construct($sName = null, $sBasePathOfTemplate = null) 
+	public function __construct($sName = null, $sBasePathOfTemplate = null, $sCachePath = null) 
 	{
-	    if ($sBasePathOfTemplate !== null) { $this->_sBasePath = $sBasePathOfTemplate; }
+	    if ($sBasePathOfTemplate !== null) { self::$_sBasePath = $sBasePathOfTemplate; }
+
+	    if ($sCachePath !== null) { self::$_sCachePath = $sCachePath; }
 	    
 	    if (class_exists('\Mobile_Detect')) {
 	        
@@ -128,7 +139,7 @@ class Template
 
 			if ($sName && is_string($sName) && strstr($sName, '.tpl')) {
 
-				$sMobileTpl = $this->_sBasePath.str_replace('.tpl', 'Mobile.tpl', $sName);
+				$sMobileTpl = self::$_sBasePath.str_replace('.tpl', 'Mobile.tpl', $sName);
 				if (file_exists($sMobileTpl)) { $sName = str_replace('.tpl', 'Mobile.tpl', $sName); }
 			}
 		}
@@ -290,13 +301,13 @@ class Template
 
 			if ($sName) {
 
-				$sMobileTpl = $this->_sBasePath.str_replace('.tpl', 'Mobile.tpl', $sName);
+				$sMobileTpl = self::$_sBasePath.str_replace('.tpl', 'Mobile.tpl', $sName);
 				if (file_exists($sMobileTpl)) { $sName = str_replace('.tpl', 'Mobile.tpl', $sName); }
 			}
 
 			if (isset($this->_aVar['model'])) {
 
-				$sMobileTpl = $this->_sBasePath.str_replace('.tpl', 'Mobile.tpl', $this->_aVar['model']);
+				$sMobileTpl = self::$_sBasePath.str_replace('.tpl', 'Mobile.tpl', $this->_aVar['model']);
 				if (file_exists($sMobileTpl)) { $this->_aVar['model'] = str_replace('.tpl', 'Mobile.tpl', $this->_aVar['model']); }
 			}
 		}
@@ -305,20 +316,11 @@ class Template
 
 		ob_start();
 
-		if (!strstr($this->_sTemplateName, 'View')) {
+        $iFileModificationTime = filemtime(self::$_sBasePath.$this->_sTemplateName);
 
-			$iFileModificationTime = filemtime(str_replace('lib', '', __DIR__).'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$this->_sTemplateName);
-		}
-		else {
+		if (file_exists(self::$_sCachePath.$this->_getEncodeTemplateName($this->_sTemplateName).'.cac.php')) {
 
-			$iFileModificationTime = filemtime(str_replace('lib', '', __DIR__).$this->_sTemplateName);
-		}
-
-		$sTmpDirectory = str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__).DIRECTORY_SEPARATOR;
-
-		if (file_exists($sTmpDirectory.$this->_getEncodeTemplateName($this->_sTemplateName).'.cac.php')) {
-
-			$iCacheModificationTime = filemtime($sTmpDirectory.$this->_getEncodeTemplateName($this->_sTemplateName).'.cac.php');
+			$iCacheModificationTime = filemtime(self::$_sCachePath.$this->_getEncodeTemplateName($this->_sTemplateName).'.cac.php');
 		}
 		else {
 
@@ -327,16 +329,38 @@ class Template
 
 		if ($iCacheModificationTime < $iFileModificationTime) {
 
-			$sTemplate = file_get_contents($this->_sBasePath.$this->_sTemplateName);
+			$sTemplate = file_get_contents(self::$_sBasePath.$this->_sTemplateName);
 			$this->_transform($sTemplate, $this->_sTemplateName, $bMainCall, true);
 		}
 		else {
 
-			$sTemplate = file_get_contents($this->_sBasePath.$this->_sTemplateName);
+			$sTemplate = file_get_contents(self::$_sBasePath.$this->_sTemplateName);
 			$this->_transform($sTemplate, $this->_sTemplateName, $bMainCall, false);
 		}
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * get the basepath
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public static function getBasePath() 
+	{
+		return self::$_sBasePath;
+	}
+
+	/**
+	 * get the basepath
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public static function getCachePath() 
+	{
+		return self::$_sCachePath;
 	}
 
 	/**
@@ -357,11 +381,10 @@ class Template
 		// {$foo[section_name]}? http://www.smarty.net/docs/en/language.syntax.variables.tpl
 		//*****************************************************************************************************************************
 
-		$sTmpDirectory = str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__).DIRECTORY_SEPARATOR;
+		$sTmpDirectory = self::$_sCachePath;
 		$sTmpDirectory = str_replace('\\', '\\\\\\', $sTmpDirectory);
 
-		$sViewDirectory = str_replace('lib', 'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR, __DIR__).DIRECTORY_SEPARATOR;
-		$sViewDirectory = str_replace('\\', '\\\\\\', $sViewDirectory);
+		$sViewDirectory = self::$_sBasePath;
 
 		$_aProtectedVar = $this->_aVar;
 		$_aProtectedVar['app']['config'] = array();
@@ -562,7 +585,7 @@ class Template
 
 			if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'Template'.DIRECTORY_SEPARATOR.'Functions'.DIRECTORY_SEPARATOR.$sName.'.php')) {
 
-				$sClassName = 'Venus\lib\Template\Functions\\'.$sName;
+				$sClassName = 'Apollina\Template\Functions\\'.$sName;
 				$oFunction = new $sClassName;
 				$aAttributes = explode(' ', $aOne[2]);
 
@@ -587,7 +610,6 @@ class Template
 					}
 				}
 
-				$oFunction->run($aParams);
 				$sContent = str_replace($aOne[0], $oFunction->replaceBy($aParams), $sContent);
 			}
 		}
@@ -598,16 +620,14 @@ class Template
 
 		if (preg_match('|\{include model\}|', $sContent)) {
 
-			$sContent = preg_replace('|\{include model\}|', '<?php $_aProtectedVar[\'model\'] = preg_replace("#^.+[^a-zA-Z0-9_-]([a-zA-Z0-9_-]+\.tpl)$#msi", "\$1", $_aProtectedVar[\'model\']); if (class_exists(\'\\Mobile_Detect\')) { $oMobileDetect = new \Mobile_Detect; $bIsMobile = $oMobileDetect->isMobile(); } else { $bIsMobile = false; } if ($bIsMobile && file_exists("'.$sTmpDirectory.'".md5(str_replace(".tpl", "Mobile.tpl", str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\']))).".cac.php")) { include "'.$sTmpDirectory.'".md5(str_replace(".tpl", "Mobile.tpl", str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\']))).".cac.php"; } else { include "'.$sTmpDirectory.'".md5(str_replace("\\\\\\\\", "/", $_aProtectedVar[\'model\'])).".cac.php"; } ?>', $sContent);
+			if ($this->_bIsMobile && file_exists(self::$_sBasePath.str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model']))) {
 
-			if ($this->_bIsMobile && file_exists(str_replace('lib', 'src/'.PORTAIL.'/View/', __DIR__).str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model']))) {
-
-				$this->_transform(file_get_contents(str_replace('lib', 'src/'.PORTAIL.'/View/', __DIR__).str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model'])), str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model']));
+				$this->_transform(file_get_contents(self::$_sBasePath.str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model'])), str_replace('.tpl', 'Mobile.tpl', $_aProtectedVar['model']));
 			}
 			else {
 
-				$sModelname = str_replace(array('src/'.PORTAIL.'/View/', 'src\\'.PORTAIL.'\View\\', '\\'), array('', '', ''), $_aProtectedVar['model']);
-				$this->_transform(file_get_contents(str_replace('lib', 'src/'.PORTAIL.'/View/', __DIR__).$sModelname), $sModelname);
+				//$sModelname = str_replace(array('src/'.PORTAIL.'/View/', 'src\\'.PORTAIL.'\View\\', '\\'), array('', '', ''), $_aProtectedVar['model']);
+				$this->_transform(file_get_contents(self::$_sBasePath.$sModelname), $sModelname);
 			}
 		}
 
@@ -668,12 +688,9 @@ class Template
 	 */
     private function _includeTransform2($aMatch) 
     {
-		$sViewDirectory = str_replace('lib', 'src'.DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR, __DIR__);
-		$sViewDirectory = str_replace('\\', '\\\\\\', $sViewDirectory);
-		//echo '$oTemplate = new \Apollina\Template("src".DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR."View".DIRECTORY_SEPARATOR."'.$aMatch[1].'"); $oTemplate->fetch(null, false);';
-		eval('$oTemplate = new \Apollina\Template("src".DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR."View".DIRECTORY_SEPARATOR."'.$aMatch[1].'"); $oTemplate->fetch(null, false);');
-		//eval('$oTemplate = new \Apollina\Template("'.$aMatch[1].'"); $oTemplate->fetch(null, false);');
-		return '<?php include "'.$this->sTmpDirectory.'".md5("src".DIRECTORY_SEPARATOR.PORTAIL.DIRECTORY_SEPARATOR."View".DIRECTORY_SEPARATOR."'.$aMatch[1].'").".cac.php"; ?>';
+		$sViewDirectory = self::$_sBasePath;
+		eval('$oTemplate = new \Apollina\Template("'.self::$_sBasePath.$aMatch[1].'"); $oTemplate->fetch(null, false);');
+		return '<?php include "'.$this->sTmpDirectory.'".md5("'.$aMatch[1].'").".cac.php"; ?>';
 	}
 
 	/**
