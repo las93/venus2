@@ -34,6 +34,15 @@ use \Attila\Orm\Where as Where;
  */
 abstract class Model extends Mother
 {
+    
+    /**
+     * Callback to filter the results
+     * 
+     * @access private
+     * @var    callable
+     */
+    private $_cFilterCallback;
+    
 	/**
 	 * Constructor
 	 *
@@ -62,9 +71,9 @@ abstract class Model extends Mother
 	/**
 	 * classic method to find an entity
 	 *
-	 * @access private
+	 * @access public
 	 * @param  object $oEntityCriteria
-	 * @return void
+	 * @return array
 	 */
 	public function find($oEntityCriteria)
 	{
@@ -80,6 +89,14 @@ abstract class Model extends Mother
 						 ->load();
 
 		if ($aResults) { return $aResults[0]; }
+
+		if ($this->_isFilter()) {
+		    
+		    foreach ($aResults as $iKey => $oValue) {
+		        
+		        $aResults[$iKey] = $this->_applyFilter($oValue);
+		    }
+		}
 
 		return $aResults;
 	}
@@ -115,6 +132,8 @@ abstract class Model extends Mother
         					 ->limit(1)
         					 ->load(false, $sEntityNamespace);
 
+        	if (isset($aResults[0]) && $this->_isFilter()) { $aResults[0] = $this->_applyFilter($aResults[0]); }
+        	
         	if (isset($aResults[0])) { return $aResults[0]; }
         	else { return array(); }
         }
@@ -128,6 +147,14 @@ abstract class Model extends Mother
         					 ->where(array($aMatchs[1] => $aArguments[0]))
         					 ->load(false, $sEntityNamespace);
 
+        	if ($this->_isFilter()) {
+        	
+        	    foreach ($aResults as $iKey => $oValue) {
+        	
+        	        $aResults[$iKey] = $this->_applyFilter($oValue);
+        	    }
+        	}
+        	
         	return $aResults;
         }
         else if (preg_match('/^findOneOrderBy([a-zA-Z_]+)$/', $sName, $aMatchs)) {
@@ -144,6 +171,8 @@ abstract class Model extends Mother
         					 ->limit(1)
         					 ->load(false, $sEntityNamespace);
 
+        	if (isset($aResults[0]) && $this->_isFilter()) { $aResults[0] = $this->_applyFilter($aResults[0]); }
+        	
         	if (isset($aResults[0])) { return $aResults[0]; }
         	else { return array(); }
         }
@@ -160,6 +189,14 @@ abstract class Model extends Mother
         					 ->orderBy(array($aMatchs[1]))
         					 ->load(false, $sEntityNamespace);
 
+        	if ($this->_isFilter()) {
+        	
+        	    foreach ($aResults as $iKey => $oValue) {
+        	
+        	        $aResults[$iKey] = $this->_applyFilter($oValue);
+        	    }
+        	}
+        	
         	return $aResults;
         }
     }
@@ -168,8 +205,8 @@ abstract class Model extends Mother
     /**
      * get all line of the tables
      *
-     * @access private
-     * @return void
+     * @access public
+     * @return array
      */
     public function findAll() 
     {
@@ -179,6 +216,14 @@ abstract class Model extends Mother
     					 ->select(array('*'))
     					 ->from($this->_sTableName)
     					 ->load(false, $sEntityNamespace);
+    	
+    	if ($this->_isFilter()) {
+    	     
+    	    foreach ($aResults as $iKey => $oValue) {
+    	         
+    	        $aResults[$iKey] = $this->_applyFilter($oValue);
+    	    }
+    	}
 
     	return $aResults;
     }
@@ -203,6 +248,8 @@ abstract class Model extends Mother
     					 ->limit(1)
     					 ->load(false, $sEntityNamespace);
 
+    	if (isset($aResults[0]) && $this->_isFilter()) { $aResults[0] = $this->_applyFilter($aResults[0]); }
+    	
     	if (isset($aResults[0])) { return $aResults[0]; }
     	else { return false; }
     }
@@ -212,7 +259,7 @@ abstract class Model extends Mother
      *
      * @access public
      * @param  array $aArguments
-     * @return object
+     * @return array
      *
      * @example	$oModel->findBy(array('id' => 12);
      */
@@ -225,6 +272,14 @@ abstract class Model extends Mother
     					 ->from($this->_sTableName)
     					 ->where($aArguments)
     					 ->load(false, $sEntityNamespace);
+    	
+    	if ($this->_isFilter()) {
+    	     
+    	    foreach ($aResults as $iKey => $oValue) {
+    	         
+    	        $aResults[$iKey] = $this->_applyFilter($oValue);
+    	    }
+    	}
 
     	return $aResults;
     }
@@ -249,6 +304,8 @@ abstract class Model extends Mother
     					 ->limit(1)
     					 ->load(false, $sEntityNamespace);
 
+    	if (isset($aResults[0]) && $this->_isFilter()) { $aResults[0] = $this->_applyFilter($aResults[0]); }
+
     	return $aResults[0];
     }
 
@@ -257,7 +314,7 @@ abstract class Model extends Mother
      *
      * @access public
      * @param  array $aArguments
-     * @return object
+     * @return array
      *
      * @example	$oModel->findOrderBy(array('id DESC');
      */
@@ -270,6 +327,14 @@ abstract class Model extends Mother
     					 ->from($this->_sTableName)
     					 ->orderBy($aArguments)
     					 ->load(false, $sEntityNamespace);
+    	
+    	if ($this->_isFilter()) {
+    	     
+    	    foreach ($aResults as $iKey => $oValue) {
+    	         
+    	        $aResults[$iKey] = $this->_applyFilter($oValue);
+    	    }
+    	}
 
     	return $aResults;
     }
@@ -277,9 +342,9 @@ abstract class Model extends Mother
 	/**
 	 * classic method to get a list of entities
 	 *
-	 * @access private
+	 * @access public
 	 * @param  object $oEntityCriteria
-	 * @return void
+	 * @return array
 	 */
 	public function get($oEntityCriteria = null)
 	{
@@ -309,6 +374,14 @@ abstract class Model extends Mother
 			 			 ->from($this->_sTableName)
 			 			 ->where($aEntity)
     					 ->load(false, $sEntityNamespace);
+    	
+    	if ($this->_isFilter()) {
+    	     
+    	    foreach ($aResults as $iKey => $oValue) {
+    	         
+    	        $aResults[$iKey] = $this->_applyFilter($oValue);
+    	    }
+    	}
 
 		return $aResults;
 	}
@@ -316,9 +389,9 @@ abstract class Model extends Mother
 	/**
 	 * classic method to get a list of entities
 	 *
-	 * @access private
+	 * @access public
 	 * @param  object $oEntityCriteria
-	 * @return void
+	 * @return int
 	 */
 	public function update($oEntityCriteria)
 	{
@@ -344,114 +417,124 @@ abstract class Model extends Mother
 				$aPrimaryKeys[$sOne] = $aEntity[$sOne];
 			}
 
-			$aResults = $this->orm
-							 ->update($this->_sTableName)
-							 ->set($aEntity)
-							 ->where($aPrimaryKeys)
-							 ->save();
+			$iResult = $this->orm
+					    	->update($this->_sTableName)
+							->set($aEntity)
+							->where($aPrimaryKeys)
+							->save();
 		}
 		else {
 
-			$aResults = $this->orm
-				 			 ->update($this->_sTableName)
-				 			 ->set($aEntity)
-				 			 ->where(array($sPrimaryKeyName => $aEntity[$sPrimaryKeyName]))
-							 ->save();
+			$iResult = $this->orm
+				 			->update($this->_sTableName)
+				 			->set($aEntity)
+				 			->where(array($sPrimaryKeyName => $aEntity[$sPrimaryKeyName]))
+							->save();
 		}
 
-		return $aResults;
+		return $iResult;
 	}
 
 	/**
 	 * classic method to get a list of entities
 	 *
-	 * @access private
+	 * @access public
 	 * @param  object $oEntityCriteria
-	 * @return void
+	 * @return int
 	 */
 	public function insert($oEntity)
 	{
 		$this->_checkEntity($oEntity);
 
-		$aResults = $this->orm
-						 ->insert($this->_sTableName)
-						 ->values(LibEntity::getAllEntity($oEntity))
-						 ->save();
+		$iResult = $this->orm
+						->insert($this->_sTableName)
+						->values(LibEntity::getAllEntity($oEntity))
+						->save();
 
-		return $aResults;
+		return $iResult;
 	}
 
 	/**
 	 * get last row
 	 *
-	 * @access private
-	 * @return void
+	 * @access public
+	 * @return object
 	 */
 
 	public function getLastRow()
 	{
 		$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
 		
-		$result = $this->orm
-					   ->select(array('*'))
-			 		   ->from($this->_sTableName)
-			 		   ->orderBy(array(LibEntity::getPrimaryKeyName($this->entity) => 'DESC'))
-			 		   ->limit(1)
-    				   ->load(false, $sEntityNamespace);
+		$aResults = $this->orm
+					     ->select(array('*'))
+			 		     ->from($this->_sTableName)
+			 		     ->orderBy(array(LibEntity::getPrimaryKeyName($this->entity) => 'DESC'))
+			 		     ->limit(1)
+    				     ->load(false, $sEntityNamespace);
 
-		return $result[0];
+    	if (isset($aResults[0]) && $this->_isFilter()) { $aResults[0] = $this->_applyFilter($aResults[0]); }
+
+		return $aResults[0];
 	}
 
 	/**
 	 * save Entity and get it
 	 *
-	 * @access private
+	 * @access public
 	 * @param  object $oEntity
-	 * @return void
+	 * @return int|object
 	 */
 	public function insertAndGet($oEntity)
 	{
-		$result = $this->insert($oEntity);
-		if ($result) {
-			return $this->getLastRow();
-		}
+		$iResult = $this->insert($oEntity);
+		
+		if ($iResult) { return $this->getLastRow(); }
 
-		return $result;
+		return $iResult;
 	}
 
 	/**
 	 * update Entity and get it
 	 *
-	 * @access private
+	 * @access public
 	 * @param  object $oEntityCriteria
-	 * @return void
+	 * @return mixed
 	 */
-
 	public function updateAndGet($oEntity)
 	{
 		$sEntityNamespace = preg_replace('/^(Venus\\\\src\\\\[a-zA-Z]+\\\\)Model\\\\.+$/', '$1Entity\\', get_called_class());
 		
-		$result = $this->update($oEntity);
+		$mResult = $this->update($oEntity);
 
 		if ($result) {
-			$aEntity = get_object_vars(LibEntity::getRealEntity($oEntity));
-			$pk = LibEntity::getPrimaryKeyName($aEntity);
-			$result = $this->orm
-					   ->select(array('*'))
-			 		   ->from($this->_sTableName)
-			 		   ->where(array($pk => $aEntity[$pk]))
-    				   ->load(false, $sEntityNamespace);
+			
+		    $aEntity = get_object_vars(LibEntity::getRealEntity($oEntity));
+			$mPrimaryKey = LibEntity::getPrimaryKeyName($aEntity);
+			
+			$mResult = $this->orm
+					        ->select(array('*'))
+			 		        ->from($this->_sTableName)
+			 		        ->where(array($mPrimaryKey => $aEntity[$mPrimaryKey]))
+    				        ->load(false, $sEntityNamespace);
+    	
+        	if ($this->_isFilter()) {
+        	     
+        	    foreach ($mResult as $iKey => $oValue) {
+        	         
+        	        $mResult[$iKey] = $this->_applyFilter($oValue);
+        	    }
+        	}
 		}
 
-		return $result;
+		return $mResult;
 	}
 
 	/**
 	 * classic method to delete one entities
 	 *
-	 * @access private
+	 * @access public
 	 * @param  object $oEntityCriteria
-	 * @return void
+	 * @return object
 	 */
 	public function delete($oEntityCriteria)
 	{
@@ -459,26 +542,43 @@ abstract class Model extends Mother
 
 		$aEntity = LibEntity::getAllEntity($oEntityCriteria, true);
 
-		$aResults = $this->orm
-		 				 ->delete($this->_sTableName)
-		 				 ->where($aEntity)
-		 				 ->save();
+		$this->orm
+		 	 ->delete($this->_sTableName)
+		 	 ->where($aEntity)
+		 	 ->save();
+		
+		return $this;
 	}
 
 	/**
 	 * classic method to truncate a table
 	 *
-	 * @access private
-	 * @return void
+	 * @access public
+	 * @return object
 	 */
 	public function truncate()
 	{    
 		$aClass = explode('\\', get_called_class());
 		$sClassName = $aClass[count($aClass) - 1];
 	
-	    $aResults = $this->orm
-	                     ->truncate($sClassName)
-	                     ->save();
+	    $this->orm
+	         ->truncate($sClassName)
+	         ->save();
+		
+		return $this;
+	}
+
+	/**
+	 * add a filter on the results
+	 *
+	 * @access public
+	 * @param  callable $cCallback callback to do the filter on the results
+	 * @return object
+	 */
+	public function filter(callable $cCallback)
+	{    
+	    $this->_cFilterCallback = $cCallback;
+	    return $this;
 	}
 
 	/**
@@ -497,5 +597,30 @@ abstract class Model extends Mother
 
 			throw new \Exception('You must passed '.$sClassName.' like Entity!');
 		}
+	}
+
+	/**
+	 * apply the filter on the results
+	 *
+	 * @access private
+	 * @param  object $oResults result to apply filter
+	 * @return object
+	 */
+	private function _applyFilter($oResults)
+	{    
+	    return $this->_cFilterCallback($oResults);
+	}
+
+	/**
+	 * apply the filter on the results
+	 *
+	 * @access private
+	 * @param  object $oResults result to apply filter
+	 * @return object
+	 */
+	private function _isFilter()
+	{    
+	    if (is_callable($this->_cFilterCallback)) { return true; }
+	    else { return false; }
 	}
 }

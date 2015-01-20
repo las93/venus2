@@ -39,19 +39,29 @@ spl_autoload_register(function ($sClassName)
 
     	require str_replace('\\', DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).$sFileName);
     }
-    else {
-
-    	require_once str_replace('conf', 'core', __DIR__).DIRECTORY_SEPARATOR.'Config.php';
-    	$oDbConf = \Venus\core\Config::get('Const')->autoload->class;
-
-    	if (isset($oDbConf->$sClassName)) {
-
-    		require str_replace('\\', DIRECTORY_SEPARATOR, str_replace('private'.DIRECTORY_SEPARATOR.'conf', '', __DIR__).$oDbConf->$sClassName);
-    	}
-    }
 });
+
+/**
+ * Load the composer autoload
+ */
 
 if (file_exists(str_replace('conf', '', __DIR__).'ext/vendor/autoload.php')) {
     
     include str_replace('conf', '', __DIR__).'ext/vendor/autoload.php';
+}
+
+/**
+ * Load the autoload file (or simple files) defined in the Const.conf
+ */
+
+$oConfig = \Venus\core\Config::get('Const');
+
+if (isset($oConfig) && isset($oConfig->autoload)) {
+    
+    $oAutoloadConf = $oConfig->autoload;
+    
+    foreach ($oAutoloadConf as $sFile) {
+    
+        require '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$sFile;
+    }
 }
