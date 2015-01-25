@@ -36,29 +36,16 @@ class Http
         'HTTP_ACCEPT_ENCODING', 'HTTP_ACCEPT_LANGUAGE');
 
 	/**
-	 * import   librairy of vendors
+	 * get the put method
 	 *
 	 * @access public
 	 * @return array
+	 * 
+	 * @deprecated Please use the \Venus\lib\Request::getPut();
 	 */
 	public static function getPut() 
 	{	    
-	    $aPut = array();
-	    
-	    $rPutResource = fopen("php://input", "r");
-	    
-	    while ($sData = fread($rPutResource, 1024)) {
-
-	        $aSeparatePut = explode('&', $sData);
-	        
-	        foreach($aSeparatePut as $sOne) {
-	            
-	            $aOnePut = explode('=', $sOne);
-	            $aPut[$aOnePut[0]] = $aOnePut[1];
-	        }
-	    }
-	    
-	    return $aPut;
+	    return Request::getPut();
 	}
 	
 	/**

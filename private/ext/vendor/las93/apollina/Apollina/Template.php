@@ -116,6 +116,38 @@ class Template
 	private static $_sCachePath = '';
 
 	/**
+	 * The render level
+	 *
+	 * @access private
+	 * @var    int
+	 */
+	private static $_iRenderLevel = 5;
+	
+	/**
+	 * constant to define the render level
+	 * @var int
+	 */
+	const LEVEL_NO_RENDER = 0;
+	const LEVEL_VIEW = 1;
+	const LEVEL_LAYOUT = 2;
+
+	/**
+	 * If the tempalte is the layout
+	 *
+	 * @access private
+	 * @var    bool
+	 */
+	private $_bIsLayout = false;
+
+	/**
+	 * If the tempalte is the layout
+	 *
+	 * @access private
+	 * @var    array
+	 */
+	private static $_aDisableRenderLevel = array(1 => false, 2 => false);
+	
+	/**
 	 * constructor of class
 	 *
 	 * @access public
@@ -123,8 +155,10 @@ class Template
 	 * @param  string $sCachePath cache of the cache
 	 * @return \Apollina\Template
 	 */
-	public function __construct($sName = null, $sBasePathOfTemplate = null, $sCachePath = null) 
+	public function __construct($sName = null, $sBasePathOfTemplate = null, $sCachePath = null, $bIsLayout = false) 
 	{
+	    $this->_bIsLayout = $bIsLayout;
+	    
 	    if ($sBasePathOfTemplate !== null) { self::$_sBasePath = $sBasePathOfTemplate; }
 
 	    if ($sCachePath !== null) { self::$_sCachePath = $sCachePath; }
@@ -364,6 +398,36 @@ class Template
 	}
 
 	/**
+	 * get the basepath
+	 *
+	 * @access public
+	 * @param  int $iRenderLevel
+	 * @return \Apollina\Template
+	 */
+	public function setRenderLevel($iRenderLevel) 
+	{
+	    self::$_iRenderLevel = $iRenderLevel;
+		return $this;
+	}
+
+	/**
+	 * get the basepath
+	 *
+	 * @access public
+	 * @param  array $aDisableRenderLevel
+	 * @return \Apollina\Template
+	 */
+	public function disableLevel($aDisableRenderLevel) 
+	{
+	    foreach ($aDisableRenderLevel as $iKey => $bRenderLevel) {
+
+	        self::$_aDisableRenderLevel[$iKey] = $bRenderLevel;
+	    }
+	    
+		return $this;
+	}
+
+	/**
 	 * assign a variable for the template
 	 *
 	 * @access private
@@ -374,6 +438,25 @@ class Template
 	 */
 	private function _transform($sContent, $sTemplateName, $bFirst = false, $bDoCompilation = true) 
 	{
+	    if ($this->_bIsLayout === true && self::$_aDisableRenderLevel[1] === true 
+	       && self::$_aDisableRenderLevel[2] === true) { 
+
+	        $sContent = '';
+	    }
+	    else if ($this->_bIsLayout === true && self::$_aDisableRenderLevel[1] === true 
+	       && self::$_aDisableRenderLevel[2] === false) { 
+
+	        $sContent = preg_replace('/^(.*)\{include file=\$model\}(.*)$/msi', '$1$2', $sContent);
+	    }
+	    else if ($this->_bIsLayout === true && self::$_iRenderLevel < 2) { 
+
+	        $sContent = preg_replace('/^.*(\{include file=\$model\}).*$/msi', '$1', $sContent);
+	    }
+	    else if (self::$_iRenderLevel < 1 || self::$_aDisableRenderLevel[1] === true) { 
+
+	        $sContent = '';
+	    }
+	    
 		//*****************************************************************************************************************************
 		// NEW version
 		// @deprecated

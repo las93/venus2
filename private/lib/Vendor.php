@@ -48,15 +48,16 @@ class Vendor
 	 * @access public
 	 * @param  string $sVendorName
 	 * @param  mixed $mParam
+	 * @param  mixed $mParam2
 	 * @return bool|object
 	 */
 
-	public static function getVendor($sVendorName, $mParam = null) {
+	public static function getVendor($sVendorName, $mParam = null, $mParam2 = null) {
 
 	    if ($sVendorName === 'Apollina\Template') { 
 
 	        return new $sVendorName($mParam, str_replace('lib', '', __DIR__), 
-	            str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__));
+	            str_replace('private'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__), $mParam2);
 	    }
 	    else if ($sVendorName === 'Attila\Orm') { 
 
@@ -64,6 +65,10 @@ class Vendor
 
 	        return new $sVendorName($oDbConfig->db, $oDbConfig->type, $oDbConfig->host, $oDbConfig->user, $oDbConfig->password, 
 	            $oDbConfig->db);
+	    }
+	    else if (isset($mParam) && isset($mParam2)) { 
+	        
+	        return new $sVendorName($mParam, $mParam2);
 	    }
 	    else if (isset($mParam)) { 
 	        

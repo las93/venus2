@@ -123,4 +123,55 @@ class Request
 		if (isset($_POST)) { return $_POST; }
 		else { return array(); }
 	}
+
+	/**
+	 * if there are POST parameters
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public function isPost()
+	{
+		if (isset($_POST) && count($_POST) > 0) { return true; }
+		else { return false; }
+	}
+
+	/**
+	 * get the POST for $sName
+	 *
+	 * @access public
+	 * @param  string $sName
+	 * @return mixed
+	 */
+	public function getPost($sName)
+	{
+		if (isset($_POST[$sName])) { return $_POST[$sName]; }
+		else { return false; }
+	}
+
+	/**
+	 * get the put method
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public static function getPut() 
+	{	    
+	    $aPut = array();
+	    
+	    $rPutResource = fopen("php://input", "r");
+	    
+	    while ($sData = fread($rPutResource, 1024)) {
+
+	        $aSeparatePut = explode('&', $sData);
+	        
+	        foreach($aSeparatePut as $sOne) {
+	            
+	            $aOnePut = explode('=', $sOne);
+	            $aPut[$aOnePut[0]] = $aOnePut[1];
+	        }
+	    }
+	    
+	    return $aPut;
+	}
 }

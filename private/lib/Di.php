@@ -29,114 +29,55 @@ namespace Venus\lib;
 class Di
 {
 	/**
-	 * contener of depency injector
+	 * contener of depency injector for all instances
 	 *
 	 * @access private
 	 * @var    array
 	 */
-	private static $_aDependencyInjectorContener = null;
-
+	private static $_aSharedDependencyInjectorContener = null;
+	
 	/**
-	 * import   librairy of vendors
+	 * contener of depency injector just for this instance
 	 *
-	 * @access public
-	 * @param  string $sClass class of vendors/ to import
-	 * @param  string $sFolder folder to import (all files will be imported automaticaly)
-	 * @param  string $sNameOfDi name to create your import
-	 * @return boolean
-	 *
-	 * @exemple  	new \Venus\core\Di::import('smarty', 'smarty', 'TplManager');
-	 * 				$oDi = new \Venus\core\Di;
-	 * 				$oSmarty = $oDi->get('TplManager');
-	 *
-	 * 				please set smarty in vendors/smarty/*
+	 * @access private
+	 * @var    array
 	 */
-	public static function import($sClass, $sFolder, $sNameOfDi)
-	{
-		$sDirectory = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'vendors'.DIRECTORY_SEPARATOR.$sFolder;
-		$aFiles = scandir($sDirectory);
-
-		foreach ($aFiles as $sOneFile) {
-
-			if (preg_match('/\.php/', $sOneFile)) {
-
-				include_once($sDirectory.DIRECTORY_SEPARATOR.$sOneFile);
-			}
-		}
-
-		if (class_exists($sClass)) {
-
-			self::$_aDependencyInjectorContener[md5($sNameOfDi)] = new $sClass;
-			self::get($sNameOfDi);
-		}
-		else {
-
-			throw new \Exception("The class ".$sClass." not found!");
-		}
-	}
+	private $_aDependencyInjectorContener = null;
 
 	/**
 	 * get the injection (no replace it if it exists)
 	 *
 	 * @access public
 	 * @param  string $sNameOfDi name of injection
-	 * @param  array $aParameters parameters of the constructor
-	 * @return object
+	 * @return mixed
 	 */
-	public function get($sNameOfDi, array $aParameters = array())
+	public function get($sNameOfDi)
 	{
-		if (!isset(self::$_aDependencyInjectorContener[md5($sNameOfDi)])) {
+		if (isset(self::$_aSharedDependencyInjectorContener[md5($sNameOfDi)])) {
 
-			if (count($aParameters) > 0) {
-
-				$oReflectionClass  = new \ReflectionClass($sNameOfDi);
-				self::$_aDependencyInjectorContener[md5($sNameOfDi)] = $oReflectionClass->newInstanceArgs($aParameters);
-			}
-			else {
-
-				self::$_aDependencyInjectorContener[md5($sNameOfDi)] = new $sNameOfDi;
-			}
+			return self::$_aSharedDependencyInjectorContener[md5($sNameOfDi)];
+		}
+		else if (isset($this->_aDependencyInjectorContener[md5($sNameOfDi)])) {
+		    
+		    return $this->_aDependencyInjectorContener[md5($sNameOfDi)];
 		}
 
-		return self::$_aDependencyInjectorContener[md5($sNameOfDi)];
-	}
-
-
-	/**
-	 * get the injection (replace it if it exists)
-	 *
-	 * @access public
-	 * @param  string $sNameOfDi name of injection
-	 * @param  array $aParameters parameters of the constructor
-	 * @return object
-	 */
-	public function newInstance($sNameOfDi, array $aParameters = array())
-	{
-		if (count($aParameters) > 0) {
-
-			$oReflectionClass  = new \ReflectionClass($sNameOfDi);
-			self::$_aDependencyInjectorContener[md5($sNameOfDi)] = $oReflectionClass->newInstanceArgs($aParameters);
-		}
-		else {
-
-			self::$_aDependencyInjectorContener[md5($sNameOfDi)] = new $sNameOfDi;
-		}
-
-		return self::$_aDependencyInjectorContener[md5($sNameOfDi)];
+		return false;
 	}
 
 	/**
-	 * set a property
+	 * get a property
 	 *
 	 * @access public
 	 * @param  string $sNameOfDi name of di
-	 * @param  string $sParameter name of field to set
-	 * @param  mixed $mValue value to set
+	 * @param  callable $cFunction functrion to use when you get this dependance injection
+	 * @param  bool $bShared indicate if you want shares or not this injection with others instances
 	 * @return \Venus\core\Di
 	 */
-	public function setProperty($sNameOfDi, $sParameter, $mValue)
+	public function set($sNameOfDi, $cFunction, $bShared = false)
 	{
-		self::$_aDependencyInjectorContener[md5($sNameOfDi)]->$sParameter = $mValue;
+	    if ($bShared === true) { self::$_aSharedDependencyInjectorContener[md5($sNameOfDi)] = $cFunction; }
+	    else { $this->_aDependencyInjectorContener[md5($sNameOfDi)] = $cFunction; }
 		return $this;
 	}
 }

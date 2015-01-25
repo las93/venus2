@@ -546,11 +546,23 @@ class Router implements LoggerAwareInterface
 		}
 
 		$oController = new $sControllerName;
+
 		ob_start();
 
 		if (!defined('PORTAIL')) { define('PORTAIL', 'Batch'); }
+		
+		if (method_exists($oController, 'beforeExecuteRoute')) { 
+		    
+		    call_user_func_array(array($oController, 'beforeExecuteRoute'), array());
+		}
 
 		$mReturnController = call_user_func_array(array($oController, $sActionName), $aParams);
+
+		if (method_exists($oController, 'afterExecuteRoute')) { 
+		    
+		    call_user_func_array(array($oController, 'afterExecuteRoute'), array());
+		}
+		
 		$mReturn = ob_get_clean();
 
 		if ($mReturn == '') { $mReturn = $mReturnController; }

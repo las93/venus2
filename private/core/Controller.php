@@ -17,13 +17,15 @@ namespace Venus\core;
 
 use \Venus\core\Router as Router;
 use \Venus\core\Security as Security;
+use \Venus\core\UrlManager as UrlManager;
 use \Venus\lib\I18n as I18n;
 use \Venus\lib\Vendor as Vendor;
 use \Venus\lib\Form as Form;
 use \Venus\lib\Mail as Mail;
 use \Venus\lib\Session as Session;
 use \Venus\lib\Cookie as Cookie;
-use \Venus\core\UrlManager as UrlManager;
+use \Venus\lib\Di as Di;
+use \Venus\lib\Request as Request;
 
 /**
  * Controller Manager
@@ -40,6 +42,15 @@ use \Venus\core\UrlManager as UrlManager;
  */
 abstract class Controller extends Mother 
 {
+	
+    /**
+     * Cache to know if a model was initialize or not because we must initialize it just one time by script
+     * 
+     * @access private
+     * @var    array
+     */
+    private static $_aInitialize = array();
+    
 	/**
 	 * Constructor
 	 *
@@ -63,7 +74,7 @@ abstract class Controller extends Mother
 
 			$this->view = function() use ($sDefaultView) { return Vendor::getVendor('Apollina\Template', $sDefaultView); };
 
-			$this->layout = function() use ($sDefaultLayout) { return Vendor::getVendor('Apollina\Template', $sDefaultLayout); };
+			$this->layout = function() use ($sDefaultLayout) { return Vendor::getVendor('Apollina\Template', $sDefaultLayout, true); };
 
 			$this->layout->assign('model', $sDefaultView);
 		}
@@ -76,6 +87,25 @@ abstract class Controller extends Mother
 		$this->translator = function() { return new I18n; };
 		$this->url = function() { return new UrlManager; };
 		$this->cookie = function() { return new Cookie; };
+		$this->di = function() { return new Di; };
+		$this->request = function() { return new Request; };
+		
+		/**
+		 * Trigger on a model to initialize it. You could fill entity with it.
+		 */
+		if (method_exists(get_called_class(), 'initialize')) {
+		    
+		    if (!isset(self::$_aInitialize[get_called_class()])) { 
+		        
+		        static::initialize();
+		        self::$_aInitialize[get_called_class()] = true;
+		    }
+		}
+		
+		/**
+		 * Trigger on a model to initialize it every time you construct it
+		 */
+		if (method_exists(get_called_class(), 'onConstruct')) { static::onConstruct(); }
 	}
 
 	/**
@@ -128,5 +158,24 @@ abstract class Controller extends Mother
 	public function Forbidden()
 	{
 		$$this->router->runHttpErrorPage(403);
+	}
+
+	/**
+	 * get a property
+	 *
+	 * @access public
+	 * @param  unknown_type $mKey
+	 * @return void
+	 */
+	public function __get($mKey)
+	{
+	    if (isset($this->di) && property_exists($this, 'di')) {
+
+    	    $mDi = $this->di->get($mKey);
+
+    		if (isset($mDi) && $mDi != false) { return $mDi; }
+	    }
+		
+		return parent::__get($mKey);
 	}
 }
