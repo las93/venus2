@@ -210,13 +210,72 @@ class Entity
 				    
     				foreach ($oOneTable->fields as $sFieldName => $oOneField) {
     				
+    				    if (isset($oOneField->many_to_many)) {
+    				        
+    				        if (!isset($oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many})) {
+
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many} = new \stdClass();    				            
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields = new \stdClass();
+
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$sTableName} = new \stdClass();
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$sTableName}->type = $oOneField->type;
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$sTableName}->key = 'primary';
+
+    				            if (isset($oOneField->null)) {
+    				                
+    				                $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$sTableName}->null = $oOneField->null;
+    				            }
+    				            
+    				            if (isset($oOneField->unsigned)) {
+    				            
+    				                $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$sTableName}->unsigned = $oOneField->unsigned;
+    				            }
+    				            
+    				            foreach ($oConnection->tables->{$oOneField->many_to_many}->fields as $sNameOfManyToManyField => $oField) {
+    				            
+    				                if (isset($oField->key) && $oField->key == 'primary') { $sFieldOfManyToMany = $oField; }
+    				            }
+    				            
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$oOneField->many_to_many} = new \stdClass();
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$oOneField->many_to_many}->type = $sFieldOfManyToMany->type;
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$oOneField->many_to_many}->key = 'primary';
+    				            //@todo : attribute ne se rajoute pas en field donc erreur dans jointure
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$oOneField->many_to_many}->join = $oOneField->many_to_many;
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$oOneField->many_to_many}->join_by_field = 'id';
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$sTableName}->join = $sTableName;
+    				            $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$sTableName}->join_by_field = 'id';
+    				            
+    				            $oConnection->tables->{$oOneField->many_to_many}->fields->{'id'}->join = array();
+    				            $oConnection->tables->{$oOneField->many_to_many}->fields->{'id'}->join_by_field = array();
+    				            $oConnection->tables->{$oOneField->many_to_many}->fields->{'id'}->join[] = $sTableName.'_'.$oOneField->many_to_many;
+    				            $oConnection->tables->{$oOneField->many_to_many}->fields->{'id'}->join_by_field[] = 'id_'.$oOneField->many_to_many;
+    				            $oConnection->tables->{$sTableName}->fields->{'id'}->join = array();
+    				            $oConnection->tables->{$sTableName}->fields->{'id'}->join_by_field = array();
+    				            $oConnection->tables->{$sTableName}->fields->{'id'}->join[] = $sTableName.'_'.$oOneField->many_to_many;
+    				            $oConnection->tables->{$sTableName}->fields->{'id'}->join_by_field[] = 'id_'.$oOneField->many_to_many;
+    				            
+    				            if (isset($sFieldOfManyToMany->null)) {
+    				                
+    				                $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$oOneField->many_to_many}->null = $sFieldOfManyToMany->null;
+    				            }
+    				            
+    				            if (isset($sFieldOfManyToMany->unsigned)) {
+    				            
+    				                $oConnection->tables->{$sTableName.'_'.$oOneField->many_to_many}->fields->{'id_'.$oOneField->many_to_many}->unsigned = $sFieldOfManyToMany->unsigned;
+    				            }
+    				        }
+    				    }
+    				    
     				    if (isset($oOneField->join)) {
 
     				        if (isset($oOneField->join_by_field)) { $sJoinByField = $oOneField->join_by_field; }
     				        else { $sJoinByField = $oOneField->join; }
     				        
     				        if (is_string($oOneField->join)) { $aOneFieldJoin = array($oOneField->join); }
+    				        else { $aOneFieldJoin = $oOneField->join; }
+    				        
     				        if (is_string($sJoinByField)) { $aJoinByField = array($sJoinByField); }
+    				        else { $aJoinByField = $sJoinByField; }
     				        
     				        foreach ($aOneFieldJoin as $iKey => $sOneFieldJoin) {
     				            
@@ -233,6 +292,7 @@ class Entity
     				            else if (isset($oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->key)
     				                && $oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->key == 'primary'
     				                && isset($oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->join)
+    				                && is_array($oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->join)
     				                && !in_array($sTableName, $oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->join)) {
     				                
                                     $iIndex = count($oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->join);
@@ -240,7 +300,7 @@ class Entity
     				                $oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->join_by_field[$iIndex] = $sFieldName;
     				            }
     				            else if (!isset($oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->join)) {
-    
+
     				                $oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->join = $sTableName;
     				                $oConnection->tables->{$sOneFieldJoin}->fields->{$sJoinByField}->join_by_field = $sFieldName;
     				            }
@@ -549,7 +609,31 @@ class '.$sTableName.' extends Entity
 	 * @join
 	 * @return ';
 								
-    							if (isset($oField->key) && $oField->key == 'primary') { 
+    							$sKey2 = '';
+    							$iPrimaryKey = 0;
+    							
+                                if (count($oField->join) == 1) {
+                                    
+                                    if (isset($oConnection->tables->{$oField->join[0]}->fields->{$oField->join_by_field[0]}->key)) {
+                                        
+                                        $sKey2 = $oConnection->tables->{$oField->join[0]}->fields->{$oField->join_by_field[0]}->key;
+                                        $iPrimaryKey = 0;
+                                        
+                                        foreach ($oConnection->tables->{$oField->join[0]}->fields as $iKey2 => $oField2) {
+                                            
+                                            if (isset($oField2->key) && $oField2->key == 'primary') {
+                                                
+                                                $iPrimaryKey++;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                if ($sKey2 == 'primary' && $iPrimaryKey == 1) {
+                                    
+                                    $sContentFile .= ENTITY_NAMESPACE.'\\'.$sTableName;
+                                }
+    							else if (isset($oField->key) && ($oField->key == 'primary' || in_array('primary', $oField->key))) { 
     
     							    $sContentFile .= 'array';
     							}
@@ -575,8 +659,11 @@ class '.$sTableName.' extends Entity
 								
 							    $sContentFile .= '
             ';
-		 
-    							if (isset($oField->key) && $oField->key == 'primary') { 
+							    if ($sKey2 == 'primary' && $iPrimaryKey == 1) {
+							    
+							        $sContentFile .= '$aResult';
+							    }
+							    else if (isset($oField->key) && ($oField->key == 'primary' || in_array('primary', $oField->key))) { 
     
     							    $sContentFile .= '$this->'.$oField->join[$i].'';
     							}
@@ -586,11 +673,12 @@ class '.$sTableName.' extends Entity
     							}
     			                     
     							$sContentFile .= ' = $oOrm->where($aWhere)
-						           ->load(false, \''.$sPortail.'\');';
+						           ->load(false, \''.ENTITY_NAMESPACE.'\');';
 		 
-    							if (!isset($oField->key) || (isset($oField->key) && $oField->key != 'primary')) { 
+    							if ((!isset($oField->key) || (isset($oField->key) && $oField->key != 'primary' && !in_array('primary', $oField->key)))
+						          || ($sKey2 == 'primary' && $iPrimaryKey == 1)) { 
     								    
-    							    $sContentFile .= "\n".'          if (count($aResult) > 0) { $this->'.$oField->join[$i].' = $aResult[0]; }
+    							    $sContentFile .= "\n\n".'          if (count($aResult) > 0) { $this->'.$oField->join[$i].' = $aResult[0]; }
           else { $this->'.$oField->join[$i].' = array(); }';
     							}
     			                     
@@ -608,7 +696,7 @@ class '.$sTableName.' extends Entity
 	 * @join
 	 * @return ';
 		 
-    							if (isset($oField->key) && $oField->key == 'primary') { 
+    							if (isset($oField->key) && ($oField->key == 'primary' || in_array('primary', $oField->key))) { 
     
     							    $sContentFile .= 'array';
     							}
@@ -621,7 +709,7 @@ class '.$sTableName.' extends Entity
 	 */
 	public function set_'.$sJoinUsedName.'(';
 		 
-    							if (isset($oField->key) && $oField->key == 'primary') { 
+    							if (isset($oField->key) && ($oField->key == 'primary' || in_array('primary', $oField->key))) { 
     
     							    $sContentFile .= 'array';
     							}
