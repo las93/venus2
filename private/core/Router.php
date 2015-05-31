@@ -396,10 +396,10 @@ class Router implements LoggerAwareInterface
 				if (isset($oRoute->constraints) && is_object($oRoute->constraints)) {
 
 					$mReturn = null;
-
+					
 					foreach ($oRoute->constraints as $sName => $sType) {
 
-						if (isset($_GET[$sName])) {
+						if (isset($_GET[$sName]) && $_GET[$sName] != '') {
 
 							$aEntries[] = $_GET[$sName];
 						}
@@ -407,6 +407,10 @@ class Router implements LoggerAwareInterface
 							&& isset($oRoute->defaults_constraints->{$sName})) {
 
 							$aEntries[] = $oRoute->defaults_constraints->{$sName};
+						}
+						else if (isset($_GET[$sName])) {
+
+							$aEntries[] = $_GET[$sName];
 						}
 						else if (preg_match('/'.$sType.'/', '')) {
 

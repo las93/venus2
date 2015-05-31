@@ -62,6 +62,6 @@ if (isset($oConfig) && isset($oConfig->autoload)) {
     
     foreach ($oAutoloadConf as $sFile) {
     
-        require '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$sFile;
+        require $sFile;
     }
 }

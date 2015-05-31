@@ -363,8 +363,25 @@ class Entity
 						else if (isset($oOneField->key) && $oOneField->key === 'index') { $aIndex[] = $sFieldName; }
 					
     					if (isset($oOneField->join) && is_string($oOneField->join)) {
+
+    					    if (isset($oOneField->constraint) && is_string($oOneField->constraint)) {
     					    
-    					    $sQuery .= 'FOREIGN KEY('.$sFieldName.') REFERENCES '.$oOneField->join.'('.$oOneField->join_by_field.'),';
+    					        $sQuery .= ' CONSTRAINT '.$oOneField->constraint.' ';
+    					    }
+    					    
+    					    $sQuery .= 'FOREIGN KEY('.$sFieldName.') REFERENCES '.$oOneField->join.'('.$oOneField->join_by_field.') ';
+    					    
+    					    if (isset($oOneField->join_delete) && is_string($oOneField->join_delete)) {
+    					        
+    					        $sQuery .= ' ON DELETE '.$oOneField->join_delete.' ';
+    					    }
+
+    					    if (isset($oOneField->join_update) && is_string($oOneField->join_update)) {
+    					        	
+    					        $sQuery .= ' ON UPDATE '.$oOneField->join_update.' ';
+    					    }
+    					    
+    					    $sQuery .= ',';
     					}
 					}
 
@@ -382,6 +399,10 @@ class Entity
 
 					$sQuery = substr($sQuery, 0, -2);
 					$sQuery .= ')';
+					
+					if (isset($oOneTable->engine)) {  $sQuery .= ' ENGINE='.$oOneTable->engine.' '; }
+					if (isset($oOneTable->auto_increment)) {  $sQuery .= ' AUTO_INCREMENT='.$oOneTable->auto_increment.' '; }
+					if (isset($oOneTable->default_charset)) {  $sQuery .= ' DEFAULT CHARSET='.$oOneTable->default_charset.' '; }
 
 					$oPdo->query($sQuery);
 				}
@@ -674,9 +695,10 @@ class '.$sTableName.' extends Entity
     			                     
     							$sContentFile .= ' = $oOrm->where($aWhere)
 						           ->load(false, \''.ENTITY_NAMESPACE.'\');';
-		 
-    							if ((!isset($oField->key) || (isset($oField->key) && $oField->key != 'primary' && !in_array('primary', $oField->key)))
-						          || ($sKey2 == 'primary' && $iPrimaryKey == 1)) { 
+
+    							if ((!isset($oField->key) || (isset($oField->key) && $oField->key != 'primary' 
+    							 && (is_array($oField->key) && !in_array('primary', $oField->key))))
+						         || ($sKey2 == 'primary' && $iPrimaryKey == 1)) { 
     								    
     							    $sContentFile .= "\n\n".'          if (count($aResult) > 0) { $this->'.$oField->join[$i].' = $aResult[0]; }
           else { $this->'.$oField->join[$i].' = array(); }';
@@ -696,7 +718,7 @@ class '.$sTableName.' extends Entity
 	 * @join
 	 * @return ';
 		 
-    							if (isset($oField->key) && ($oField->key == 'primary' || in_array('primary', $oField->key))) { 
+    							if (isset($oField->key) && ($oField->key == 'primary' || (is_array($oField->key) && in_array('primary', $oField->key)))) { 
     
     							    $sContentFile .= 'array';
     							}
@@ -709,7 +731,7 @@ class '.$sTableName.' extends Entity
 	 */
 	public function set_'.$sJoinUsedName.'(';
 		 
-    							if (isset($oField->key) && ($oField->key == 'primary' || in_array('primary', $oField->key))) { 
+    							if (isset($oField->key) && ($oField->key == 'primary' || (is_array($oField->key) && in_array('primary', $oField->key)))) { 
     
     							    $sContentFile .= 'array';
     							}

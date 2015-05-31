@@ -52,7 +52,11 @@ class Config
 	    if ($bNoDoRedirect === true) { $sNameCache = $sName.'_true'; }
 	    else { $sNameCache = $sName; }
 	    
-		if ($sPortal === null || !is_string($sPortal)) { $sPortal = PORTAIL; }
+		if ($sPortal === null || !is_string($sPortal)) {
+		    
+		    if (defined('PORTAIL')) { $sPortal = PORTAIL; }
+		    else { $sPortal = ''; }
+		}
 
 		if (!isset(self::$_aConfCache[$sNameCache])) {
 

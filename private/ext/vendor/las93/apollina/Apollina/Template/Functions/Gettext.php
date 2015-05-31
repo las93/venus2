@@ -41,7 +41,7 @@ class Gettext
 	{
 		if (isset($aParams['word'])) {
 
-			$sWord = $aParams['word'];
+			$sWord = preg_replace("/'/", "", $aParams['word']);
 
 			return '<?php $oI18n = new \Apollina\I18n; echo $oI18n->_("'.$sWord.'"); ?>';
 		}

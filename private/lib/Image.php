@@ -14,10 +14,6 @@
  */
 namespace Venus\lib;
 
-use \Venus\lib\I18n\Mock as Mock;
-use \Venus\lib\I18n\Gettext as Gettext;
-use \Venus\lib\I18n\Translator as Translator;
-
 /**
  * This class manage the Image
  *
