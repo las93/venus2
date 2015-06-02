@@ -41,7 +41,7 @@ class Image
 	 * @param  int $iIdProductImg
 	 * @param  int $iWidth
 	 * @param  int $iHeight
-	 * @return \Venus\lib\I18n
+	 * @return void
 	 */
 	public static function showImageInSize($iImageUri, $iWidth, $iHeight, $bKeepDimension = false)
 	{	

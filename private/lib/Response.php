@@ -43,7 +43,7 @@ class Response
 	 *
 	 * @access public
 	 * @param  string $sKinbfOfReturn
-	 * @return \Venus\lib\I18n
+	 * @return \Venus\lib\Response
 	 */
 	public static function setKinbfOfReturn($sKinbfOfReturn)
 	{
