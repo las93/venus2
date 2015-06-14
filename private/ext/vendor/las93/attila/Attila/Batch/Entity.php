@@ -205,9 +205,9 @@ class Entity
         		           ->setUser($oConnection->user);
 			    
 				$oPdo = Db::connect($oContainer);
-
+				
 				foreach ($oConnection->tables as $sTableName => $oOneTable) {
-				    
+
     				foreach ($oOneTable->fields as $sFieldName => $oOneField) {
     				
     				    if (isset($oOneField->many_to_many)) {
@@ -320,6 +320,7 @@ class Entity
 					$sQuery = 'CREATE TABLE IF NOT EXISTS '.SQL_FIELD_NAME_SEPARATOR.$sTableName.SQL_FIELD_NAME_SEPARATOR.' (';
 
 					$aIndex = array();
+					$aUnique = array();
 					$aPrimaryKey = array();
 
 					foreach ($oOneTable->fields as $sFieldName => $oOneField) {
@@ -361,6 +362,7 @@ class Entity
 
 						if (isset($oOneField->key) && $oOneField->key === 'primary') { $aPrimaryKey[] = $sFieldName; }
 						else if (isset($oOneField->key) && $oOneField->key === 'index') { $aIndex[] = $sFieldName; }
+						else if (isset($oOneField->key) && $oOneField->key === 'unique') { $aUnique[] = $sFieldName; }
 					
     					if (isset($oOneField->join) && is_string($oOneField->join)) {
 
@@ -388,10 +390,20 @@ class Entity
 					if (count($aPrimaryKey) > 0) { $sQuery .= 'PRIMARY KEY('.implode(',', $aPrimaryKey).') , '; }
 					
 					if (count($aIndex) > 0) { $sQuery .= 'KEY('.implode(',', $aIndex).') , '; }
+					
+					if (count($aUnique) > 0) { $sQuery .= 'UNIQUE KEY '.$aUnique[0].' ('.implode(',', $aUnique).') , '; }
 
 					if (isset($oOneTable->index)) {
 
 						foreach ($oOneTable->index as $sIndexName => $aFields) {
+
+							$sQuery .= 'KEY '.$sIndexName.' ('.implode(',', $aFields).') , ';
+						}
+					}
+
+					if (isset($oOneTable->unique)) {
+
+						foreach ($oOneTable->unique as $sIndexName => $aFields) {
 
 							$sQuery .= 'KEY '.$sIndexName.' ('.implode(',', $aFields).') , ';
 						}
@@ -404,7 +416,11 @@ class Entity
 					if (isset($oOneTable->auto_increment)) {  $sQuery .= ' AUTO_INCREMENT='.$oOneTable->auto_increment.' '; }
 					if (isset($oOneTable->default_charset)) {  $sQuery .= ' DEFAULT CHARSET='.$oOneTable->default_charset.' '; }
 
-					$oPdo->query($sQuery);
+					if ($oPdo->query($sQuery) === false) {
+					    
+					   echo "\n[ERROR SQL] ".$oPdo->errorInfo()[2]." for the table ".$sTableName."\n"; 
+					   echo "\n".$sQuery."\n"; 
+					}
 				}
 			}
 
@@ -694,14 +710,14 @@ class '.$sTableName.' extends Entity
     							}
     			                     
     							$sContentFile .= ' = $oOrm->where($aWhere)
-						           ->load(false, \''.ENTITY_NAMESPACE.'\');';
+						           ->load(false, \''.ENTITY_NAMESPACE.'\\\\\');';
 
     							if ((!isset($oField->key) || (isset($oField->key) && $oField->key != 'primary' 
     							 && (is_array($oField->key) && !in_array('primary', $oField->key))))
 						         || ($sKey2 == 'primary' && $iPrimaryKey == 1)) { 
     								    
-    							    $sContentFile .= "\n\n".'          if (count($aResult) > 0) { $this->'.$oField->join[$i].' = $aResult[0]; }
-          else { $this->'.$oField->join[$i].' = array(); }';
+    							    $sContentFile .= "\n\n".'          if (count($aResult) > 0) { $this->'.$sJoinUsedName.' = $aResult[0]; }
+          else { $this->'.$sJoinUsedName.' = array(); }';
     							}
     			                     
     							$sContentFile .= '

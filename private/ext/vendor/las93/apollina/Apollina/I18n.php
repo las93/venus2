@@ -36,7 +36,7 @@ class I18n
 	 * the translation language
 	 * @var string
 	 */	
-	private $_sLanguage = LANGUAGE;
+	private static $_sLanguage = LANGUAGE;
 	
 	/**
 	 * set the language if you don't want take the default language of the configuration file
@@ -47,7 +47,7 @@ class I18n
 	 */
 	public function setLanguage($sLanguage)
 	{	
-		$this->_sLanguage = $sLanguage;
+		self::$_sLanguage = $sLanguage;
 		return $this;
 	}
 	
@@ -61,18 +61,18 @@ class I18n
      */
     public function _($sValue)
     {
-        if (file_exists(__DIR__.DIRECTORY_SEPARATOR.I18N_DIRECTORY.LANGUAGE.DIRECTORY_SEPARATOR.'LC_MESSAGES'.DIRECTORY_SEPARATOR.I18N_DOMAIN.'.json')) {
-        
+        if (file_exists(__DIR__.DIRECTORY_SEPARATOR.I18N_DIRECTORY.self::$_sLanguage.DIRECTORY_SEPARATOR.'LC_MESSAGES'.DIRECTORY_SEPARATOR.I18N_DOMAIN.'.json')) {
+            
             if (!Translator::isConfigurated()) {
                  
-                Translator::setConfig(__DIR__.DIRECTORY_SEPARATOR.I18N_DIRECTORY.LANGUAGE.DIRECTORY_SEPARATOR.'LC_MESSAGES'.DIRECTORY_SEPARATOR.I18N_DOMAIN.'.json');
+                Translator::setConfig(__DIR__.DIRECTORY_SEPARATOR.I18N_DIRECTORY.self::$_sLanguage.DIRECTORY_SEPARATOR.'LC_MESSAGES'.DIRECTORY_SEPARATOR.I18N_DOMAIN.'.json');
             }
         
             return Translator::_($sValue);
         }
     	else if (!function_exists("gettext")) {
     		
-    		if (!Gettext::isConfigurated()) { Gettext::setConfig(LANGUAGE, I18N_DOMAIN, I18N_DIRECTORY); }	
+    		if (!Gettext::isConfigurated()) { Gettext::setConfig(self::$_sLanguage, I18N_DOMAIN, I18N_DIRECTORY); }	
     		
     		return Gettext::_($sValue);
     	}
