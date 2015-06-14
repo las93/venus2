@@ -51,17 +51,18 @@ class Entity extends Controller
 	 */
 	public function runScaffolding(array $aOptions = array())
 	{
-	    if (isset($aOptions['p'])) { $sPortail = $aOptions['p']; }
-	    else { $sPortail = 'Batch'; }
+	    if (!isset($aOptions['p'])) { $aOptions['p'] = 'Batch'; }
 	    
-	    $aOptions['b'] = json_encode(Config::get('Db', $aOptions['p']));
+	    if (!isset($aOptions['b'])) { $aOptions['b'] = json_encode(Config::get('Db', $aOptions['p'])); }
 	    
 	    $aOptions['g'] = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$aOptions['p'].DIRECTORY_SEPARATOR.'Entity'.DIRECTORY_SEPARATOR;
 	    
 	    $aOptions['h'] = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$aOptions['p'].DIRECTORY_SEPARATOR.'Model'.DIRECTORY_SEPARATOR;
 	    
-	    define('ENTITY_NAMESPACE', '\Venus\src\\'.$aOptions['p'].'\Entity');
-	    define('MODEL_NAMESPACE', '\Venus\src\\'.$aOptions['p'].'\Model');
+	    
+	    if (!defined('ENTITY_NAMESPACE')) { define('ENTITY_NAMESPACE', '\Venus\src\\'.$aOptions['p'].'\Entity'); }
+	    
+	    if (!defined('MODEL_NAMESPACE')) { define('MODEL_NAMESPACE', '\Venus\src\\'.$aOptions['p'].'\Model'); }
 	    
 	    $oBatch = new BatchEntity;
 	    $oBatch->runScaffolding($aOptions);
