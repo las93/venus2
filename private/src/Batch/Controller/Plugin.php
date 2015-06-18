@@ -57,7 +57,7 @@ class Plugin extends Controller
 	        define('CREATE_PORTAL', $aOptions['p']);
 	    }
 	    
-	    foreach ($aPlugins as $sPluginName) {
+	    foreach ($aPlugins->list as $sPluginName) {
 	        
 	        $sClassName = 'Venus\src\plugins\\'.$sPluginName.'\Controller\\'.$sPluginName;
 	        $oPlugin = new $sClassName;

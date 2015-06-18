@@ -97,7 +97,17 @@ class Router implements LoggerAwareInterface
 		$this->_create_constant();
 
 		if (Request::isHttpRequest()) {
-
+        
+		    // Search public files in all plugins
+		    foreach (Config::get('Plugins')->list as $iKey => $sPlugin) {
+		        
+		        if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.$_SERVER['REQUEST_URI'])) {
+		            
+		            echo file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.$_SERVER['REQUEST_URI']);
+                    exit;
+		        }
+		    }
+		    
 			foreach (Config::get('Route') as $sHost => $oHost) {
 
 				if ((!strstr($sHost, '/') && $sHost == $_SERVER['HTTP_HOST'])
@@ -133,14 +143,14 @@ class Router implements LoggerAwareInterface
 								if (isset($oRoute->cache)) { $this->_checkCache($oRoute->cache); }
 
 								return true;
-							}
+							}							
 						}
 
 						$this->_getPage404();
 					}
 				}
 				else {
-					
+
 					//@todo : Error à formater => Host mal définit
 					
 					if ($sHost !== $_SERVER['HTTP_HOST']) {
