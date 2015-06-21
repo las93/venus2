@@ -29,5 +29,16 @@ use \Apollina\I18n as CoreI18n;
  * @since       1.0
  */
 class I18n extends CoreI18n
-{	
+{
+    /**
+     * constructor
+     * 
+     * @access public
+     * @return \Venus\lib\I18n
+     */
+    public function __contruct()
+    {
+        $this->setI18nDirectory(__DIR__.DIRECTORY_SEPARATOR.I18N_DIRECTORY)
+             ->setIntermediaiteDirectory(DIRECTORY_SEPARATOR.'LC_MESSAGES'.DIRECTORY_SEPARATOR);    
+    }
 }
