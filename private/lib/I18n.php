@@ -36,9 +36,10 @@ class I18n extends CoreI18n
      * @access public
      * @return \Venus\lib\I18n
      */
-    public function __contruct()
+    public function __construct()
     {
         $this->setI18nDirectory(__DIR__.DIRECTORY_SEPARATOR.I18N_DIRECTORY)
+             ->setI18nDomain(I18N_DOMAIN)
              ->setIntermediaiteDirectory(DIRECTORY_SEPARATOR.'LC_MESSAGES'.DIRECTORY_SEPARATOR);    
     }
 }
