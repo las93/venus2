@@ -54,7 +54,7 @@ class Gettext
 	}
 	
 	/**
-	 * set config jsut for the first time 
+	 * set config just for the first time 
 	 * 
 	 * @access private
 	 * @return bool

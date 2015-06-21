@@ -15,6 +15,7 @@
  */
 namespace Venus\src\plugins\common;
 
+use \Venus\core\Config                  as Config;
 use \Venus\core\Controller              as CoreController;
 use \Venus\src\Batch\Controller\Entity  as Entity;
 
@@ -44,12 +45,17 @@ abstract class Controller extends CoreController
 		parent::__construct();
 		
 		$this->installDb = function()
-		{  
+		{
+		    $oDb = Config::get('DB');
+		    $oTables = json_decode(file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.preg_replace('/^.*\\\\([a-zA-Z0-9]+)$/', '$1', get_called_class()).DIRECTORY_SEPARATOR.'conf'.DIRECTORY_SEPARATOR.'Db.conf'));
+		    
+		    $oDb->configuration->tables = $oTables;
+		    
     	    $aOptions = [
 	           "p" => CREATE_PORTAL,
 	           "c" => true,
 	           "e" => true,
-	           "b" => file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.preg_replace('/^.*\\\\([a-zA-Z0-9]+)$/', '$1', get_called_class()).DIRECTORY_SEPARATOR.'conf'.DIRECTORY_SEPARATOR.'Db.conf')
+	           "b" => json_encode($oDb)
     	    ];
     	    
     	    $oEntity = new Entity;

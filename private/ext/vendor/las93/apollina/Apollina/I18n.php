@@ -55,6 +55,12 @@ class I18n
 	 * @var string
 	 */	
 	private static $_sIntermediaiteDirectory = '';
+
+	/**
+	 * add a callback to highlight the _() method -> exemple to add a plugin in your framework
+	 * @var string
+	 */
+	private static $_aCallbacks = [];
 	
 	/**
 	 * set the language if you don't want take the default language of the configuration file
@@ -118,7 +124,7 @@ class I18n
 	}
 	
 	/**
-	 *get the default I18N Domain
+	 * get the default I18N Domain
 	 * 
 	 * @access public
 	 * @return string
@@ -126,6 +132,31 @@ class I18n
 	public function getI18nDomain()
 	{	
 		return self::$_sI18nDomain;
+	}
+
+	/**
+	 * add a callback
+	 *
+	 * @access public
+	 * @param  string $sName
+	 * @param  fucntion $fCallback
+	 * @return void
+	 */
+	public static function addCallback($sName, $fCallback)
+	{
+	    self::$_aCallbacks[$sName] = $fCallback;
+	}
+
+	/**
+	 * remove a callback
+	 *
+	 * @access public
+	 * @param  string $sName
+	 * @return void
+	 */
+	public static function removeCallback($sName)
+	{
+	    unset(self::$_aCallbacks[$sName]);
 	}
 	
 	/**
@@ -156,12 +187,31 @@ class I18n
      * get a translation
      *
      * @access public
-     * @param  string $sName name of the Cookie
-     * @param  mixed $mValue value of this sesion var
-     * @return \Venus\lib\Cookie
+     * @param  string $sValue text to translate
+     * @return string
      */
     public function _($sValue)
     {
+        return $this->getText($sValue);
+    }
+	
+    /**
+     * get a translation
+     *
+     * @access public
+     * @param  string $sValue text to translate
+     * @return string
+     */
+    public function getText($sValue)
+    {
+        //ad callback to add translation before Apollina - You could see the method use in Venus2
+        foreach (self::$_aCallbacks as $aOneCallback) {
+            
+            $sValueReturn = $aOneCallback($sValue);
+            
+            if ($sValueReturn !== $sValue) { return $sValueReturn; }
+        }
+        
         if (file_exists($this->getI18nDirectory().$this->getLanguage().$this->getIntermediaiteDirectory().$this->getI18nDomain().'.json')) {
             
             if (!Translator::isConfigurated()) {

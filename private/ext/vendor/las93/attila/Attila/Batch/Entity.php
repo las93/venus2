@@ -166,7 +166,7 @@ class Entity
 		    
 		    foreach ($oConstJson as $sKey => $mValue) {
 		        
-		        if (is_tring($mValue) || is_int($mValue) || is_float($mValue)) {
+		        if (is_string($mValue) || is_int($mValue) || is_float($mValue)) {
 		            
 		            if (!defined(strtoupper($sKey))) { define(strtoupper($sKey), $mValue); }
 		        }
@@ -176,9 +176,7 @@ class Entity
 		if ($sSqlJsonFile !== false) { $oJson = json_decode(file_get_contents($sSqlJsonFile)); }
 		else { $oJson = json_decode($sSqlJson); }
 		
-		$oConfiguration = $oJson->configuration;
-
-		foreach ($oConfiguration as $sConnectionName => $oConnection) {
+		$oConnection = $oJson->configuration;
 
 		    if (!defined('SQL_FIELD_NAME_SEPARATOR')) {
 		        
@@ -202,7 +200,7 @@ class Entity
 
         		$oContainer->setDbName($oConnection->db)
         		           ->setHost($oConnection->host)
-        		           ->setName($sConnectionName)
+        		           ->setName($oConnection->db)
         		           ->setPassword($oConnection->password)
         		           ->setType($oConnection->type)
         		           ->setUser($oConnection->user);
@@ -816,6 +814,5 @@ class '.$sTableName.' extends Model
 					}
 				}
 			}
-		}
 	}
 }
