@@ -15,15 +15,17 @@
  */
 namespace Venus\core;
 
-use \Venus\core\Security as Security;
-use \Venus\lib\Cache as Cache;
-use \Venus\lib\PhpDoc as PhpDoc;
-use \Venus\lib\Request as Request;
-use \Venus\lib\Vendor as Vendor;
-use \Venus\core\UrlManager as UrlManager;
-use \Venus\lib\Debug as Debug;
+use \Venus\core\Security                as Security;
+use \Venus\lib\Cache                    as Cache;
+use \Venus\lib\Less                     as Less;
+use \Venus\lib\PhpDoc                   as PhpDoc;
+use \Venus\lib\Typescript               as Typescript;
+use \Venus\lib\Request                  as Request;
+use \Venus\lib\Vendor                   as Vendor;
+use \Venus\core\UrlManager              as UrlManager;
+use \Venus\lib\Debug                    as Debug;
 use \Venus\lib\Log\LoggerAwareInterface as LoggerAwareInterface;
-use \Venus\lib\Log\LoggerInterface as LoggerInterface;
+use \Venus\lib\Log\LoggerInterface      as LoggerInterface;
 
 /**
  * Router
@@ -98,6 +100,28 @@ class Router implements LoggerAwareInterface
 
 		if (Request::isHttpRequest()) {
         
+		    // Search if a Less file exists
+		    if (defined('LESS_ACTIVE') && LESS_ACTIVE === true) {
+		        
+		        if (strstr($_SERVER['REQUEST_URI'], '.css')
+                    && file_exists(preg_replace('/\.css/', '.less', $_SERVER['REQUEST_URI']))) {
+		        
+		            Less::toCss($_SERVER['REQUEST_URI']);
+		            exit;
+		        }
+		    }
+		    
+		    // Search if a typescript file exists
+		    if (defined('TYPESCRIPT_ACTIVE') && TYPESCRIPT_ACTIVE === true) {
+		    
+		        if (strstr($_SERVER['REQUEST_URI'], '.js')
+		        && file_exists(preg_replace('/\.js/', '.ts', $_SERVER['REQUEST_URI']))) {
+		    
+		            Typescript::toJs($_SERVER['REQUEST_URI']);
+		            exit;
+		        }
+		    }
+		    
 		    // Search public files in all plugins
 		    foreach (Config::get('Plugins')->list as $iKey => $sPlugin) {
 		        
@@ -105,6 +129,18 @@ class Router implements LoggerAwareInterface
 		            
 		            echo file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.$_SERVER['REQUEST_URI']);
                     exit;
+		        }
+		        else if (strstr($_SERVER['REQUEST_URI'], '.css')
+		            && file_exists(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.preg_replace('/\.css/', '.less', $_SERVER['REQUEST_URI']))) {
+
+		            Less::toCss(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.preg_replace('/\.css/', '.less', $_SERVER['REQUEST_URI']));
+		            exit;
+		        }
+		        else if (strstr($_SERVER['REQUEST_URI'], '.js')
+		            && file_exists(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.preg_replace('/\.js/', '.ts', $_SERVER['REQUEST_URI']))) {
+
+		            Typescript::toJs(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.preg_replace('/\.js/', '.ts', $_SERVER['REQUEST_URI']));
+		            exit;
 		        }
 		    }
 		    
