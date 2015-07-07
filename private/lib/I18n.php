@@ -14,7 +14,8 @@
  */
 namespace Venus\lib;
 
-use \Apollina\I18n as CoreI18n;
+use \Apollina\I18n      as CoreI18n;
+use \Venus\core\Config  as Config;
 
 /**
  * This class manage the Translation
@@ -40,6 +41,35 @@ class I18n extends CoreI18n
     {
         $this->setI18nDirectory(__DIR__.DIRECTORY_SEPARATOR.I18N_DIRECTORY)
              ->setI18nDomain(I18N_DOMAIN)
-             ->setIntermediaiteDirectory(DIRECTORY_SEPARATOR.'LC_MESSAGES'.DIRECTORY_SEPARATOR);    
+             ->setIntermediaiteDirectory(DIRECTORY_SEPARATOR.'LC_MESSAGES'.DIRECTORY_SEPARATOR);
+        
+        foreach (Config::get('Plugins')->list as $iKey => $sPlugin) {
+            
+            if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR.$this->getLanguage().$this->getIntermediaiteDirectory().$sPlugin.'.json')) {
+
+                $oJson = json_decode(file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR.$this->getLanguage().$this->getIntermediaiteDirectory().$sPlugin.'.json'));
+                
+                $fCallBack = function($sValue) use ($oJson)
+                {    
+                    if (isset($oJson->$sValue)) { return $oJson->$sValue; }
+                    else { return ''; }
+                };
+            }
+            
+            CoreI18n::addCallback($sPlugin, $fCallBack);
+        }
+    }
+	
+    /**
+     * Hilight to add the plugin I18N
+     *
+     * @access public
+     * @param  string $sName name of the Cookie
+     * @param  mixed $mValue value of this sesion var
+     * @return \Venus\lib\Cookie
+     */
+    public function _($sValue)
+    {
+        return $this->getText($sValue);
     }
 }

@@ -23,7 +23,6 @@ namespace Attila\Batch;
 
 use \Attila\lib\Db as Db;
 use \Attila\lib\Db\Container as DbContainer;
-use \Venus\core\Config as Config;
 
 /**
  * Batch that create entity

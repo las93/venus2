@@ -208,8 +208,8 @@ class I18n
         foreach (self::$_aCallbacks as $aOneCallback) {
             
             $sValueReturn = $aOneCallback($sValue);
-            
-            if ($sValueReturn !== $sValue) { return $sValueReturn; }
+
+            if ($sValueReturn !== '') { return $sValueReturn; }
         }
         
         if (file_exists($this->getI18nDirectory().$this->getLanguage().$this->getIntermediaiteDirectory().$this->getI18nDomain().'.json')) {

@@ -123,13 +123,15 @@ class Router implements LoggerAwareInterface
 		    }
 		    
 		    // Search public files in all plugins
-		    foreach (Config::get('Plugins')->list as $iKey => $sPlugin) {
-		        
-		        if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.$_SERVER['REQUEST_URI'])) {
-		            
-		            echo file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.$_SERVER['REQUEST_URI']);
-                    exit;
-		        }
+		    if ($_SERVER['REQUEST_URI'] !== '/') {
+	
+    		    foreach (Config::get('Plugins')->list as $iKey => $sPlugin) {
+    		        
+    		        if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.$_SERVER['REQUEST_URI'])) {
+    		            
+    		            echo file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.$_SERVER['REQUEST_URI']);
+                        exit;
+    		        }
 		        else if (strstr($_SERVER['REQUEST_URI'], '.css')
 		            && file_exists(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$sPlugin.DIRECTORY_SEPARATOR.'public'.preg_replace('/\.css/', '.less', $_SERVER['REQUEST_URI']))) {
 
@@ -143,63 +145,66 @@ class Router implements LoggerAwareInterface
 		            exit;
 		        }
 		    }
+	}
 		    
-			foreach (Config::get('Route') as $sHost => $oHost) {
+			foreach (Config::get('Route') as $sMultiHost => $oHost) {
 
-				if ((!strstr($sHost, '/') && $sHost == $_SERVER['HTTP_HOST'])
-					|| (strstr($sHost, '/')
-					&& strstr($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], $sHost))) {
-
-					$this->_oRoutes = $oHost;
-
-					if (strstr($sHost, '/')
-						&& strstr($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], $sHost)) {
-
-						$this->_sBaseUri = preg_replace('#^[^/]+#', '', $sHost);
-					}
-
-					if (isset($oHost->location)) {
-
-						header('Status: 301 Moved Permanently', false, 301);
-	  					header('Location: '.$oHost->location);
-	  					exit;
-					}
-					else if (isset($oHost->routes)) {
-
-						foreach($oHost->routes as $sKey => $oRoute) {
-
-							$mReturn = $this->_route($oRoute, $_SERVER['REQUEST_URI']);
-
-							if ($mReturn === 403) {
-
-								$this->_getPage403();
-							}
-							else if ($mReturn === true) {
-
-								if (isset($oRoute->cache)) { $this->_checkCache($oRoute->cache); }
-
-								return true;
-							}							
-						}
-
-						$this->_getPage404();
-					}
-				}
-				else {
-
-					//@todo : Error à formater => Host mal définit
-					
-					if ($sHost !== $_SERVER['HTTP_HOST']) {
-						
-						trigger_error("Votre host est mal définit : ".$sHost." = ".$_SERVER['HTTP_HOST']
-							, E_USER_NOTICE);
-					}
-					else {
-						
-						trigger_error("Votre route n'existe pas : ".$_SERVER['REQUEST_URI'], E_USER_NOTICE);
-					}
-					
-				}
+			    foreach (explode(',', $sMultiHost) as $sHost) {
+			     
+    				if ((!strstr($sHost, '/') && $sHost == $_SERVER['HTTP_HOST']) || (strstr($sHost, '/')
+    					&& strstr($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], $sHost))) {
+    
+    					$this->_oRoutes = $oHost;
+    
+    					if (strstr($sHost, '/')
+    						&& strstr($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], $sHost)) {
+    
+    						$this->_sBaseUri = preg_replace('#^[^/]+#', '', $sHost);
+    					}
+    
+    					if (isset($oHost->location)) {
+    
+    						header('Status: 301 Moved Permanently', false, 301);
+    	  					header('Location: '.$oHost->location);
+    	  					exit;
+    					}
+    					else if (isset($oHost->routes)) {
+    
+    						foreach($oHost->routes as $sKey => $oRoute) {
+    
+    							$mReturn = $this->_route($oRoute, $_SERVER['REQUEST_URI']);
+    
+    							if ($mReturn === 403) {
+    
+    								$this->_getPage403();
+    							}
+    							else if ($mReturn === true) {
+    
+    								if (isset($oRoute->cache)) { $this->_checkCache($oRoute->cache); }
+    
+    								return true;
+    							}							
+    						}
+    
+    						$this->_getPage404();
+    					}
+    				}
+    				else {
+    
+    					//@todo : Error à formater => Host mal définit
+    					
+    					if ($sHost !== $_SERVER['HTTP_HOST']) {
+    						
+    						trigger_error("Votre host est mal définit : ".$sHost." = ".$_SERVER['HTTP_HOST']
+    							, E_USER_NOTICE);
+    					}
+    					else {
+    						
+    						trigger_error("Votre route n'existe pas : ".$_SERVER['REQUEST_URI'], E_USER_NOTICE);
+    					}
+    					
+    				}
+			    }
 			}
 		}
 		else if (Request::isCliRequest()) {

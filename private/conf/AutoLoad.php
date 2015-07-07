@@ -31,13 +31,13 @@ spl_autoload_register(function ($sClassName)
     
     $sFileName .= $sClassName.'.php';
 
-    if (strstr($sFileName, 'Venus\\') && file_exists(str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName))) {
+    if (strstr($sFileName, 'Venus\\') && file_exists(str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName)))) {
 
-    	require str_replace('\\', DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName));
+    	require str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('\\', DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName)));
     }
-    else if (file_exists(str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).$sFileName)) {
+    else if (file_exists(str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).$sFileName))) {
 
-    	require str_replace('\\', DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).$sFileName);
+    	require str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('\\', DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).$sFileName));
     }
 });
 

@@ -46,7 +46,7 @@ abstract class Controller extends CoreController
 		
 		$this->installDb = function()
 		{
-		    $oDb = Config::get('DB');
+		    $oDb = Config::get('Db');
 		    $oTables = json_decode(file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.preg_replace('/^.*\\\\([a-zA-Z0-9]+)$/', '$1', get_called_class()).DIRECTORY_SEPARATOR.'conf'.DIRECTORY_SEPARATOR.'Db.conf'));
 		    
 		    $oDb->configuration->tables = $oTables;

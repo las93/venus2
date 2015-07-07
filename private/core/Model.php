@@ -41,7 +41,7 @@ class Model extends AttilaModel
 	 */
 	public function __construct($oDbConfig = null)
 	{
-		$oDbConfig = Config::get('DB')->configuration;
+		$oDbConfig = Config::get('Db')->configuration;
 		parent::__construct($oDbConfig);
 	}
 }
