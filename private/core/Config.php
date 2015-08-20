@@ -145,7 +145,7 @@ class Config
 
 		if (!self::$_aConfCache[$sNameCache]) {
 			
-			$oDebug = new Debug;
+			$oDebug = Debug::getInstance();
 			$oDebug->error('The configuration file '.$sName.' is in error!');
 		}
 		
@@ -178,8 +178,19 @@ class Config
 	private static function  _mergeAndGetConf($sFileToMerge, $aBase)
 	{
 		$aConfFiles = json_decode(file_get_contents($sFileToMerge));
-		list($aConfFiles, $aBase) = self::_recursiveGet($aConfFiles, $aBase);
-		return $aBase;
+
+		if (is_object($aConfFiles)) {
+
+			list($aConfFiles, $aBase) = self::_recursiveGet($aConfFiles, $aBase);
+			return $aBase;
+		}
+		else {
+
+			echo "The Json ".$sFileToMerge." has an error! Please verify!\n";
+			$oDebug = Debug::getInstance();
+			$oDebug->error("The Json ".$sFileToMerge." has an error! Please verify!\n");
+			exit;
+		}
 	}
 
 	/**

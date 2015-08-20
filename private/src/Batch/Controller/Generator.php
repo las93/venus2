@@ -50,7 +50,6 @@ class Generator extends Controller
 		/**
 		 * option -p [portail]
 		 */
-
 		if (isset($aOptions['p'])) { $sPortail = $aOptions['p']; }
 		else { $sPortail = 'Batch'; }
 
@@ -72,24 +71,27 @@ class Generator extends Controller
 		}
 		else {
 
-			mkdir($sPublicPath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'css', 0777, true);
-			mkdir($sPublicPath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'js', 0777, true);
-			mkdir($sPublicPath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'img', 0777, true);
+			if (!file_exists($sPrivatePath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'Controller')) {
 
-			$sContentFile = '<?php
+				mkdir($sPublicPath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'css', 0777, true);
+				mkdir($sPublicPath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'js', 0777, true);
+				mkdir($sPublicPath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'img', 0777, true);
+
+
+				$sContentFile = '<?php
 
 /**
  * bootstrap of the framework
  *
- * @author    	'.AUTHOR.'
- * @copyright 	'.COPYRIGHT.'
- * @license   	'.LICENCE.'
- * @version   	Release: '.VERSION.'
- * @filesource	'.FILESOURCE.'
- * @link      	'.LINK.'
+ * @author    	' . AUTHOR . '
+ * @copyright 	' . COPYRIGHT . '
+ * @license   	' . LICENCE . '
+ * @version   	Release: ' . VERSION . '
+ * @filesource	' . FILESOURCE . '
+ * @link      	' . LINK . '
  * @since     	1.0
  */
-const PORTAIL = \''.$sPortail.'\';
+const PORTAIL = \'' . $sPortail . '\';
 
 set_include_path(get_include_path().PATH_SEPARATOR.str_replace(\'public\'.DIRECTORY_SEPARATOR.PORTAIL, \'private\', __DIR__));
 
@@ -98,16 +100,21 @@ require \'conf/AutoLoad.php\';
 \Venus\lib\Debug::activateDebug();
 
 $oRouter = new \Venus\core\Router();
-$oRouter->run();'."\n";
+$oRouter->run();' . "\n";
 
-			file_put_contents($sPublicPath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'index.php', $sContentFile);
+				file_put_contents($sPublicPath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'index.php', $sContentFile);
 
-			$sContentFile = 'RewriteEngine on
+				$sContentFile = 'RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^.*$ /index.php [NC,L]';
 
-			file_put_contents($sPublicPath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'.htaccess', $sContentFile);
+				file_put_contents($sPublicPath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . '.htaccess', $sContentFile);
+			}
+			else {
+
+				echo 'The Project (public part) ' . $sPrivatePath . DIRECTORY_SEPARATOR . $sPortail . " exists\n";
+			}
 		}
 
 		if (!is_writable($sPrivatePath)) {
@@ -117,12 +124,19 @@ RewriteRule ^.*$ /index.php [NC,L]';
 		}
 		else {
 
-			mkdir($sPrivatePath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'Controller', 0777, true);
-			mkdir($sPrivatePath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'Entity', 0777, true);
-			mkdir($sPrivatePath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'Model', 0777, true);
-			mkdir($sPrivatePath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'View', 0777, true);
-			mkdir($sPrivatePath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'conf', 0777, true);
-			mkdir($sPrivatePath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'common', 0777, true);
+			if (!file_exists($sPrivatePath.DIRECTORY_SEPARATOR.$sPortail.DIRECTORY_SEPARATOR.'Controller')) {
+
+				mkdir($sPrivatePath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'Controller', 0777, true);
+				mkdir($sPrivatePath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'Entity', 0777, true);
+				mkdir($sPrivatePath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'Model', 0777, true);
+				mkdir($sPrivatePath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'View', 0777, true);
+				mkdir($sPrivatePath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'conf', 0777, true);
+				mkdir($sPrivatePath . DIRECTORY_SEPARATOR . $sPortail . DIRECTORY_SEPARATOR . 'common', 0777, true);
+			}
+			else {
+
+				echo 'The Project (private part) ' . $sPrivatePath . DIRECTORY_SEPARATOR . $sPortail . " exists\n";
+			}
 
 			$sContent = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'common'.DIRECTORY_SEPARATOR.'Controller.php');
 			$sContent = str_replace('Batch', $sPortail, $sContent);

@@ -213,45 +213,61 @@ class Router implements LoggerAwareInterface
 			else { $aArguments = $argv; }
 
 			$sBatchName = $aArguments[1];
-			$oBatch = Config::get('Route')->batch->script->{$sBatchName};
-			array_shift($aArguments);
-			array_shift($aArguments);
 
-			$aOptions = array();
+			if (isset(Config::get('Route')->batch->script->{$sBatchName})) {
 
-			while (count($aArguments) > 0) {
+				$oBatch = Config::get('Route')->batch->script->{$sBatchName};
+				array_shift($aArguments);
+				array_shift($aArguments);
 
-        		if (preg_match('/^-[a-z]/', $aArguments[0])) {
+				$aOptions = array();
 
-          			$sOptionName = str_replace('-', '', $aArguments[0]);
+				while (count($aArguments) > 0) {
 
-          			if (isset($aArguments[1])) { $sOptionValue = $aArguments[1]; }
-          			else { $sOptionValue = ''; }
+					if (preg_match('/^-[a-z]/', $aArguments[0])) {
 
-          			if (isset($oBatch->options->$sOptionName) && $oBatch->options->$sOptionName === false) {
+						$sOptionName = str_replace('-', '', $aArguments[0]);
 
-            			$aOptions[$sOptionName] = true;
-            			array_shift($aArguments);
-          			}
-          			else if (isset($oBatch->options->$sOptionName) && ($oBatch->options->$sOptionName === 'string'
-          				|| $oBatch->options->$sOptionName === 'int')) {
+						if (isset($aArguments[1])) {
+							$sOptionValue = $aArguments[1];
+						} else {
+							$sOptionValue = '';
+						}
 
-            			$aOptions[$sOptionName] = $sOptionValue;
-            			array_shift($aArguments);
-            			array_shift($aArguments);
-          			}
-					else {
+						if (isset($oBatch->options->$sOptionName) && $oBatch->options->$sOptionName === false) {
+
+							$aOptions[$sOptionName] = true;
+							array_shift($aArguments);
+						} else if (isset($oBatch->options->$sOptionName) && ($oBatch->options->$sOptionName === 'string'
+								|| $oBatch->options->$sOptionName === 'int')
+						) {
+
+							$aOptions[$sOptionName] = $sOptionValue;
+							array_shift($aArguments);
+							array_shift($aArguments);
+						} else {
+
+							array_shift($aArguments);
+						}
+					} else {
 
 						array_shift($aArguments);
 					}
-        		}
-        		else {
-
-          			array_shift($aArguments);
-        		}
+				}
       		}
 
-			echo $this->_loadController($oBatch->controller, $oBatch->action, array($aOptions));
+			if (isset($oBatch->controller) && isset($oBatch->action)) {
+
+				echo $this->_loadController($oBatch->controller, $oBatch->action, array($aOptions));
+			}
+			else {
+
+				if (Request::isCliRequest()) {
+
+					echo "Error : The batch not exists - please verify your Route or the name passed in your command name.\n";
+				}
+			}
+
 		}
 	}
 

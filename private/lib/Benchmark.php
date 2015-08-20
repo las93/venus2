@@ -14,7 +14,6 @@
  */
 namespace Venus\lib;
 
-use \Venus\lib\Debug as Debug;
 use \Venus\lib\Log\LoggerAwareInterface as LoggerAwareInterface;
 use \Venus\lib\Log\LoggerInterface as LoggerInterface;
 
@@ -84,11 +83,11 @@ class Benchmark implements LoggerAwareInterface
 	 */
 	public static function setPointInLog($sName = 'default')
 	{
-	    $oLogger = new Debug();
-	    $this->setLogger($oLogger);
-	    
-	    $this->getLogger()
-	         ->log('BENCHMARK: Time at this point '.(microtime(true) - self::$_fStart).' - '.$sName);
+	    $oLogger = Debug::getInstance();
+		$oLogger->setLogger($oLogger);
+
+		$oLogger->getLogger()
+	         	->log('BENCHMARK: Time at this point '.(microtime(true) - self::$_fStart).' - '.$sName);
 	}
 	
 	/**
