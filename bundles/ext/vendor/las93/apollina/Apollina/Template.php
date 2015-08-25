@@ -330,6 +330,7 @@ class Template
 		}
 
 		$sTemplate = $this->fetch($sName);
+
 		echo $sTemplate;
 	}
 

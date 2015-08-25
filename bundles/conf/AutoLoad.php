@@ -45,9 +45,9 @@ spl_autoload_register(function ($sClassName)
     }
     else {
         
-        if (strstr($sFileName, 'Venus\\') && file_exists(str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName)))) {
+        if (strstr($sFileName, 'Venus\\') && file_exists(preg_replace('#^(src/[a-zA-Z0-9_]+/)#', '$1app/', str_replace(['\\', '/'], '/', str_replace('conf', '', __DIR__).str_replace('Venus\\', '', $sFileName))))) {
         
-            require str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('\\', DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName)));
+            require preg_replace('#^(src/[a-zA-Z0-9_]+/)#', '$1app/', str_replace(['\\', '/'], '/', str_replace('conf', '', __DIR__).str_replace('Venus\\', '', $sFileName)));
         } 
     }
 });

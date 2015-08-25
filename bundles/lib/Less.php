@@ -15,8 +15,6 @@
  */
 namespace Venus\lib;
 
-use \Venus\lib\Response\ResponseInterface as ResponseInterface;
-
 /**
  * Manage Less
  *
@@ -30,7 +28,7 @@ use \Venus\lib\Response\ResponseInterface as ResponseInterface;
  * @link      	https://github.com/las93
  * @since     	1.0
  */
-class Less implements ResponseInterface
+class Less
 {
     /**
      * @var string

@@ -62,71 +62,88 @@ class Config
 
 			$aBase = new \StdClass;
 
-			if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local')) {
+			$aDirectories = scandir(str_replace('core', 'src', __DIR__));
+			
+			foreach ($aDirectories as $sPortal) {
+			
+			    if ($sPortal != '..' && $sPortal != '.') {
 
-				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local')) {
-				
-				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('DEV') == 1) {
+        			if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local')) {
+        
+        				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
 
-				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('DEV') == 1) {
-
-				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('PROD') == 1) {
-
-				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-prod';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('PROD') == 1) {
-
-				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-prod';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('PREPROD') == 1) {
-
-				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-pprod';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('PREPROD') == 1) {
-
-				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-pprod';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('RECETTE') == 1) {
-
-				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-rec';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('RECETTE') == 1) {
-
-				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-rec';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local')) {
-
-				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf')) {
-
-				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
-			else {
-
-				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf';
-				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
-			}
+        			if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local')) {
+        				
+        				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('DEV') == 1) {
+        
+        				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('DEV') == 1) {
+        
+        				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('PROD') == 1) {
+        
+        				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-prod';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('PROD') == 1) {
+        
+        				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-prod';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('PREPROD') == 1) {
+        
+        				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-pprod';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('PREPROD') == 1) {
+        
+        				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-pprod';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('RECETTE') == 1) {
+        
+        				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-rec';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-dev') && getenv('RECETTE') == 1) {
+        
+        				$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-rec';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local')) {
+        
+        				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf-local';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        			
+        			if (file_exists(str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf')) {
+        
+        				$sJsonFile = str_replace('core', 'src'.DIRECTORY_SEPARATOR.$sPortal.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf';
+        				$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+        			}
+        
+        			$sJsonFile = str_replace('core', 'conf', __DIR__).DIRECTORY_SEPARATOR.$sName.'.conf';
+        			$aBase = self::_mergeAndGetConf($sJsonFile, $aBase);
+			    }
+		    }
 
 			if ($aBase === '') {
 				
@@ -177,11 +194,11 @@ class Config
 	 */
 	private static function  _mergeAndGetConf($sFileToMerge, $aBase)
 	{
-		$aConfFiles = json_decode(file_get_contents($sFileToMerge));
+		$oConfFiles = json_decode(file_get_contents($sFileToMerge));
 
-		if (is_object($aConfFiles)) {
+		if (is_object($oConfFiles)) {
 
-			list($aConfFiles, $aBase) = self::_recursiveGet($aConfFiles, $aBase);
+			list($oConfFiles, $aBase) = self::_recursiveGet($oConfFiles, $aBase);
 			return $aBase;
 		}
 		else {
@@ -197,25 +214,29 @@ class Config
 	 * recursive merge
 	 *
 	 * @access private
-	 * @param  array $aConfFiles
+	 * @param  array $oConfFiles
 	 * @param  array $aBase
 	 * @return multitype:array multitype:array
 	 */
-	private static function _recursiveGet($aConfFiles, $aBase)
+	private static function _recursiveGet($oConfFiles, $aBase)
 	{
-		foreach ($aConfFiles as $sKey => $mOne) {
+		foreach ($oConfFiles as $sKey => $mOne) {
 
-			if (!isset($aBase->$sKey)) {
+			if (is_object($oConfFiles) && is_object($aBase) && !isset($aBase->$sKey)) {
 
-				$aBase->$sKey =  $aConfFiles->$sKey;
+				$aBase->$sKey = $oConfFiles->$sKey;
 			}
-			else if (isset($aBase[$sKey]) && is_array($mOne)) {
+			else if (is_array($oConfFiles) && is_array($aBase) && !isset($aBase[$sKey])) {
+
+				$aBase[$sKey] = $oConfFiles[$sKey];
+			}
+			else if (!isset($aBase->$sKey) && is_array($mOne)) {
 
 				$aBase->$sKey = new \StdClass;
-				list($aConfFiles, $aBase) = self::_recursiveGet($mOne, $aBase->$sKey);
+				list($oConfFiles, $aBase) = self::_recursiveGet($mOne, $aBase->$sKey);
 			}
 		}
 
-		return array($aConfFiles, $aBase);
+		return array($oConfFiles, $aBase);
 	}
 }

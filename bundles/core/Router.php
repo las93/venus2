@@ -202,7 +202,7 @@ class Router implements LoggerAwareInterface
     					}
     				}
     				else {
-
+    				    
     					if ($sHost !== $_SERVER['HTTP_HOST']) {
     						
     						trigger_error("Votre host est mal définit : ".$sHost." = ".$_SERVER['HTTP_HOST']
@@ -445,7 +445,7 @@ class Router implements LoggerAwareInterface
 
 			if (isset($oRoute->controller)) {
 
-			    define('PORTAL', preg_replace('/^\\Venus\\src\\([a-zA-Z0-9_]+)\\.+$/', '$1', $oRoute->controller));
+			    define('PORTAL', preg_replace('/^\\\\Venus\\\\src\\\\([a-zA-Z0-9_]+)\\\\.+$/', '$1', $oRoute->controller));
 			    set_include_path(get_include_path().PATH_SEPARATOR.'src'.PATH_SEPARATOR.PORTAL.PATH_SEPARATOR.'public');
 			     
 				if (isset($oRoute->content_type)) {
@@ -526,7 +526,7 @@ class Router implements LoggerAwareInterface
 			}
 			else if (isset($oRoute->template) && isset($oRoute->layout) && $oRoute->layout === true) {
 
-			    define('PORTAL', preg_replace('/^\\Venus\\src\\([a-zA-Z0-9_]+)\\.+$/', '$1', $oRoute->template));
+			    define('PORTAL', preg_replace('/^\\\\Venus\\\\src\\\\([a-zA-Z0-9_]+)\\\\.+$/', '$1', $oRoute->template));
 			    set_include_path(get_include_path().PATH_SEPARATOR.'src'.PATH_SEPARATOR.PORTAL.PATH_SEPARATOR.'public');
 			    
 			    $oLayout = Vendor::getVendor('Apollina\Template', DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.PORTAL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.'Layout.tpl');
@@ -544,7 +544,7 @@ class Router implements LoggerAwareInterface
 			}
 			else if (isset($oRoute->template)) {
 
-			    define('PORTAL', preg_replace('/^\\Venus\\src\\([a-zA-Z0-9_]+)\\.+$/', '$1', $oRoute->template));
+			    define('PORTAL', preg_replace('/^\\\\Venus\\\\src\\\\([a-zA-Z0-9_]+)\\\\.+$/', '$1', $oRoute->template));
 			    set_include_path(get_include_path().PATH_SEPARATOR.'src'.PATH_SEPARATOR.PORTAL.PATH_SEPARATOR.'public');
 			    
 				$oTemplate = Vendor::getVendor('Apollina\Template', DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.PORTAL.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$oRoute->template.'.tpl');

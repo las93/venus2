@@ -34,13 +34,16 @@ class Yaml implements ResponseInterface
 {
 	/**
 	 * translate the content
+     * @see \Venus\lib\Response\ResponseInterface::translate()
 	 *
 	 * @access public
 	 * @param  mixed $mContent content to translate
 	 * @return mixed
 	 */
-	public static function translate($mContent)
-	{	    
-	    return yaml_emit($mContent);
-	}
+    public static function translate($mContent)
+    {
+        // TODO Auto-generated method stub
+        return yaml_emit($mContent);
+    }
+
 }

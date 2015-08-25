@@ -35,13 +35,15 @@ class Json implements ResponseInterface
 {
 	/**
 	 * translate the content
+	 * @see \Venus\lib\Response\ResponseInterface::translate()
 	 *
 	 * @access public
 	 * @param  mixed $mContent content to translate
 	 * @return mixed
 	 */
-	public static function translate($mContent)
-	{
-	    return json_encode(Object::object_to_array($mContent));
-	}
+    public static function translate($mContent)
+    {
+        return json_encode(Object::object_to_array($mContent));
+    }
+
 }

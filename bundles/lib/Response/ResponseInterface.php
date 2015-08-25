@@ -30,11 +30,12 @@ namespace Venus\lib\Response;
  */
 interface ResponseInterface
 {
-	/**
+    /**
 	 * translate the content
 	 *
 	 * @access public
-	 * @param  mixed $sFile content
+	 * @param  mixed $mContent content to translate
+	 * @return mixed
 	 */
-	public static function toCss($sFile);
+	public static function translate($mContent);
 }

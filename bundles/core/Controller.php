@@ -67,8 +67,8 @@ abstract class Controller extends Mother
 
 			$sNamespaceBaseName = str_replace('\Controller', '', $sNamespaceName);
 			$sDefaultModel = $sNamespaceBaseName.'\Model\\'.$sClassName;
-			$sDefaultView = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('Venus\\', '\\', $sNamespaceBaseName)).DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$sClassName.'.tpl';
-			$sDefaultLayout = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('Venus\\', '\\', $sNamespaceBaseName)).DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.'Layout.tpl';
+			$sDefaultView = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('Venus\\', '\\', $sNamespaceBaseName)).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.$sClassName.'.tpl';
+			$sDefaultLayout = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('Venus\\', '\\', $sNamespaceBaseName)).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'View'.DIRECTORY_SEPARATOR.'Layout.tpl';
 
 			$this->model = function() use ($sDefaultModel) { return new $sDefaultModel; };
 
