@@ -56,10 +56,12 @@ class Vendor
 	{
 	    if ($sVendorName === 'Apollina\Template') { 
 
-	        return new $sVendorName($mParam, str_replace('lib', '', __DIR__), 
+	        $oApollina = new $sVendorName($mParam, str_replace('lib', '', __DIR__), 
 	            str_replace('bundles'.DIRECTORY_SEPARATOR.'lib', CACHE_DIR, __DIR__), $mParam2);
+  
+	        return $oApollina->addFunctionPath(__DIR__.DIRECTORY_SEPARATOR.'Functions', '\Venus\lib\Functions\\');
 	    }
-	    else if ($sVendorName === 'Attila\Orm') { 
+	    else if ($sVendorName === 'Attila\Orm') {
 
 	        $oDbConfig = Config::get('Db')->configuration;
 

@@ -168,13 +168,25 @@ class Router implements LoggerAwareInterface
     	  					header('Location: '.$oHost->location);
     	  					exit;
     					}
-    					else if (preg_match('#getCss$#', $_SERVER['REQUEST_URI'])) {
+    					else if (preg_match('#getCss\?#', $_SERVER['REQUEST_URI'])) {
     					    
     					    foreach ($_GET as $sKey => $sValue) {
-    					        
-    					        if (file_exists(str_replace(DIRECTORY_SEPARATOR.'core', DIRECTORY_SEPARATOR.'src', __DIR__).$sKey)) {
+
+    					        if (file_exists(str_replace(DIRECTORY_SEPARATOR.'core', DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR, __DIR__).$sKey.'.css')) {
     					            
-    					            echo file_get_contents(str_replace(DIRECTORY_SEPARATOR.'core', DIRECTORY_SEPARATOR.'src', __DIR__).$sKey)."\n";
+    					            echo file_get_contents(str_replace(DIRECTORY_SEPARATOR.'core', DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR, __DIR__).$sKey.'.css')."\n";
+    					        }
+    					    }
+    					    
+    					    exit;
+    					}
+    					else if (preg_match('#getJs\?#', $_SERVER['REQUEST_URI'])) {
+    					    
+    					    foreach ($_GET as $sKey => $sValue) {
+
+    					        if (file_exists(str_replace(DIRECTORY_SEPARATOR.'core', DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR, __DIR__).$sKey.'.js')) {
+    					            
+    					            echo file_get_contents(str_replace(DIRECTORY_SEPARATOR.'core', DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR, __DIR__).$sKey.'.js')."\n";
     					        }
     					    }
     					    

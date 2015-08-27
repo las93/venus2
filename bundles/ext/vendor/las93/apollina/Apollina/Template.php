@@ -122,6 +122,14 @@ class Template
 	 * @var    int
 	 */
 	private static $_iRenderLevel = 5;
+
+	/**
+	 * The path of functions 
+	 *
+	 * @access private
+	 * @var    string
+	 */
+	private $_aFunctionsPath = array();
 	
 	/**
 	 * constant to define the render level
@@ -441,6 +449,22 @@ class Template
 	}
 
 	/**
+	 * get the basepath
+	 *
+	 * @access public
+	 * @param  string $sFilesPath
+	 * @param  string $sNamespace
+	 * @return \Apollina\Template
+	 */
+	public function addFunctionPath($sFilesPath, $sNamespace) 
+	{
+	    $this->_aFunctionsPath[count($this->_aFunctionsPath)+1] = array();   
+	    $this->_aFunctionsPath[count($this->_aFunctionsPath)]['files'] = $sFilesPath;
+	    $this->_aFunctionsPath[count($this->_aFunctionsPath)]['namespace'] = $sNamespace;
+		return $this;
+	}
+
+	/**
 	 * assign a variable for the template
 	 *
 	 * @access private
@@ -707,6 +731,26 @@ class Template
 				}
 
 				$sContent = str_replace($aOne[0], $oFunction->replaceBy($aParams), $sContent);
+			}
+			
+			foreach ($this->_aFunctionsPath as $sOnePath) {
+
+			    if (file_exists($sOnePath['files'])) {
+			    
+			        $sClassName = $sOnePath['namespace'].$sName;
+			        $oFunction = new $sClassName;
+			        $aAttributes = explode(' ', $aOne[2]);
+			    
+			        $aParams = [];
+			    
+			        foreach ($aAttributes as $sOne2) {
+			    
+			            $aSplitParams = explode('=', $sOne2);
+			            $aParams[$aSplitParams[0]] = $aSplitParams[1];
+			        }
+
+			        $sContent = str_replace($aOne[0], $oFunction->replaceBy($aParams), $sContent);
+			    }
 			}
 		}
 
