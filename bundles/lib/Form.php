@@ -140,7 +140,10 @@ class Form
 	 */
 	public function add($sName, $sType, $sLabel = null, $mValue = null, $mOptions = null)
 	{
-		if ($sType === 'text' || $sType === 'submit' || $sType === 'password' || $sType === 'file') {
+		if ($sType === 'text' || $sType === 'submit' || $sType === 'password' || $sType === 'file' || $sType === 'tel'
+	        || $sType === 'url' || $sType === 'email' || $sType === 'search' || $sType === 'date' || $sType === 'time'
+	        || $sType === 'datetime' || $sType === 'month' || $sType === 'week' || $sType === 'number' || $sType === 'range'
+	        || $sType === 'color') {
 
 			$this->_aElement[$sName] = new Input($sName, $sType, $sLabel, $mValue);
 		}

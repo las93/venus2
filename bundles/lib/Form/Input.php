@@ -173,7 +173,11 @@ class Input extends Common
 	{
 		$sContent = '';
 
-		if ($this->getType() === 'text' || $this->getType() === 'password' || $this->getType() === 'file') {
+		if ($this->getType() === 'text' || $this->getType() === 'password' || $this->getType() === 'file'
+            || $this->getType() === 'tel' || $this->getType() === 'url' || $this->getType() === 'email'
+            || $this->getType() === 'search' || $this->getType() === 'date' || $this->getType() === 'time'
+            || $this->getType() === 'datetime' || $this->getType() === 'month' || $this->getType() === 'week'
+            || $this->getType() === 'number' || $this->getType() === 'range' || $this->getType() === 'color') {
 
 			$sContent .= '<label>'.$this->getLabel().'</label> ';
 		}
