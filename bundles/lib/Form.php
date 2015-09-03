@@ -37,13 +37,14 @@
  */
 namespace Venus\lib;
 
-use \Attila\lib\Entity as LibEntity;
-use \Venus\lib\Form\Checkbox as Checkbox;
-use \Venus\lib\Form\Label as Label;
-use \Venus\lib\Form\Input as Input;
-use \Venus\lib\Form\Radio as Radio;
-use \Venus\lib\Form\Select as Select;
-use \Venus\lib\Form\Textarea as Textarea;
+use \Attila\lib\Entity          as LibEntity;
+use \Venus\lib\Form\Checkbox    as Checkbox;
+use \Venus\lib\Form\Container   as Container;
+use \Venus\lib\Form\Label       as Label;
+use \Venus\lib\Form\Input       as Input;
+use \Venus\lib\Form\Radio       as Radio;
+use \Venus\lib\Form\Select      as Select;
+use \Venus\lib\Form\Textarea    as Textarea;
 
 /**
  * This class manage the Form
@@ -235,98 +236,84 @@ class Form
 	 * get global form
 	 *
 	 * @access public
-	 * @return string
+	 * @return \Venus\lib\Form\Container
 	 */
 	public function getForm()
 	{
-		if ($this->_iIdEntity > 0 && $this->_sSynchronizeEntity !== null && count($_POST) > 0) {
-
-			$sModelName = str_replace('Entity', 'Model', $this->_sSynchronizeEntity);
-			$oModel = new $sModelName;
-				
-			$oEntity = new $this->_sSynchronizeEntity;
-			$sPrimaryKey = LibEntity::getPrimaryKeyNameWithoutMapping($oEntity);
-			$sMethodName = 'set_'.$sPrimaryKey;
-
-			call_user_func_array(array(&$oEntity, $sMethodName), array($this->_iIdEntity));
-
-			foreach ($this->_aElement as $sKey => $sValue) {
-			
-				$sMethodName = 'set_'.$sValue->getName().'';
-				call_user_func_array(array(&$oEntity, $sMethodName), array($_POST[$sValue->getName()]));
-			}
-				
-			$oEntity->save();
-		}
-		else if ($this->_sSynchronizeEntity !== null && isset($_POST) && count($_POST) > 0) {
-			
-			$oEntity = new $this->_sSynchronizeEntity;
-			
-			foreach ($this->_aElement as $sKey => $sValue) {
-				
-				$sMethodName = 'set_'.$sValue->getName().'';
-				call_user_func_array(array(&$oEntity, $sMethodName), array($_POST[$sValue->getName()]));
-			}
-			
-			$this->_iIdEntityCreated = $oEntity->save();
-		}
-		else if ($this->_iIdEntity > 0 && $this->_sSynchronizeEntity !== null && count($_POST) < 1) {
-
-			$sModelName = str_replace('Entity', 'Model', $this->_sSynchronizeEntity);
-			$oModel = new $sModelName;
-			
-			$oEntity = new $this->_sSynchronizeEntity;
-			$sPrimaryKey = LibEntity::getPrimaryKeyNameWithoutMapping($oEntity);
-			$sMethodName = 'findOneBy'.$sPrimaryKey;
-			$oCompleteEntity = call_user_func_array(array(&$oModel, $sMethodName), array($this->_iIdEntity));
-
-			if (is_object($oCompleteEntity)) {
-
-				foreach ($this->_aElement as $sKey => $sValue) {
-	
-					if ($sValue instanceof \Venus\lib\Form\Radio) { 
-						
-						$sExKey = $sKey;
-						$sKey = substr($sKey, 0, -6);
-					}
-					
-					$sMethodNameInEntity = 'get_'.$sKey;
-					$mValue = $oCompleteEntity->$sMethodNameInEntity();
-
-					if ($sValue instanceof \Venus\lib\Form\Radio && method_exists($this->_aElement[$sExKey], 'setValueChecked')) {
-						
-						$this->_aElement[$sExKey]->setValueChecked($mValue);
-					}
-					else if (isset($mValue) && method_exists($this->_aElement[$sKey], 'setValue')) { 
-						
-						$this->_aElement[$sKey]->setValue($mValue); 
-					}
-				}
-			}			
-		}
+		$oForm = $this->_getFormInObject();
 		
-		$sFormContent = '<form name="form'.$this->_iFormNumber.'" method="post"><input type="hidden" value="1" name="validform'.$this->_iFormNumber.'">';
+		$sFormContent = $oForm->start;
 
-		foreach ($this->_aElement as $sKey => $sValue) {
+		foreach ($oForm->form as $sValue) {
 
-			$sFormContent .= $sValue->fetch().$this->_sSeparator;
+			$sFormContent .= $sValue.$this->_sSeparator;
 		}
 
-		$sFormContent .= '</form>';
+		$sFormContent .= $oForm->end;
 
-		return $sFormContent;
+		$oContainer = new Container;
+		$oContainer->setView($sFormContent)
+		           ->setForm($this);
+		
+		return $oContainer;
 	}
+	
 
 	/**
-	 * if this form is validate or not
+	 * get global object form
 	 *
 	 * @access public
-	 * @return boolean
+	 * @return object
 	 */
-	public function isValid()
+	private function _getFormInObject()
 	{
-		if (isset($_POST['validform'.$this->_iFormNumber]) && $_POST['validform'.$this->_iFormNumber] == 1) { return true; }
-		else { return false; }
+	    if ($this->_iIdEntity > 0 && $this->_sSynchronizeEntity !== null && count($_POST) < 1) {
+	
+	        $sModelName = str_replace('Entity', 'Model', $this->_sSynchronizeEntity);
+	        $oModel = new $sModelName;
+	        	
+	        $oEntity = new $this->_sSynchronizeEntity;
+	        $sPrimaryKey = LibEntity::getPrimaryKeyNameWithoutMapping($oEntity);
+	        $sMethodName = 'findOneBy'.$sPrimaryKey;
+	        $oCompleteEntity = call_user_func_array(array(&$oModel, $sMethodName), array($this->_iIdEntity));
+	
+	        if (is_object($oCompleteEntity)) {
+	
+	            foreach ($this->_aElement as $sKey => $sValue) {
+	
+	                if ($sValue instanceof \Venus\lib\Form\Radio) {
+	
+	                    $sExKey = $sKey;
+	                    $sKey = substr($sKey, 0, -6);
+	                }
+	                	
+	                $sMethodNameInEntity = 'get_'.$sKey;
+	                $mValue = $oCompleteEntity->$sMethodNameInEntity();
+	
+	                if ($sValue instanceof \Venus\lib\Form\Radio && method_exists($this->_aElement[$sExKey], 'setValueChecked')) {
+	
+	                    $this->_aElement[$sExKey]->setValueChecked($mValue);
+	                }
+	                else if (isset($mValue) && method_exists($this->_aElement[$sKey], 'setValue')) {
+	
+	                    $this->_aElement[$sKey]->setValue($mValue);
+	                }
+	            }
+	        }
+	    }
+	
+	    $oForm = new \StdClass();
+	    $oForm->start = '<form name="form'.$this->_iFormNumber.'" method="post"><input type="hidden" value="1" name="validform'.$this->_iFormNumber.'">';
+	    $oForm->form = array();
+	
+	    foreach ($this->_aElement as $sKey => $sValue) {
+	
+	        $oForm->form[] = $sValue->fetch();
+	    }
+	
+	    $oForm->end = '</form>';
+	
+	    return $oForm;
 	}
 
 	/**

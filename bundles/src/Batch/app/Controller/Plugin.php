@@ -21,8 +21,6 @@
  */
 namespace Venus\src\Batch\Controller;
 
-use \Venus\core\Config as Config;
-use \Attila\Batch\Entity as BatchEntity;
 use \Venus\src\Batch\common\Controller as Controller;
 
 /**
