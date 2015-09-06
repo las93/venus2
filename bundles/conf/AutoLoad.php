@@ -33,14 +33,13 @@ spl_autoload_register(function ($sClassName)
     $sFileName .= $sClassName.'.php';
 
     if (defined('PORTAL')) {
-     
-        if (strstr($sFileName, 'Venus\\') && file_exists(str_replace(PORTAL, PORTAL.DIRECTORY_SEPARATOR.'app', str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName))))) {
-    
-        	require str_replace(PORTAL, PORTAL.DIRECTORY_SEPARATOR.'app', str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('\\', DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName))));
-        }
-        else if (file_exists(str_replace(PORTAL, PORTAL.DIRECTORY_SEPARATOR.'app', str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).$sFileName)))) {
-    
-        	require str_replace(PORTAL, PORTAL.DIRECTORY_SEPARATOR.'app', str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('\\', DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).$sFileName)));
+
+        $sFileClassName = str_replace(PORTAL, PORTAL.DIRECTORY_SEPARATOR.'app', str_replace(['\\', '/'], DIRECTORY_SEPARATOR, str_replace('conf', DIRECTORY_SEPARATOR, __DIR__).str_replace('Venus\\', '', $sFileName)));
+        $sFileClassName = str_replace('app/bundles//', 'bundles/', $sFileClassName);
+
+        if (strstr($sFileName, 'Venus\\') && file_exists($sFileClassName)) {
+
+        	require $sFileClassName;
         }
     }
     else {
