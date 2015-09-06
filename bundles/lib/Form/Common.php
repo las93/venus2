@@ -37,6 +37,14 @@ abstract class Common
 	 * @var    string
 	 */
 	private $_sName = null;
+	
+	/**
+	 * constraints on the element
+	 *
+	 * @access private
+	 * @var    string
+	 */
+	private $_aConstraints = null;
 
 	/**
 	 * get the name
@@ -69,4 +77,17 @@ abstract class Common
 	 * @return string
 	 */
 	abstract public function fetch();
+
+	/**
+	 * get the name
+	 *
+	 * @access public
+	 * @param  object $oConstraint constraint;
+	 * @return object
+	 */
+	public function setConstraint($oConstraint)
+	{
+		$this->_aConstraints[] = $oConstraint;
+		return $this;
+	}
 }

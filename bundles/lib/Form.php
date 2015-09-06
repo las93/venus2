@@ -367,4 +367,22 @@ class Form
 		$this->_sSynchronizeEntity = $sSynchronizeEntity;
 		return $this;
 	}
+
+	/**
+	 * add constraint
+	 *
+	 * @access public
+	 * @param  string $sName field name
+	 * @param  object $oConstraint constraint on the field
+	 * @return \Venus\lib\Form
+	 */
+	public function addConstraint($sName, $oConstraint)
+	{
+		if ($this->_aElement[$sName] instanceof Input) {
+
+			$this->_aElement[$sName]->setConstraint($sName, $oConstraint);
+		}
+
+		return $this;
+	}
 }
