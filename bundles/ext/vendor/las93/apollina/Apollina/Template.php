@@ -735,7 +735,7 @@ class Template
 			
 			foreach ($this->_aFunctionsPath as $sOnePath) {
 
-			    if (file_exists($sOnePath['files'])) {
+			    if (file_exists($sOnePath['files'].DIRECTORY_SEPARATOR.$sName.'.php')) {
 			    
 			        $sClassName = $sOnePath['namespace'].$sName;
 			        $oFunction = new $sClassName;
