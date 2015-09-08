@@ -240,7 +240,7 @@ class Form
 	 */
 	public function getForm()
 	{
-		$oForm = $this->_getFormInObject();
+		$oForm = $this->getFormInObject();
 		
 		$sFormContent = $oForm->start;
 
@@ -265,7 +265,7 @@ class Form
 	 * @access public
 	 * @return object
 	 */
-	private function _getFormInObject()
+	public function getFormInObject()
 	{
 	    if ($this->_iIdEntity > 0 && $this->_sSynchronizeEntity !== null && count($_POST) < 1) {
 	
@@ -308,7 +308,7 @@ class Form
 	
 	    foreach ($this->_aElement as $sKey => $sValue) {
 	
-	        $oForm->form[] = $sValue->fetch();
+	        $oForm->form[$sKey] = $sValue->fetch();
 	    }
 	
 	    $oForm->end = '</form>';

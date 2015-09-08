@@ -75,6 +75,9 @@ class Container
 	{
 	    $oView = new \stdClass;
 	    $oView->form = $this->_sView;
+	    $oView->form_start = $this->getFormInObject()->start;
+	    $oView->form_end = $this->getFormInObject()->end;
+	    $oView->form_row = $this->getFormInObject()->form;
 	    
 		return $oView;
 	}
