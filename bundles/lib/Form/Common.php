@@ -79,7 +79,7 @@ abstract class Common
 	abstract public function fetch();
 
 	/**
-	 * get the name
+	 * set the constraint
 	 *
 	 * @access public
 	 * @param  object $oConstraint constraint;
@@ -89,5 +89,16 @@ abstract class Common
 	{
 		$this->_aConstraints[] = $oConstraint;
 		return $this;
+	}
+
+	/**
+	 * get the constraint
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function getConstraint()
+	{
+		return $this->_aConstraints;
 	}
 }

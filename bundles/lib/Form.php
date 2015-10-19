@@ -133,34 +133,38 @@ class Form
 	 *
 	 * @access public
 	 * @param  string $sName name
-	 * @param  string $sType type of field
+	 * @param  string|\Venus\lib\Form $mType type of field
 	 * @param  string $sLabel label of field
 	 * @param  mixed $mValue value of field
 	 * @parma  mixed $mOptions options (for select)
 	 * @return \Venus\lib\Form
 	 */
-	public function add($sName, $sType, $sLabel = null, $mValue = null, $mOptions = null)
+	public function add($sName, $mType, $sLabel = null, $mValue = null, $mOptions = null)
 	{
-		if ($sType === 'text' || $sType === 'submit' || $sType === 'password' || $sType === 'file' || $sType === 'tel'
-	        || $sType === 'url' || $sType === 'email' || $sType === 'search' || $sType === 'date' || $sType === 'time'
-	        || $sType === 'datetime' || $sType === 'month' || $sType === 'week' || $sType === 'number' || $sType === 'range'
-	        || $sType === 'color') {
+	    if ($mType instanceof Container) {
+	        
+	        $this->_aElement[$sName] = $mType;
+	    }
+		else if ($mType === 'text' || $mType === 'submit' || $mType === 'password' || $mType === 'file' || $mType === 'tel'
+	        || $mType === 'url' || $mType === 'email' || $mType === 'search' || $mType === 'date' || $mType === 'time'
+	        || $mType === 'datetime' || $mType === 'month' || $mType === 'week' || $mType === 'number' || $mType === 'range'
+	        || $mType === 'color') {
 
-			$this->_aElement[$sName] = new Input($sName, $sType, $sLabel, $mValue);
+			$this->_aElement[$sName] = new Input($sName, $mType, $sLabel, $mValue);
 		}
-		elseif ($sType === 'textarea') {
+		elseif ($mType === 'textarea') {
 
 			$this->_aElement[$sName] = new Textarea($sName, $sLabel, $mValue);
 		}
-		else  if ($sType === 'select') {
+		else  if ($mType === 'select') {
 
 			$this->_aElement[$sName] = new Select($sName, $mOptions, $sLabel, $mValue);
 		}
-		else  if ($sType === 'label') {
+		else  if ($mType === 'label') {
 
 			$this->_aElement[$sName] = new Label($sName);
 		}
-		else  if ($sType === 'list_checkbox') {
+		else  if ($mType === 'list_checkbox') {
 
 			$i = 0;
 			
@@ -171,15 +175,15 @@ class Form
 				$this->_aElement[$sName.'_'.$i++] = new Checkbox($sName, $sValue, $mKey, $mOptions);
 			}
 		}
-		else  if ($sType === 'checkbox') {
+		else  if ($mType === 'checkbox') {
 
 			$this->_aElement[$sName] = new Checkbox($sName, $sLabel, $mValue, $mOptions);
 		}
-		else  if ($sType === 'radio') {
+		else  if ($mType === 'radio') {
 
 			$this->_aElement[$sName.rand(100000,999999)] = new Radio($sName, $sLabel, $mValue, $mOptions);
 		}
-		else  if ($sType === 'date') {
+		else  if ($mType === 'date') {
 
 			$aDay = array();
 
@@ -287,16 +291,23 @@ class Form
 	                    $sKey = substr($sKey, 0, -6);
 	                }
 	                	
-	                $sMethodNameInEntity = 'get_'.$sKey;
-	                $mValue = $oCompleteEntity->$sMethodNameInEntity();
-	
-	                if ($sValue instanceof \Venus\lib\Form\Radio && method_exists($this->_aElement[$sExKey], 'setValueChecked')) {
-	
-	                    $this->_aElement[$sExKey]->setValueChecked($mValue);
+	                if ($sValue instanceof Form) {
+	                    
+	                    ;
 	                }
-	                else if (isset($mValue) && method_exists($this->_aElement[$sKey], 'setValue')) {
-	
-	                    $this->_aElement[$sKey]->setValue($mValue);
+	                else {
+	                 
+    	                $sMethodNameInEntity = 'get_'.$sKey;
+    	                $mValue = $oCompleteEntity->$sMethodNameInEntity();
+    	
+    	                if ($sValue instanceof \Venus\lib\Form\Radio && method_exists($this->_aElement[$sExKey], 'setValueChecked')) {
+    	
+    	                    $this->_aElement[$sExKey]->setValueChecked($mValue);
+    	                }
+    	                else if (isset($mValue) && method_exists($this->_aElement[$sKey], 'setValue')) {
+    	
+    	                    $this->_aElement[$sKey]->setValue($mValue);
+    	                }
 	                }
 	            }
 	        }
@@ -307,8 +318,15 @@ class Form
 	    $oForm->form = array();
 	
 	    foreach ($this->_aElement as $sKey => $sValue) {
-	
-	        $oForm->form[$sKey] = $sValue->fetch();
+
+	        if ($sValue instanceof Container) {
+	        
+	            $oForm->form[$sKey] = $sValue;
+	        }
+	        else {
+	            
+	            $oForm->form[$sKey] = $sValue->fetch();
+	        }
 	    }
 	
 	    $oForm->end = '</form>';
@@ -378,7 +396,7 @@ class Form
 	 */
 	public function addConstraint($sName, $oConstraint)
 	{
-		if ($this->_aElement[$sName] instanceof Input) {
+		if ($this->_aElement[$sName] instanceof Input || $this->_aElement[$sName] instanceof Textarea) {
 
 			$this->_aElement[$sName]->setConstraint($sName, $oConstraint);
 		}

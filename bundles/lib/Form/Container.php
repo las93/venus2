@@ -77,8 +77,21 @@ class Container
 	    $oView->form = $this->_sView;
 	    $oView->form_start = $this->_oForm->getFormInObject()->start;
 	    $oView->form_end = $this->_oForm->getFormInObject()->end;
-	    $oView->form_row = $this->_oForm->getFormInObject()->form;
+	    $oView->form_row = array();
 	    
+	    foreach ($this->_oForm->getFormInObject()->form as $sKey => $mValue) {
+	        
+	        if ($mValue instanceof Container) {
+	            
+	            $oNewForm = $mValue->createView();
+	            $oView->form_row[$sKey] = $oNewForm->form_row;
+	        }
+	        else {
+	            
+	           $oView->form_row[$sKey] = $mValue;
+	        }
+	    }
+	       
 		return $oView;
 	}
 
@@ -107,8 +120,8 @@ class Container
 	    // Validation
 	    foreach ($this->_oForm->_aElement as $sKey => $sValue) {
 	    
-	        if (!$sValue->validate($aRequest[$sValue->getName()])) {
-	            
+	        if (!$sValue->_validate($aRequest[$sValue->getName()])) {
+
 	            return false;
 	        }
 	    }
@@ -205,5 +218,25 @@ class Container
 	{
 	    if (isset($_POST[$sElementName]) && $_POST[$sElementName]) { return true; }
 		else { return false; }
+	}
+
+	/**
+	 * if the element is valide or not (with the constraint)
+	 * 
+	 * @access private
+	 * @param  object $oElement element of formular
+	 * @return boolean
+	 */
+	private function _validate($oElement)
+	{
+	    foreach ($oElement->getConstraint() as $oConstraint) {
+	        
+	        if (!$oConstraint->validate($_POST[$oElement->getName()])) {
+	            
+	            return false;
+	        }
+	    }
+	    
+	    return true;
 	}
 }

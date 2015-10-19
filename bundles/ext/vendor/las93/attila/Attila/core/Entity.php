@@ -555,4 +555,49 @@ abstract class Entity
 	{
 	    return $this->_aForeignKey;
 	}
+
+	/**
+	 * create an array with an object
+	 *
+	 * @access public
+	 * @param  unknown $sServiceName
+	 * @param  unknown $aParams
+	 * @return
+	 */
+	public static function object_to_array($mObject)
+	{
+	    if ( is_object($mObject)) {
+	        	
+	        $mObject = (array) $mObject;
+	    }
+	
+	
+	    if (is_array($mObject)) {
+	
+	        $aNew = array();
+	
+	        foreach($mObject as $sKey => $mValues) {
+	
+	            $sKey = preg_replace("/^\\0(.*)\\0/", "", $sKey);
+	            $aNew[$sKey] = self::object_to_array($mValues);
+	        }
+	    }
+	    else {
+	
+	        $aNew = $mObject;
+	    }
+	
+	    return $aNew;
+	}
+	
+	/**
+	 * transform the entity in JSON content
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function __toString() {
+	    
+	    return json_encode(self::object_to_array($this));
+	}
 }
