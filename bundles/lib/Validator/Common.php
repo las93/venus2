@@ -34,7 +34,8 @@ abstract class Common
 	 * validate function of the validator type
 	 *
 	 * @access public
+	 * @param  string $sValue
 	 * @return string
 	 */
-	abstract public function validate();
+	abstract public function validate($sValue = null);
 }

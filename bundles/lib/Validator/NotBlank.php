@@ -34,9 +34,10 @@ class NotBlank extends Common
 	 * validate the NotBlank
 	 *
 	 * @access public
+	 * @param  string $sValue
 	 * @return string
 	 */
-	public function validate($sValue)
+	public function validate($sValue = null)
 	{
 		if (trim($sValue) != '') { return true; }
 		else { return false; }

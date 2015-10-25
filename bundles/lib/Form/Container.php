@@ -117,28 +117,30 @@ class Container
 	 */
 	public function handleRequest($aRequest)
 	{
-	    // Validation
-	    foreach ($this->_oForm->_aElement as $sKey => $sValue) {
+	    if (!count($_POST)) { return true; }
 	    
-	        if (!$sValue->_validate($aRequest[$sValue->getName()])) {
+	    // Validation
+	    foreach ($this->_oForm->getElement() as $sKey => $sValue) {
+	    
+	        if (!$sValue instanceof self && !$this->_validate($sValue)) {
 
 	            return false;
 	        }
 	    }
 	    
 	    // Save
-		if ($this->_oForm->_iIdEntity > 0 && $this->_oForm->_sSynchronizeEntity !== null && count($aRequest) > 0) {
+		if ($this->_oForm->getIdEntity() > 0 && $this->_oForm->getSynchronizeEntity() !== null && count($aRequest) > 0) {
 		
-		    $sModelName = str_replace('Entity', 'Model', $this->_oForm->_sSynchronizeEntity);
+		    $sModelName = str_replace('Entity', 'Model', $this->_oForm->getSynchronizeEntity());
 		    $oModel = new $sModelName;
 		
-		    $oEntity = new $this->_oForm->_sSynchronizeEntity;
+		    $oEntity = new $this->_oForm->getSynchronizeEntity();
 		    $sPrimaryKey = LibEntity::getPrimaryKeyNameWithoutMapping($oEntity);
 		    $sMethodName = 'set_'.$sPrimaryKey;
 		
-		    call_user_func_array(array(&$oEntity, $sMethodName), array($this->_oForm->_iIdEntity));
+		    call_user_func_array(array(&$oEntity, $sMethodName), array($this->_oForm->getIdEntity()));
 		
-		    foreach ($this->_oForm->_aElement as $sKey => $sValue) {
+		    foreach ($this->_oForm->getElement() as $sKey => $sValue) {
 		
 		        $sMethodName = 'set_'.$sValue->getName().'';
 		        call_user_func_array(array(&$oEntity, $sMethodName), array($aRequest[$sValue->getName()]));
@@ -146,11 +148,11 @@ class Container
 		
 		    $oEntity->save();
 		}
-		else if ($this->_oForm->_sSynchronizeEntity !== null && isset($aRequest) && count($aRequest) > 0) {
+		else if ($this->_oForm->getSynchronizeEntity() !== null && isset($aRequest) && count($aRequest) > 0) {
 		
 		    $oEntity = new $this->_oForm->_sSynchronizeEntity;
 		
-		    foreach ($this->_oForm->_aElement as $sKey => $sValue) {
+		    foreach ($this->_oForm->getElement() as $sKey => $sValue) {
 		
 		        $sMethodName = 'set_'.$sValue->getName().'';
 		        call_user_func_array(array(&$oEntity, $sMethodName), array($aRequest[$sValue->getName()]));

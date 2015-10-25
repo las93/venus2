@@ -397,10 +397,43 @@ class Form
 	public function addConstraint($sName, $oConstraint)
 	{
 		if ($this->_aElement[$sName] instanceof Input || $this->_aElement[$sName] instanceof Textarea) {
-
-			$this->_aElement[$sName]->setConstraint($sName, $oConstraint);
+		   
+			$this->_aElement[$sName]->setConstraint($oConstraint);
 		}
 
 		return $this;
+	}
+	
+	/**
+	 * get all elements
+	 * 
+	 * @access public
+	 * @return  array 
+	 */
+	public function getElement() {
+	    
+	    return $this->_aElement;
+	}
+	
+	/**
+	 * get all elements
+	 * 
+	 * @access public
+	 * @return int 
+	 */
+	public function getIdEntity() {
+	    
+	    return $this->_iIdEntity;
+	}
+	
+	/**
+	 * get all elements
+	 * 
+	 * @access public
+	 * @return string 
+	 */
+	public function getSynchronizeEntity() {
+	    
+	    return $this->_sSynchronizeEntity;
 	}
 }

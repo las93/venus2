@@ -49,12 +49,12 @@ class Type extends Common
     }
     
     /**
-     * validate the NotBlank
+     * validate the Type
      *
      * @access public
      * @return string
      */
-    public function validate($sValue)
+    public function validate($sValue = null)
     {
         if ($this->_sType == 'DateTime') {
             
